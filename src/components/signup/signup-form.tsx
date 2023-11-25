@@ -3,6 +3,7 @@
 //import { login } from '@/lib/action';
 import { useFormState, useFormStatus } from 'react-dom';
 import Button from '../ui/button';
+import Link from 'next/link';
 
 function SignUpForm() {
     //const [code, action] = useFormState(login, undefined);
@@ -10,10 +11,10 @@ function SignUpForm() {
 
     return (
         <div className="flex p-5 min-h-full w-full flex-col justify-center items-center px-6 py-12 lg:px-8 ">
-            <div className="rounded-lg w-full md:border max-w-[420px]  md:px-7 pb-12 pt-4 dark:border-none">
+            <div className="rounded-lg w-full max-w-[420px]  md:px-7 pb-12 pt-4 dark:border-none">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-3xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
-                        Sign in
+                    <h2 className="mt-10 text-center text-4xl font-bold leading-9 tracking-tight text-[#333] dark:text-white">
+                        Sign up
                     </h2>
                     <div
                         id="error"
@@ -98,13 +99,13 @@ function SignUpForm() {
                     </form>
                     <p className="mt-10 text-center text-sm text-gray-500 dark:text-white">
                         Do you already have an account?
-                        <a
-                            href="/sign-up"
+                        <Link
+                            href="/sign-in"
                             className="font-semibold leading-6 text-[#0D6EFD] hover:opacity-90"
                         >
                             {' '}
                             Sign in
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

@@ -11,9 +11,9 @@ function SignInForm() {
 
     return (
         <div className="flex p-5 min-h-full w-full flex-col justify-center items-center px-6 py-12 lg:px-8 ">
-            <div className="rounded-lg w-full md:border max-w-[420px]  md:px-7 pb-12 pt-4 dark:border-none">
+            <div className="rounded-lg w-full max-w-[420px]  md:px-7 pb-12 pt-4 dark:border-none backdrop-blur-3xl">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-3xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
+                    <h2 className="mt-10 text-center text-4xl  font-semibold leading-9 tracking-tight text-[#333] dark:text-white">
                         Sign in
                     </h2>
                     <div
