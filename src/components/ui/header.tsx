@@ -14,15 +14,10 @@ function Header({ className = '', showUserInformation = true }: HeaderProps) {
 
     useEffect(() => {
         const handleScroll = () => {
-            const html = document.querySelector('html');
-
-            if (!html) return;
-
-            setScroll(html.scrollTop > 10);
+            setScroll(document.documentElement.scrollTop > 10);
         };
 
         document.addEventListener('scroll', handleScroll);
-
         return () => {
             document.removeEventListener('scroll', handleScroll);
         };
@@ -30,8 +25,8 @@ function Header({ className = '', showUserInformation = true }: HeaderProps) {
 
     return (
         <header
-            className={`flex items-center justify-between w-screen h-14 sticky z-50 dark:border-[#222] transition-all ${clsx(
-                { 'border-b-2': isScroll }
+            className={`flex items-center justify-between w-screen h-14 z-50 dark:border-[#222] transition-all ${clsx(
+                { 'border-y': isScroll }
             )} ${className}`}
         >
             <Logo />
@@ -41,6 +36,7 @@ function Header({ className = '', showUserInformation = true }: HeaderProps) {
                         href="/sign-in"
                         className="mx-1 py-[6px]"
                         variant="ghost"
+                        scroll={false}
                     >
                         sign in
                     </Button>
@@ -48,6 +44,7 @@ function Header({ className = '', showUserInformation = true }: HeaderProps) {
                         href="/sign-up"
                         className="mx-1 py-[6px]"
                         variant="primary"
+                        scroll={false}
                     >
                         sign up
                     </Button>

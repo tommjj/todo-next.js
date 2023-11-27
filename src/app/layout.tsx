@@ -8,17 +8,19 @@ export const metadata: Metadata = {
     description: 'todo next app',
 };
 
-export default function RootLayout({
-    children,
-}: {
+export default function RootLayout(props: {
     children: React.ReactNode;
+    modal: React.ReactNode;
 }) {
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <body
                 className={`${inter.className} w-screen overflow-x-hidden bg-white dark:bg-[#09090B] dark:text-white`}
             >
-                <Providers>{children}</Providers>
+                <Providers>
+                    {props.children}
+                    {props.modal}
+                </Providers>
             </body>
         </html>
     );

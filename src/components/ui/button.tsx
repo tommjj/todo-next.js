@@ -15,6 +15,7 @@ interface Button extends React.ButtonHTMLAttributes<{}> {
         | 'link';
     href?: string;
     roundedFull?: boolean;
+    scroll?: boolean;
 }
 
 export default function Button({
@@ -23,9 +24,10 @@ export default function Button({
     disabled = false,
     roundedFull = false,
     variant = '',
+
     ...props
 }: Button) {
-    const ClassName = `flex items-center justify-center py-2  cursor-pointer disabled:cursor-default rounded-full hover:opacity-90 ${clsx(
+    className = `flex items-center justify-center py-2 cursor-pointer disabled:cursor-default hover:opacity-90 ${clsx(
         {
             'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]':
                 variant === 'dark',
@@ -48,11 +50,11 @@ export default function Button({
     return (
         <>
             {props.href ? (
-                <Link href={props.href} className={ClassName} {...props}>
+                <Link href={props.href} className={className} {...props}>
                     {children}
                 </Link>
             ) : (
-                <button className={ClassName} {...props}>
+                <button className={className} {...props}>
                     {children}
                 </button>
             )}
