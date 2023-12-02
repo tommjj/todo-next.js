@@ -17,9 +17,16 @@ function Header({ className = '', showUserInformation = true }: HeaderProps) {
             setScroll(document.documentElement.scrollTop > 10);
         };
 
+        const handleWheel = (e: any) => {
+            console.log(e.deltaY);
+        };
+
         document.addEventListener('scroll', handleScroll);
+        document.addEventListener('wheel', handleWheel);
+
         return () => {
             document.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('wheel', handleWheel);
         };
     }, []);
 
