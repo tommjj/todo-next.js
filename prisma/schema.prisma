@@ -14,4 +14,47 @@ model User {
   id       String @id @default(uuid())
   name     String @unique
   password String
+  List     List[]
+}
+
+model List {
+  id     String @id @default(uuid())
+  name   String @db.VarChar(30)
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Task {
+  id             String         @id @default(uuid())
+  title          String         @db.VarChar(250)
+  Importent      Boolean        @default(false)
+  completed      Boolean        @default(false)
+  dueDate        DateTime       @default(now()) @db.Date
+  repeatInterval RepeatInterval @default(NONE)
+  repeatCount    Int?
+  note           String?        @db.VarChar(255)
+  MiniTask       MiniTask[]
+  level          Level?
+}
+
+model MiniTask {
+  id        String  @id @default(uuid())
+  title     String  @db.VarChar(255)
+  completed Boolean @default(false)
+  taskId    String
+  task      Task    @relation(fields: [taskId], references: [id])
+}
+
+enum Level {
+  EASY
+  MEDIUM
+  DIFFICULT
+}
+
+enum RepeatInterval {
+  NONE
+  DAYLY
+  WEEKLY
+  YEARLLY
+  MONTHLY
 }
