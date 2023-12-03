@@ -2,8 +2,8 @@
 
 import { z } from 'zod';
 import { createUser, getUser } from '@/lib/data';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { signIn } from '@/auth';
 
 const AccountSchema = z.object({
     username: z.string({ invalid_type_error: 'please enter username' }).max(29),
@@ -67,4 +67,19 @@ export async function createAccountAction(
     }
 
     redirect('/sign-in');
+}
+
+export async function signInAction(
+    privState: string | undefined,
+    formData: FormData
+) {
+    try {
+        await signIn('credentials', Object.fromEntries(formData));
+    } catch (error) {
+        if ((error as Error).message.includes('CredentialsSignin')) {
+            return 'CredentialSignin';
+        }
+        throw error;
+    }
+    return undefined;
 }

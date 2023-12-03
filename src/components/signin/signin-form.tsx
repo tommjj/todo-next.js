@@ -1,12 +1,12 @@
 'use client';
 
-//import { login } from '@/lib/action';
+import { signInAction } from '@/lib/action';
 import { useFormState, useFormStatus } from 'react-dom';
 import Button from '../ui/button';
 import Link from 'next/link';
 
 function SignInForm({ className }: { className?: String }) {
-    //const [code, action] = useFormState(login, undefined);
+    const [code, action] = useFormState(signInAction, undefined);
     const { pending } = useFormStatus();
 
     return (
@@ -18,13 +18,13 @@ function SignInForm({ className }: { className?: String }) {
                     Sign in
                 </h2>
                 <div id="error" className="text-red-400 text-center h-4 mt-3">
-                    {/* {code && 'Incorrect username or password!'}  */}
+                    {code && 'Incorrect username or password!'}
                 </div>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form
-                    // action={action}
+                    action={action}
                     className="space-y-6"
                     aria-describedby="error"
                 >
