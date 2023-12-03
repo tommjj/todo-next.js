@@ -22,19 +22,22 @@ model List {
   name   String @db.VarChar(30)
   userId String
   user   User   @relation(fields: [userId], references: [id])
+  Task   Task[]
 }
 
 model Task {
   id             String         @id @default(uuid())
   title          String         @db.VarChar(250)
-  Importent      Boolean        @default(false)
+  important      Boolean        @default(false)
   completed      Boolean        @default(false)
   dueDate        DateTime       @default(now()) @db.Date
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?
   note           String?        @db.VarChar(255)
-  MiniTask       MiniTask[]
+  miniTasks      MiniTask[]
   level          Level?
+  listId         String
+  list           List           @relation(fields: [listId], references: [id])
 }
 
 model MiniTask {
@@ -53,8 +56,8 @@ enum Level {
 
 enum RepeatInterval {
   NONE
-  DAYLY
+  DAILY
   WEEKLY
-  YEARLLY
+  YEARLY
   MONTHLY
 }
