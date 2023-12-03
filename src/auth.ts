@@ -4,16 +4,7 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 
 import { authConfig } from '@/auth.config';
-import db from '@/lib/db';
-
-async function getUser(username: string) {
-    try {
-        return await db.user.findUnique({ where: { name: username } });
-    } catch (error) {
-        console.log((error as Error).message);
-        return null;
-    }
-}
+import { getUser } from './lib/data';
 
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,

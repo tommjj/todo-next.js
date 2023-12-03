@@ -1,12 +1,12 @@
 'use client';
 
-//import { login } from '@/lib/action';
+import { createAccountAction } from '@/lib/action';
 import { useFormState, useFormStatus } from 'react-dom';
 import Button from '../ui/button';
 import Link from 'next/link';
 
 function SignUpForm({ className }: { className?: string }) {
-    //const [code, action] = useFormState(login, undefined);
+    const [code, action] = useFormState(createAccountAction, undefined);
     const { pending } = useFormStatus();
 
     return (
@@ -18,13 +18,13 @@ function SignUpForm({ className }: { className?: string }) {
                     Sign up
                 </h2>
                 <div id="error" className="text-red-400 text-center h-4 mt-3">
-                    {/* {code && 'Incorrect username or password!'} */}
+                    {code?.message}
                 </div>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form
-                    // action={action}
+                    action={action}
                     className="space-y-5"
                     aria-describedby="error"
                 >
@@ -42,7 +42,8 @@ function SignUpForm({ className }: { className?: string }) {
                                 name="username"
                                 required
                                 autoComplete="off"
-                                className="block dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500"
+                                className="block dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
+                                aria-invalid={!!code?.errors?.username}
                             />
                         </div>
                     </div>
@@ -58,10 +59,14 @@ function SignUpForm({ className }: { className?: string }) {
                         </div>
                         <div className="mt-2">
                             <input
+                                required
                                 id="password"
                                 type="password"
                                 name="password"
-                                className="block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500"
+                                className={`block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 ${
+                                    code?.errors?.password && 'ring-red-500'
+                                }`}
+                                aria-invalid={!!code?.errors?.password}
                             />
                         </div>
                     </div>
@@ -76,10 +81,14 @@ function SignUpForm({ className }: { className?: string }) {
                         </div>
                         <div className="mt-2">
                             <input
+                                required
                                 id="confirm"
                                 type="password"
                                 name="confirm"
-                                className="block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500"
+                                className={`block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 ${
+                                    code?.errors?.confirm && 'ring-red-600'
+                                }`}
+                                aria-invalid={!!code?.errors?.confirm}
                             />
                         </div>
                     </div>
