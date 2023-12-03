@@ -16,22 +16,20 @@ function Introduce() {
                             Your Perfect Assistant for Daily Task Management!
                         </h1>
 
-                        <p className="px-10 tracking-tight max-w-[340px] mx-auto sm:max-w-none sm:text-base lg:px-0 lg:text-base mt-7 lg:mt-10 lg:w-12/12 text-[#333] dark:text-white">
-                            <span className="p-0 sm:inline">
-                                {' '}
-                                With us, you can effortlessly create, organize,
-                                and efficiently track your to-do lists. We make
-                                managing your daily tasks a breeze.
-                            </span>
+                        <p className="px-10 tracking-tight max-w-[340px] mx-auto sm:max-w-none sm:text-base lg:px-0 lg:text-base mt-7 lg:mt-10 lg:w-12/12 text-[#333] dark:text-white ">
+                            {' '}
+                            With us, you can effortlessly create, organize, and
+                            efficiently track your to-do lists. We make managing
+                            your daily tasks a breeze.
                         </p>
                     </div>
 
-                    <div className="flex justify-center sm:mt-6 mb-5 lg:mb-0 lg:justify-start relative w-full lg:mt-3">
+                    <div className="flex justify-center sm:mt-6 mb-5 lg:mb-0 lg:justify-start relative w-full lg:mt-4">
                         <Button
                             variant="primary"
-                            className="group w-32 lg:w-36 pl-7"
+                            className="group w-44 lg:w-40 pl-7"
                         >
-                            START
+                            Get Started
                             <ArrowSmallRightIcon className="h-6 w-6 text-white group-hover:translate-x-1 transition-transform" />
                         </Button>
                     </div>
