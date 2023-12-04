@@ -44,6 +44,7 @@ export type Task = {
     miniTasks?: MiniTask[];
     level?: Level;
     listId: string;
+    order: number;
 };
 
 export type MiniTask = {

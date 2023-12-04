@@ -37,6 +37,7 @@ function SignInForm({ className }: { className?: String }) {
                         </label>
                         <div className="mt-2">
                             <input
+                                autoCapitalize="none"
                                 id="username"
                                 type="text"
                                 name="username"

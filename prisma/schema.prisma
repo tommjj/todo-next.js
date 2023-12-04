@@ -38,6 +38,7 @@ model Task {
   level          Level?
   listId         String
   list           List           @relation(fields: [listId], references: [id])
+  order          Int            @default(autoincrement())
 }
 
 model MiniTask {

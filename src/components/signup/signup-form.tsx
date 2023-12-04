@@ -37,6 +37,7 @@ function SignUpForm({ className }: { className?: string }) {
                         </label>
                         <div className="mt-2">
                             <input
+                                autoCapitalize="none"
                                 id="username"
                                 type="text"
                                 name="username"
