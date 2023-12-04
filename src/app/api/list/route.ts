@@ -1,22 +1,15 @@
 import { auth } from '@/auth';
+import { useAuth } from '@/lib/api.hook';
 import db from '@/lib/db';
 
 export async function POST() {
-    const user = await auth();
-    if (!user?.user?.name) {
-        return new Response(JSON.stringify({ message: 'sign in' }), {
-            status: 400,
-        });
-    }
+    const [user, response] = await useAuth();
+    if (response) return response;
 }
 
 export async function GET() {
-    const user = await auth();
-    if (!user?.user?.name) {
-        return new Response(JSON.stringify({ message: 'sign in' }), {
-            status: 400,
-        });
-    }
+    const [user, response] = await useAuth();
+    if (response) return response;
 
     const list = await db.list.findMany({
         select: {
@@ -25,7 +18,7 @@ export async function GET() {
         },
         where: {
             user: {
-                name: user.user?.name,
+                name: user,
             },
         },
     });
