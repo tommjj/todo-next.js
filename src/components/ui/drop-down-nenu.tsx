@@ -1,81 +1,109 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import clsx from 'clsx';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-export function DropdownMenu({ children }: { children: React.ReactNode }) {
+function useDropdownMenu() {
     const ref = useRef<HTMLDivElement>(null);
-    const [openMenu, setOpenMenu] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleOpen = useCallback(() => {
+        setIsOpen(true);
+    }, []);
+
+    const handleClose = useCallback(() => {
+        setIsOpen(false);
+    }, []);
+
+    const handleToggle = useCallback(() => {
+        setIsOpen((privState) => !privState);
+    }, []);
 
     useEffect(() => {
-        const childNodes = ref.current?.childNodes;
+        if (!ref.current || !isOpen) return;
 
-        if (!childNodes) return;
+        const contentElement = ref.current.querySelector(
+            '#DropdownMenuContent'
+        ) as HTMLElement;
 
-        (Object.values(childNodes) as HTMLElement[]).forEach((item) => {
-            if (item.id === 'DropdownMenuContent') {
-                if (openMenu) {
-                    item.style.cssText = `display: block; left: 50%; transform: translateX(-50%);`;
+        if (!contentElement) return;
 
-                    const BoundingClientRect = item.getBoundingClientRect();
-                    const isOnTop =
-                        BoundingClientRect.y + BoundingClientRect.height >
-                        window.innerHeight;
+        contentElement.style.cssText =
+            'display: block; left: 50%; transform: translateX(-50%);';
 
-                    const isLeft = BoundingClientRect.x < 0;
-                    const isRight =
-                        BoundingClientRect.x + BoundingClientRect.width >
-                        window.innerWidth;
+        const boundingRect = contentElement.getBoundingClientRect();
 
-                    item.style.cssText = `display: block; ${
-                        isOnTop ? `bottom: 100%;` : 'top: 100%;'
-                    } ${isLeft ? 'left: 0;' : ''} ${
-                        isRight ? 'right: 0;' : ''
-                    } ${
-                        isLeft ||
-                        isRight ||
-                        `left: 50%; transform: translateX(-50%);`
-                    }`;
-                    document.body.style.cssText = `pointer-events: none; touch-action: none;`;
-                } else {
-                    item.style.cssText = '';
-                    document.body.style.cssText = 'pointer-events: auto;';
-                }
-            }
-            if (item.id === 'DropdownMenuTrigger') {
-                item.onclick = (e: any) => {
-                    e.stopPropagation();
-                    setOpenMenu(!openMenu);
-                };
-            }
-        });
-    }, [openMenu]);
+        const isOnTop =
+            boundingRect.y + boundingRect.height > window.innerHeight;
+        const isLeft = boundingRect.x < 0;
+        const isRight = boundingRect.x + boundingRect.width > window.innerWidth;
+
+        contentElement.style.cssText = `display: block; ${clsx({
+            'bottom: 100%;': isOnTop,
+            'top: 100%;': !isOnTop,
+            'left: 0;': isLeft,
+            'right: 0;': isRight,
+            'left: 50%; transform: translateX(-50%);': !(isLeft || isRight),
+        })}
+        `;
+
+        document.body.style.cssText = `pointer-events: none; touch-action: none;`;
+
+        return () => {
+            contentElement.style.cssText = '';
+            document.body.style.cssText = '';
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         function preventScroll(e: any) {
             e.preventDefault();
             e.stopPropagation();
-
             return false;
         }
 
         const handleClick = (e: MouseEvent) => {
             document.body.style.cssText = '';
-            setOpenMenu(false);
+            handleClose();
         };
 
-        if (openMenu) {
-            window.addEventListener('wheel', preventScroll, {
-                passive: false,
-            });
+        if (!isOpen) return;
+        window.addEventListener('wheel', preventScroll, {
+            passive: false,
+        });
 
+        window.addEventListener('click', handleClick);
+
+        return () => {
             window.addEventListener('click', handleClick);
+            window.removeEventListener('wheel', preventScroll);
+        };
+    }, [isOpen, handleClose]);
 
-            return () => {
-                window.addEventListener('click', handleClick);
-                window.removeEventListener('wheel', preventScroll);
-            };
-        }
-    }, [openMenu]);
+    return {
+        isOpen,
+        handleClose,
+        handleOpen,
+        handleToggle,
+        ref,
+    };
+}
+
+export function DropdownMenu({ children }: { children: React.ReactNode }) {
+    const { ref, handleToggle } = useDropdownMenu();
+
+    useEffect(() => {
+        const triggerElement = ref.current?.querySelector(
+            '#DropdownMenuTrigger'
+        ) as HTMLElement;
+
+        if (!triggerElement) return;
+
+        triggerElement.onclick = (e: any) => {
+            e.stopPropagation();
+            handleToggle();
+        };
+    }, [ref, handleToggle]);
 
     return (
         <div className="relative w-fit " ref={ref}>
@@ -109,15 +137,24 @@ export function DropdownMenuContent({
         <div
             className={`hidden absolute z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className}`}
             id="DropdownMenuContent"
-            style={{ pointerEvents: 'auto' }}
         >
             {children}
         </div>
     );
 }
 
-export function DropdownMenuItem({ children }: { children: React.ReactNode }) {
-    return <div style={{ pointerEvents: 'auto' }}>{children}</div>;
+export function DropdownMenuItem({
+    children,
+    className = '',
+}: {
+    children: React.ReactNode;
+    className?: string;
+}) {
+    return (
+        <div className={className} style={{ pointerEvents: 'auto' }}>
+            {children}
+        </div>
+    );
 }
 
 export function DropdownMenuLabel() {}
