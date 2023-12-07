@@ -1,5 +1,7 @@
+import Logo from '@/components/logo';
 import Button from '@/components/ui/button';
 import Header from '@/components/ui/header';
+import UserButton from '@/components/ui/user-button';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 function Introduce() {
@@ -12,7 +14,7 @@ function Introduce() {
                         <p className="hidden lg:inline font-normal lg:mb-0 text-[#444] dark:text-white text-xl md:text-base">
                             Welcome to the ToDo App!
                         </p>
-                        <h1 className="text-3xl tracking-tighter lg:mt-0 text-[#222] dark:text-white font-semibold lg:top-0 md:text-4xl md:font-semibold lg:text-5xl">
+                        <h1 className="text-3xl tracking-tighter lg:mt-0 text-[#333] dark:text-white font-semibold lg:top-0 md:text-4xl md:font-semibold lg:text-5xl">
                             Your Perfect Assistant for Daily Task Management!
                         </h1>
 
@@ -81,10 +83,13 @@ function Introduce() {
 export default function Home() {
     return (
         <>
-            <Header className="backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6" />
-            <main className="min-h-screen bg-gradient-to-br from-white to-90% to-[#e9eaf0] overflow-hidden -mt-16 dark:from-[#09001B] dark:to-[#040130]">
+            <Header className="backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6">
+                <Logo />
+                <UserButton />
+            </Header>
+            <main className="min-h-screen w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                {/* <section className="w-screen h-screen"></section> */}
+                <section className="w-full h-screen"></section>
             </main>
         </>
     );

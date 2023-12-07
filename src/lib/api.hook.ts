@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 
 export async function useAuth(): Promise<
-    [string | undefined, Response | undefined]
+    [undefined, Response] | [string, undefined]
 > {
     const user = await auth();
 

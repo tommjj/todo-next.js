@@ -15,7 +15,7 @@ export default function RootLayout(props: {
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <body
-                className={`${inter.className} w-screen overflow-x-hidden overflow-y-hidden bg-white dark:bg-[#09090B] dark:text-white`}
+                className={`${inter.className} w-full overflow-x-hidden bg-white dark:bg-[#09090B] dark:text-white`}
             >
                 <Providers>
                     {props.children}

@@ -1,4 +1,3 @@
-import { auth } from '@/auth';
 import { useAuth } from '@/lib/api.hook';
 import db from '@/lib/db';
 
@@ -8,13 +7,22 @@ export async function POST() {
 }
 
 export async function GET() {
-    const [user, response] = await useAuth();
-    if (response) return response;
+    const [user, err] = await useAuth();
+    if (err) return err;
 
-    const list = await db.list.findMany({
+    const lists = await db.list.findMany({
         select: {
             id: true,
             name: true,
+            _count: {
+                select: {
+                    Task: {
+                        where: {
+                            completed: true,
+                        },
+                    },
+                },
+            },
         },
         where: {
             user: {
@@ -23,7 +31,7 @@ export async function GET() {
         },
     });
 
-    return new Response(JSON.stringify(list), {
+    return new Response(JSON.stringify({ data: { ...lists } }), {
         status: 200,
     });
 }
