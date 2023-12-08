@@ -19,6 +19,7 @@ function useDropdownMenu() {
         setIsOpen((privState) => !privState);
     }, []);
 
+    //su ly dieu chich vi chi cua menu
     useEffect(() => {
         if (!ref.current || !isOpen) return;
 

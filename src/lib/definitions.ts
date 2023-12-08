@@ -1,19 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
-import db from './db';
-
-export enum Level {
-    'EASY',
-    'MEDIUM',
-    'DIFFICULT',
-}
-
-export enum RepeatInterval {
-    'NONE',
-    'DAILY',
-    'WEEKLY',
-    'YEARLY',
-    'MONTHLY',
-}
+import { $Enums } from '@prisma/client';
 
 export type Account = {
     username: string;
@@ -30,6 +15,7 @@ export type List = {
     id: string;
     name: string;
     userId: string;
+    tasks?: Task[];
 };
 
 export type Task = {
@@ -38,11 +24,11 @@ export type Task = {
     important: boolean;
     completed: boolean;
     dueDate: Date;
-    repeatInterval: RepeatInterval;
-    repeatCount?: number;
-    note?: string;
-    miniTasks?: MiniTask[];
-    level?: Level;
+    repeatInterval: $Enums.RepeatInterval;
+    repeatCount: number | null;
+    note: string | null;
+    miniTasks: MiniTask[];
+    level: $Enums.Level | null;
     listId: string;
     order: number;
 };
