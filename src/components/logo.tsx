@@ -8,6 +8,7 @@ export default function Logo() {
         <Link
             className="flex h-12 justify-center items-center w-32 text-3xl dark:text-white"
             href={'/'}
+            scroll={false}
         >
             <ArrowsPointingOutIcon />
             <span className="font-semibold">LOGO</span>

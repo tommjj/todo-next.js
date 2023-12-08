@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 function SignInForm({ className }: { className?: String }) {
     const [code, action] = useFormState(signInAction, undefined);
-    const { pending } = useFormStatus();
 
     return (
         <div
@@ -77,14 +76,7 @@ function SignInForm({ className }: { className?: String }) {
                     </div>
 
                     <div>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            aria-disabled={pending}
-                            className="w-full aria-disabled:opacity-75  py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                            Sign in
-                        </Button>
+                        <SignInButton />
                     </div>
                 </form>
 
@@ -100,6 +92,20 @@ function SignInForm({ className }: { className?: String }) {
                 </p>
             </div>
         </div>
+    );
+}
+
+function SignInButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button
+            variant="primary"
+            type="submit"
+            aria-disabled={pending}
+            className="w-full aria-disabled:opacity-75  py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:cursor-not-allowed"
+        >
+            Sign in
+        </Button>
     );
 }
 

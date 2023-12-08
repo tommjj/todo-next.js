@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 function SignUpForm({ className }: { className?: string }) {
     const [code, action] = useFormState(createAccountAction, undefined);
-    const { pending } = useFormStatus();
 
     return (
         <div
@@ -95,14 +94,7 @@ function SignUpForm({ className }: { className?: string }) {
                     </div>
 
                     <div>
-                        <Button
-                            variant="primary"
-                            type="submit"
-                            aria-disabled={pending}
-                            className="w-full aria-disabled:opacity-75 mt-12 py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D6EFD]"
-                        >
-                            Sign up
-                        </Button>
+                        <SignUpButton />
                     </div>
                 </form>
                 <p className="mt-10 text-center text-sm text-gray-500 dark:text-white">
@@ -117,6 +109,21 @@ function SignUpForm({ className }: { className?: string }) {
                 </p>
             </div>
         </div>
+    );
+}
+
+function SignUpButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <Button
+            variant="primary"
+            type="submit"
+            aria-disabled={pending}
+            className="w-full aria-disabled:opacity-75 aria-disabled:cursor-not-allowed mt-12 py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D6EFD]"
+        >
+            Sign up
+        </Button>
     );
 }
 
