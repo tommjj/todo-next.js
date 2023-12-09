@@ -11,18 +11,19 @@ export const authConfig = {
             const isLoggedIn = !!auth?.user;
 
             const isOnTasks = nextUrl.pathname.startsWith('/tasks');
-            const isSignUp = nextUrl.pathname.startsWith('/sign-up');
             const isOnHomePage = nextUrl.pathname === '/';
+
             if (isOnHomePage) return true;
 
-            if (isSignUp) return true;
-
-            if (isOnTasks && isLoggedIn) {
-                return true;
+            if (isOnTasks) {
+                if (isLoggedIn) {
+                    return true;
+                }
+                return false;
             } else if (isLoggedIn) {
                 return Response.redirect(new URL('/tasks', nextUrl));
             }
-            return false;
+            return true;
         },
     },
 } satisfies NextAuthConfig;

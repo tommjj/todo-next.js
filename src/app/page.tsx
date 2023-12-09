@@ -28,6 +28,8 @@ function Introduce() {
                     <div></div>
                     <div className="flex justify-center sm:mt-6 mb-5 lg:mb-0 lg:justify-start relative w-full lg:mt-4">
                         <Button
+                            href="/sign-up"
+                            scroll={false}
                             variant="primary"
                             className="group w-44 lg:w-40 pl-7"
                         >
