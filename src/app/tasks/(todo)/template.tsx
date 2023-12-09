@@ -1,17 +1,11 @@
 import AppHeader from '@/components/ui/app-header';
 
-function Template({
-    children,
-    details,
-}: {
-    children: React.ReactNode;
-    details: React.ReactNode;
-}) {
+function Template({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex w-screen h-screen pt-14">
             <AppHeader />
             <aside className="">
-                <nav className="w-[290px] h-screen absolute top-0 left-0 sm:w-[200px] md:relative lg:w-[290px]">
+                <nav className="w-[290px] h-full absolute top-0 left-0 sm:w-[200px] md:relative lg:w-[290px]">
                     <ul className="flex flex-col">
                         <li>1</li>
                         <li>2</li>
