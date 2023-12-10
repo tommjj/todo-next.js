@@ -5,10 +5,12 @@ function Template({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex w-screen h-screen pt-14">
             <AppHeader />
-            <aside className="">
-                <SideNav />
-            </aside>
-            <div className="flex bg-red-400 grow">{children}</div>
+            <div className="flex w-full h-full relative">
+                <aside className="">
+                    <SideNav />
+                </aside>
+                <div className="flex bg-red-400 grow">{children}</div>
+            </div>
         </div>
     );
 }
