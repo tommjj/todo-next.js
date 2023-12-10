@@ -3,18 +3,20 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 
+export type Variant =
+    | ''
+    | 'link'
+    | 'ghost'
+    | 'primary'
+    | 'warning'
+    | 'success'
+    | 'secondary'
+    | 'destructive'
+    | 'outline'
+    | 'dark';
+
 interface Button extends React.ButtonHTMLAttributes<{}> {
-    variant?:
-        | ''
-        | 'primary'
-        | 'warning'
-        | 'success'
-        | 'secondary'
-        | 'destructive'
-        | 'outline'
-        | 'ghost'
-        | 'dark'
-        | 'link';
+    variant?: Variant;
     href?: string;
     roundedFull?: boolean;
     scroll?: boolean;

@@ -1,5 +1,5 @@
 import { auth, signOut } from '@/auth';
-import Button from './button';
+import Button, { Variant } from './button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
 async function UserButton() {
     const session = await auth();
 
-    const isSignIn = !!session?.user;
+    const isSignIn = !!session?.user?.name;
 
     if (!isSignIn) {
         return (
@@ -35,11 +35,23 @@ async function UserButton() {
         );
     }
 
+    return <UserMenu name={session.user?.name}></UserMenu>;
+}
+
+export function UserMenu({
+    name = '',
+    className = '',
+    variant = 'ghost',
+}: {
+    name?: string | null;
+    className?: string;
+    variant?: Variant;
+}) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <Button variant="ghost" className="px-2">
-                    {session.user?.name}
+                <Button variant={variant} className={`px-2 ${className}`}>
+                    {name}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-[#fafafb] dark:bg-[#040130]">

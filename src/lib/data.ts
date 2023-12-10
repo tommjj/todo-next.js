@@ -2,7 +2,8 @@ import type { Account } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
 import db from '@/lib/db';
 import { getSessionUser } from './auth';
-import { $Enums, Prisma } from '@prisma/client';
+import { $Enums } from '@prisma/client';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function createUser({ username, password }: Account) {
     const hashPassword = await bcrypt.hash(password, 10);
@@ -100,4 +101,23 @@ export async function getList(
     if (!list) return [undefined, new Error('not found')];
 
     return [list, undefined];
+}
+
+export type Lists = { id: string; name: string }[];
+
+export async function getLists(): Promise<
+    [undefined, Error] | [Lists, undefined]
+> {
+    const user = await getSessionUser();
+
+    if (!user) {
+        return [undefined, new Error('miss user')];
+    }
+
+    const lists = await db.list.findMany({
+        select: { id: true, name: true },
+        where: { userId: user.id },
+    });
+
+    return [lists, undefined];
 }

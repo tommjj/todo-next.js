@@ -1,5 +1,5 @@
 function DetailsPage({ searchParams }: { searchParams?: { q?: string } }) {
-    if (!searchParams?.q) return null;
+    if (searchParams?.q === undefined) return null;
 
     return <h1>search {searchParams?.q}</h1>;
 }

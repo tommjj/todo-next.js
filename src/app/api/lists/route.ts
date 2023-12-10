@@ -16,7 +16,7 @@ export async function GET() {
             name: true,
             _count: {
                 select: {
-                    Task: {
+                    tasks: {
                         where: {
                             completed: true,
                         },
