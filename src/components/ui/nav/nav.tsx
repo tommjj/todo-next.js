@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import CreateList from '../create-list';
 
 function Nav({ lists }: { lists: Lists }) {
     const isOpen = useStore((state) => state.isOpenNav);
@@ -30,11 +31,15 @@ function Nav({ lists }: { lists: Lists }) {
                 { hidden: !isOpen }
             )}`}
         >
-            <div className="w-[290px] sm:w-full bg-white dark:bg-[#111]  inset-0">
-                <div className="h-14 flex items-center px-3">
-                    <button onClick={handleToggleNav}>
+            <div className="w-[290px] sm:w-full bg-white dark:bg-[#111] inset-0">
+                <div className="h-14 flex items-center justify-between px-3">
+                    <button
+                        onClick={handleToggleNav}
+                        aria-label="toggle side nav"
+                    >
                         <Bars3Icon className="h-6 cursor-pointer" />
                     </button>
+                    <CreateList />
                 </div>
                 <NavLink lists={lists} />
             </div>
