@@ -2,12 +2,15 @@
 
 import { Lists } from '@/lib/data';
 import useStore from '@/store/store';
-import { Bars3Icon, ListBulletIcon } from '@heroicons/react/24/solid';
+import {
+    Bars3Icon,
+    ListBulletIcon,
+    EllipsisVerticalIcon,
+} from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import CreateList from '../create-list/create-list';
 import CreateListForm from '../create-list/create-list-form';
 
 function Nav({ lists }: { lists: Lists }) {
@@ -38,7 +41,10 @@ function Nav({ lists }: { lists: Lists }) {
                         onClick={handleToggleNav}
                         aria-label="toggle side nav"
                     >
-                        <Bars3Icon className="h-6 cursor-pointer" />
+                        <Bars3Icon
+                            className="h-6 cursor-pointer"
+                            strokeWidth={1}
+                        />
                     </button>
                 </div>
                 <NavLink lists={lists} />
@@ -54,6 +60,33 @@ function Nav({ lists }: { lists: Lists }) {
     );
 }
 
+export function NavItem({
+    active,
+    list,
+}: {
+    active: boolean;
+    list: { id: string; name: string };
+}) {
+    return (
+        <Link
+            href={`/tasks/${list.id}`}
+            className={`w-full hover:opacity-90 h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
+                {
+                    'font-light': !active,
+                    'bg-[#0D6EFD20] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
+                        active,
+                }
+            )}`}
+        >
+            <div className="flex">
+                <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />
+                {list.name}
+            </div>
+            {active && <EllipsisVerticalIcon className="h-6" strokeWidth={1} />}
+        </Link>
+    );
+}
+
 export function NavLink({ lists }: { lists: Lists }) {
     const pathname = usePathname();
 
@@ -61,18 +94,10 @@ export function NavLink({ lists }: { lists: Lists }) {
         <ul className="flex flex-col">
             {lists.map((item) => (
                 <li key={item.id}>
-                    <Link
-                        href={`/tasks/${item.id}`}
-                        className={`w-full hover:opacity-90 h-12 px-4 flex items-center relative ${clsx(
-                            {
-                                'bg-[#0D6EFD20] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px]':
-                                    `/tasks/${item.id}` === pathname,
-                            }
-                        )}`}
-                    >
-                        <ListBulletIcon className="h-6 mr-4" />
-                        {item.name}
-                    </Link>
+                    <NavItem
+                        active={`/tasks/${item.id}` === pathname}
+                        list={item}
+                    />
                 </li>
             ))}
         </ul>
