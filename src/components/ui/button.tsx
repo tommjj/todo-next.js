@@ -28,9 +28,14 @@ export default function Button({
     disabled = false,
     roundedFull = false,
     variant = '',
-
     ...props
 }: Button) {
+    let Comp: any = 'button';
+
+    if (props.href) {
+        Comp = Link;
+    }
+
     className = `flex items-center justify-center py-2 cursor-pointer disabled:cursor-default hover:opacity-90 ${clsx(
         {
             'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]':
@@ -52,16 +57,8 @@ export default function Button({
     )} ${className}`;
 
     return (
-        <>
-            {props.href ? (
-                <Link href={props.href} className={className} {...props}>
-                    {children}
-                </Link>
-            ) : (
-                <button className={className} {...props}>
-                    {children}
-                </button>
-            )}
-        </>
+        <Comp className={className} {...props}>
+            {children}
+        </Comp>
     );
 }

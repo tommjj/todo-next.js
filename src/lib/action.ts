@@ -4,6 +4,9 @@ import { z } from 'zod';
 import { createUser, getUser } from '@/lib/data';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
+import { getSessionUser } from './auth';
+import db from './db';
+import { revalidatePath } from 'next/cache';
 
 const AccountSchema = z.object({
     username: z.string({ invalid_type_error: 'please enter username' }).max(29),
@@ -82,4 +85,26 @@ export async function signInAction(
         throw error;
     }
     return undefined;
+}
+
+export async function createList(formData: FormData) {
+    const user = await getSessionUser();
+
+    if (!user) return;
+
+    const listParse = z
+        .object({
+            listName: z.string(),
+        })
+        .safeParse(Object.fromEntries(formData));
+
+    if (!listParse.success) return;
+
+    await db.list.create({
+        data: {
+            name: listParse.data.listName,
+            userId: user.id,
+        },
+    });
+    revalidatePath('/tasks', 'layout');
 }
