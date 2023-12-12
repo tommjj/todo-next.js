@@ -2,7 +2,7 @@
 
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
-import Button from './button';
+import CreateListForm from './create-list-form';
 
 function CreateList() {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,17 +23,7 @@ function CreateList() {
                 </div>
             ) : (
                 <div className="flex-grow pl-1">
-                    <form className="flex items-center w-full">
-                        <input
-                            type="text"
-                            name="listName"
-                            placeholder="name.."
-                            className="flex-grow w-12 mx-1 h-9 px-2 outline-none"
-                        ></input>
-                        <Button variant="primary" className="w-14 h-9">
-                            add
-                        </Button>
-                    </form>
+                    <CreateListForm />
                 </div>
             )}
         </>
