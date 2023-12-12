@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { createUser, getUser } from '@/lib/data';
+import { createUser, getList, getLists, getUser } from '@/lib/data';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
@@ -107,4 +107,32 @@ export async function createList(formData: FormData) {
         },
     });
     revalidatePath('/tasks', 'layout');
+}
+
+export async function deleteList(listId: string, formData: FormData) {
+    const user = await getSessionUser();
+
+    if (!user) return;
+
+    const [lists, err] = await getLists();
+
+    if (err) {
+        return;
+    }
+
+    if (lists.length === 1) {
+        return;
+    }
+
+    try {
+        await db.list.delete({
+            where: {
+                userId: user.id,
+                id: listId,
+            },
+        });
+    } catch (error) {}
+    revalidatePath('/tasks', 'layout');
+
+    redirect(`/tasks/${lists[0].id === listId ? lists[1].id : lists[0].id}`);
 }

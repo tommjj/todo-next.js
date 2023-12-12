@@ -30,7 +30,7 @@ function useDropdownMenu() {
         if (!contentElement) return;
 
         contentElement.style.cssText =
-            'display: block; left: 50%; transform: translateX(-50%);';
+            'display: block; opacity: 0; left: 50%; transform: translateX(-50%); ';
 
         const boundingRect = contentElement.getBoundingClientRect();
 
@@ -39,7 +39,7 @@ function useDropdownMenu() {
         const isLeft = boundingRect.x < 0;
         const isRight = boundingRect.x + boundingRect.width > window.innerWidth;
 
-        contentElement.style.cssText = `display: block; ${clsx({
+        contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
             'bottom: 100%;': isOnTop,
             'top: 100%;': !isOnTop,
             'left: 0;': isLeft,
@@ -100,9 +100,11 @@ export function DropdownMenu({ children }: { children: React.ReactNode }) {
 
         if (!triggerElement) return;
 
-        triggerElement.onclick = (e: any) => {
+        triggerElement.onclick = (e) => {
             e.stopPropagation();
+
             handleToggle();
+            return false;
         };
     }, [ref, handleToggle]);
 

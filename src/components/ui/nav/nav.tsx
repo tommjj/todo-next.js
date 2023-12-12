@@ -12,6 +12,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import CreateListForm from '../create-list/create-list-form';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '../drop-down-nenu';
+import Button from '../button';
+import { deleteList } from '@/lib/action';
 
 function Nav({ lists }: { lists: Lists }) {
     const isOpen = useStore((state) => state.isOpenNav);
@@ -31,7 +39,7 @@ function Nav({ lists }: { lists: Lists }) {
 
     return (
         <nav
-            className={`flex w-full h-full absolute overflow-hidden top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r ${clsx(
+            className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r ${clsx(
                 { hidden: !isOpen }
             )}`}
         >
@@ -67,10 +75,12 @@ export function NavItem({
     active: boolean;
     list: { id: string; name: string };
 }) {
+    const action = deleteList.bind(null, list.id);
+
     return (
         <Link
             href={`/tasks/${list.id}`}
-            className={`w-full hover:opacity-90 h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
+            className={`w-full h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
                 {
                     'font-light': !active,
                     'bg-[#0D6EFD20] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
@@ -82,7 +92,35 @@ export function NavItem({
                 <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />
                 {list.name}
             </div>
-            {active && <EllipsisVerticalIcon className="h-6" strokeWidth={1} />}
+            {active && (
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        return false;
+                    }}
+                >
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <EllipsisVerticalIcon
+                                className="h-6"
+                                strokeWidth={1}
+                            />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="transition-all duration-75">
+                            <DropdownMenuItem>
+                                <form action={action}>
+                                    <button
+                                        type="submit"
+                                        className="px-3 py-1 text-red-600 "
+                                    >
+                                        delete
+                                    </button>
+                                </form>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
         </Link>
     );
 }
