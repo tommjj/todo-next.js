@@ -6,7 +6,7 @@ function Template({ children }: { children: React.ReactNode }) {
         <div className="flex w-screen h-screen pt-14">
             <AppHeader />
             <div className="flex w-full h-full relative">
-                <aside className="">
+                <aside>
                     <SideNav />
                 </aside>
                 <div className="flex bg-red-400 grow">{children}</div>

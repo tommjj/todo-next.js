@@ -100,13 +100,14 @@ export async function createList(formData: FormData) {
 
     if (!listParse.success) return;
 
-    await db.list.create({
+    const list = await db.list.create({
         data: {
             name: listParse.data.listName,
             userId: user.id,
         },
     });
     revalidatePath('/tasks', 'layout');
+    redirect(`/tasks/${list.id}`);
 }
 
 export async function deleteList(listId: string, formData: FormData) {

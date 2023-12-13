@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Providers } from '@/components/providers';
 import { inter } from '../components/font';
+
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,9 +15,7 @@ export default function RootLayout(props: {
 }) {
     return (
         <html lang="en" suppressHydrationWarning={true}>
-            <body
-                className={`${inter.className} w-full overflow-x-hidden bg-white dark:bg-[#09090B] dark:text-white`}
-            >
+            <body className={`${inter.className} w-full overflow-x-hidden`}>
                 <Providers>
                     {props.children}
                     {props.modal}

@@ -1,4 +1,5 @@
 import Logo from '@/components/logo';
+import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 import Button from '@/components/ui/button';
 import Header from '@/components/ui/header';
 import UserButton from '@/components/ui/user-button';
@@ -85,7 +86,7 @@ function Introduce() {
 export default function Home() {
     return (
         <>
-            <Header className="backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6">
+            <Header className="backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6 ">
                 <Logo />
                 <UserButton />
             </Header>

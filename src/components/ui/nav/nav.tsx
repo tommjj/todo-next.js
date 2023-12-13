@@ -43,8 +43,8 @@ function Nav({ lists }: { lists: Lists }) {
                 { hidden: !isOpen }
             )}`}
         >
-            <div className="w-[290px] md:w-full bg-white dark:bg-[#111] inset-0">
-                <div className="h-14 flex items-center justify-between px-4">
+            <div className="w-[290px] md:w-ful inset-0 dark:bg-[#111]">
+                <div className="h-14 flex items-center justify-between px-4 ">
                     <button
                         onClick={handleToggleNav}
                         aria-label="toggle side nav"
