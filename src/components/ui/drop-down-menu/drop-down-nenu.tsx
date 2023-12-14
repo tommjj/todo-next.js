@@ -36,8 +36,9 @@ function useDropdownMenu() {
 
         const isOnTop =
             boundingRect.y + boundingRect.height > window.innerHeight;
-        const isLeft = boundingRect.x < 0;
-        const isRight = boundingRect.x + boundingRect.width > window.innerWidth;
+        const isLeft = boundingRect.x < 25;
+        const isRight =
+            boundingRect.x + boundingRect.width > window.innerWidth - 25;
 
         contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
             'bottom: 100%;': isOnTop,

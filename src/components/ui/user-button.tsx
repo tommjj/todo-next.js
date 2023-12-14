@@ -5,7 +5,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from './drop-down-nenu';
+} from './drop-down-menu/drop-down-nenu';
 import ThemeSelector from './theme-selection';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
 

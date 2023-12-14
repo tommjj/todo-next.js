@@ -9,7 +9,7 @@ function Template({ children }: { children: React.ReactNode }) {
                 <aside>
                     <SideNav />
                 </aside>
-                <div className="flex bg-red-400 grow">{children}</div>
+                <div className="flex grow">{children}</div>
             </div>
         </div>
     );

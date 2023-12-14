@@ -6,6 +6,7 @@ import {
     Bars3Icon,
     ListBulletIcon,
     EllipsisVerticalIcon,
+    TrashIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -17,8 +18,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '../drop-down-nenu';
-import Button from '../button';
+} from '../drop-down-menu/drop-down-nenu';
 import { deleteList } from '@/lib/action';
 
 function Nav({ lists }: { lists: Lists }) {
@@ -43,7 +43,7 @@ function Nav({ lists }: { lists: Lists }) {
                 { hidden: !isOpen }
             )}`}
         >
-            <div className="w-[290px] md:w-ful inset-0 dark:bg-[#111]">
+            <div className="w-[290px] md:w-ful inset-0 bg-white dark:bg-[#111]">
                 <div className="h-14 flex items-center justify-between px-4 ">
                     <button
                         onClick={handleToggleNav}
@@ -82,8 +82,9 @@ export function NavItem({
             href={`/tasks/${list.id}`}
             className={`w-full h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
                 {
-                    'font-light': !active,
-                    'bg-[#0D6EFD20] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
+                    'font-light hover:bg-gray-100 dark:hover:bg-[#222]':
+                        !active,
+                    'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
                         active,
                 }
             )}`}
@@ -111,9 +112,10 @@ export function NavItem({
                                 <form action={action}>
                                     <button
                                         type="submit"
-                                        className="px-3 py-1 text-red-600 "
+                                        className="w-36 px-3 py-1 text-red-600 flex justify-center items-center"
                                     >
-                                        delete
+                                        <TrashIcon className="h-4 mr-2" />
+                                        delete list
                                     </button>
                                 </form>
                             </DropdownMenuItem>

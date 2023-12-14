@@ -14,7 +14,7 @@ const useStore = create<Data & Action>()((set) => ({
     isOpenNav: true,
     handleToggleNav: () => set((state) => ({ isOpenNav: !state.isOpenNav })),
     handleCloseNav: () => set((state) => ({ isOpenNav: false })),
-    handleOpenNav: () => set((state) => ({ isOpenNav: false })),
+    handleOpenNav: () => set((state) => ({ isOpenNav: true })),
 }));
 
 export default useStore;

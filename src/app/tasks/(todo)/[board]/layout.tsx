@@ -11,7 +11,7 @@ function Layout({
 }) {
     return (
         <>
-            <main className="grow">{children}</main>
+            <main className="w-full h-full flex flex-col">{children}</main>
             <aside>
                 {details} {search}
             </aside>

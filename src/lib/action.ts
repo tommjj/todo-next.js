@@ -135,5 +135,9 @@ export async function deleteList(listId: string, formData: FormData) {
     } catch (error) {}
     revalidatePath('/tasks', 'layout');
 
-    redirect(`/tasks/${lists[0].id === listId ? lists[1].id : lists[0].id}`);
+    const deleteListIndex = lists.findIndex((e) => e.id === listId);
+
+    redirect(
+        `/tasks/${lists[deleteListIndex === 0 ? 1 : deleteListIndex - 1].id}`
+    );
 }
