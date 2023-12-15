@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { createUser, getLists, getUser } from '@/lib/data';
+import { createUser, getList, getLists, getUser } from '@/lib/data';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
@@ -122,9 +122,22 @@ export async function deleteList(listId: string, formData: FormData) {
     if (lists.length === 1) return;
 
     try {
+        await db.miniTask.deleteMany({
+            where: {
+                task: {
+                    listId: listId,
+                },
+            },
+        });
+
+        await db.task.deleteMany({
+            where: {
+                listId: listId,
+            },
+        });
+
         await db.list.delete({
             where: {
-                userId: user.id,
                 id: listId,
             },
         });
