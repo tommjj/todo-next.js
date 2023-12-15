@@ -1,5 +1,3 @@
-// import { createPortal } from 'react-dom';
-
 function Layout({
     children,
     details,
@@ -12,9 +10,8 @@ function Layout({
     return (
         <>
             <main className="w-full h-full flex flex-col">{children}</main>
-            <aside>
-                {details} {search}
-            </aside>
+            <aside>{details}</aside>
+            {search}
         </>
     );
 }

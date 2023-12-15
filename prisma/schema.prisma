@@ -30,6 +30,7 @@ model Task {
   title          String         @db.VarChar(250)
   important      Boolean        @default(false)
   completed      Boolean        @default(false)
+  createAt       DateTime       @default(now()) @db.Date
   dueDate        DateTime       @default(now()) @db.Date
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?

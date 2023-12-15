@@ -27,7 +27,7 @@ export type Task = {
     repeatInterval: $Enums.RepeatInterval;
     repeatCount: number | null;
     note: string | null;
-    miniTasks: MiniTask[];
+    miniTasks?: MiniTask[];
     level: $Enums.Level | null;
     listId: string;
     order: number;
@@ -38,4 +38,11 @@ export type MiniTask = {
     title: string;
     completed: boolean;
     taskId: string;
+};
+
+export type ListWithTasks = {
+    id: string;
+    name: string;
+    userId: string;
+    tasks?: Task[];
 };

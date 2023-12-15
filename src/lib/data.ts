@@ -1,8 +1,8 @@
-import type { Account } from '@/lib/definitions';
+import type { Account, ListWithTasks } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
 import db from '@/lib/db';
 import { getSessionUser } from './auth';
-import { $Enums } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function createUser({ username, password }: Account) {
@@ -34,73 +34,44 @@ export async function getUser(username: string) {
     }
 }
 
-type list = {
-    id: string;
-    name: string;
-    tasks: ({
-        miniTasks: {
-            id: string;
-            title: string;
-            completed: boolean;
-            taskId: string;
-        }[];
-    } & {
-        id: string;
-        title: string;
-        important: boolean;
-        completed: boolean;
-        dueDate: Date;
-        repeatInterval: $Enums.RepeatInterval;
-        repeatCount: number | null;
-        note: string | null;
-        miniTasks: {
-            id: string;
-            title: string;
-            completed: boolean;
-            taskId: string;
-        }[];
-        level: $Enums.Level | null;
-        listId: string;
-        order: number;
-    })[];
-};
-
-export async function getList(
-    listId: string
-): Promise<[undefined, Error] | [list, undefined]> {
-    const user = await getSessionUser();
-
-    if (!user) {
-        return [undefined, new Error('miss user')];
-    }
-
-    const list = await db.list.findUnique({
+const defaultListSelect = {
+    id: true,
+    name: true,
+    tasks: {
         select: {
             id: true,
-            name: true,
-            tasks: {
-                select: {
-                    id: true,
-                    title: true,
-                    important: true,
-                    completed: true,
-                    dueDate: true,
-                    repeatInterval: true,
-                    repeatCount: true,
-                    note: true,
-                    miniTasks: true,
-                    level: true,
-                    listId: true,
-                    order: true,
-                },
-            },
+            title: true,
+            important: true,
+            completed: true,
+            dueDate: true,
+            repeatInterval: true,
+            repeatCount: true,
+            note: true,
+            miniTasks: true,
+            level: true,
+            listId: true,
+            order: true,
         },
+    },
+} satisfies Prisma.ListSelect;
+
+export async function getList(
+    listId: string,
+    select: Prisma.ListSelect = defaultListSelect
+): Promise<[undefined, Error] | [ListWithTasks, undefined]> {
+    const user = await getSessionUser();
+
+    if (!user) return [undefined, new Error('miss user')];
+
+    const list = await db.list.findUnique({
+        select,
         where: { id: listId, userId: user.id },
     });
 
     if (!list) return [undefined, new Error('not found')];
 
-    return [list, undefined];
+    const typedList = list as ListWithTasks;
+    return [typedList, undefined];
 }
 
 export type Lists = { id: string; name: string }[];

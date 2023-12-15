@@ -11,7 +11,7 @@ import {
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import CreateListForm from '../create-list/create-list-form';
 import {
     DropdownMenu,
@@ -24,6 +24,13 @@ import { deleteList } from '@/lib/action';
 function Nav({ lists }: { lists: Lists }) {
     const isOpen = useStore((state) => state.isOpenNav);
     const handleToggleNav = useStore((state) => state.handleToggleNav);
+    const handleClose = useStore((state) => state.handleCloseNav);
+
+    useLayoutEffect(() => {
+        if (window.innerWidth < 768) {
+            handleClose();
+        }
+    }, [handleClose]);
 
     useEffect(() => {
         const handleReSize = (e: any) => {
@@ -39,7 +46,7 @@ function Nav({ lists }: { lists: Lists }) {
 
     return (
         <nav
-            className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r ${clsx(
+            className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r z-50 ${clsx(
                 { hidden: !isOpen }
             )}`}
         >
@@ -55,7 +62,7 @@ function Nav({ lists }: { lists: Lists }) {
                         />
                     </button>
                 </div>
-                <NavLink lists={lists} />
+                <NavLinks lists={lists} />
                 <div className="h-12 px-4 flex items-center">
                     <CreateListForm />
                 </div>
@@ -68,7 +75,7 @@ function Nav({ lists }: { lists: Lists }) {
     );
 }
 
-export function NavItem({
+export function NavLink({
     active,
     list,
 }: {
@@ -82,7 +89,7 @@ export function NavItem({
             href={`/tasks/${list.id}`}
             className={`w-full h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
                 {
-                    'font-light hover:bg-gray-100 dark:hover:bg-[#222]':
+                    'font-light hover:bg-gray-100 dark:hover:bg-[#0D6EFD15]':
                         !active,
                     'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
                         active,
@@ -127,14 +134,14 @@ export function NavItem({
     );
 }
 
-export function NavLink({ lists }: { lists: Lists }) {
+export function NavLinks({ lists }: { lists: Lists }) {
     const pathname = usePathname();
 
     return (
         <ul className="flex flex-col">
             {lists.map((item) => (
                 <li key={item.id}>
-                    <NavItem
+                    <NavLink
                         active={`/tasks/${item.id}` === pathname}
                         list={item}
                     />

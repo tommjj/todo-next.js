@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { createUser, getList, getLists, getUser } from '@/lib/data';
+import { createUser, getLists, getUser } from '@/lib/data';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
@@ -117,13 +117,9 @@ export async function deleteList(listId: string, formData: FormData) {
 
     const [lists, err] = await getLists();
 
-    if (err) {
-        return;
-    }
+    if (err) return;
 
-    if (lists.length === 1) {
-        return;
-    }
+    if (lists.length === 1) return;
 
     try {
         await db.list.delete({
@@ -132,7 +128,9 @@ export async function deleteList(listId: string, formData: FormData) {
                 id: listId,
             },
         });
-    } catch (error) {}
+    } catch (error) {
+        console.log(err);
+    }
     revalidatePath('/tasks', 'layout');
 
     const deleteListIndex = lists.findIndex((e) => e.id === listId);
