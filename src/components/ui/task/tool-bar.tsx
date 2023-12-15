@@ -69,7 +69,7 @@ function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
 
 function ToolBarButton() {
     return (
-        <div className="flex pr-4 items-center">
+        <div className="flex pr-5 items-center">
             <button className="flex font-light">
                 <ArrowsUpDownIcon className="h-5 mr-1" strokeWidth={1} />
                 sort

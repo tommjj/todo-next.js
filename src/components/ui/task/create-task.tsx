@@ -1,9 +1,12 @@
 'use client';
 
+import { createTask } from '@/lib/action';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { ChangeEvent, useCallback } from 'react';
 
-export default function CreateTaskForm() {
+export default function CreateTaskForm({ listId }: { listId: string }) {
+    const action = createTask.bind(null, listId);
+
     const handleDateInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === '') {
             e.target.style.width = '20px';
@@ -14,11 +17,12 @@ export default function CreateTaskForm() {
 
     return (
         <div className="w-full border rounded-md shadow-sm shadow-[#00000040]">
-            <form className="">
+            <form className="" action={action}>
                 <div className="flex items-center p-4">
                     <PlusIcon className="h-6 mr-4 text-[#0D6EFD]" />
                     <input
-                        className="flex-grow outline-none font-light"
+                        className="flex-grow outline-none font-light dark:bg-[#111]"
+                        name="title"
                         placeholder="add new task"
                         type="text"
                         autoComplete="none"
@@ -31,7 +35,8 @@ export default function CreateTaskForm() {
                     <div className="flex-grow ">
                         <input
                             onChange={handleDateInput}
-                            className="outline-none w-5 font-light "
+                            name="dueDate"
+                            className="outline-none w-5 font-light dark:bg-[#111]"
                             id="createTaskDate"
                             type="date"
                         ></input>

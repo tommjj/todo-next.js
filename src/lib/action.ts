@@ -139,3 +139,29 @@ export async function deleteList(listId: string, formData: FormData) {
         `/tasks/${lists[deleteListIndex === 0 ? 1 : deleteListIndex - 1].id}`
     );
 }
+
+const createTaskSchema = z.object({
+    title: z.string().min(1),
+    dueDate: z.coerce.date().or(
+        z
+            .string()
+            .max(0)
+            .transform((e) => undefined)
+    ),
+});
+
+export async function createTask(listId: string, formData: FormData) {
+    const taskPrase = createTaskSchema.safeParse(Object.fromEntries(formData));
+
+    if (!taskPrase.success) return;
+
+    await db.task.create({
+        data: {
+            title: taskPrase.data.title,
+            dueDate: taskPrase.data.dueDate,
+            listId: listId,
+        },
+    });
+
+    revalidatePath('/tasks', 'layout');
+}

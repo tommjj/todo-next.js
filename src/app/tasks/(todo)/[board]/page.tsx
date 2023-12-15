@@ -11,8 +11,9 @@ async function Page({ params }: { params: { board: string } }) {
     return (
         <>
             <ToolBar list={list} />
-            <div className="flex flex-col p-3 md:p-5 w-full flex-grow">
-                <CreateTaskForm />
+            <div className="flex flex-col px-3 md:p-5 w-full flex-grow">
+                <CreateTaskForm listId={list.id} />
+                <p>{JSON.stringify(list.tasks)}</p>
             </div>
         </>
     );
