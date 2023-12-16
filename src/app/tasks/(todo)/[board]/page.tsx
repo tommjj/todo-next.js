@@ -1,5 +1,5 @@
-import SetList from '@/components/setList';
-import TaskTable from '@/components/ui/task/TaskTable';
+import SetList from '@/components/set-list';
+import TaskList from '@/components/ui/task/tast-list';
 import CreateTaskForm from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';
 import { getList } from '@/lib/data';
@@ -16,7 +16,7 @@ async function Page({ params }: { params: { board: string } }) {
             <div className="flex flex-col px-3 md:p-5 w-full flex-grow">
                 <CreateTaskForm listId={list.id} />
                 <SetList list={list} />
-                <TaskTable />
+                <TaskList />
             </div>
         </>
     );
