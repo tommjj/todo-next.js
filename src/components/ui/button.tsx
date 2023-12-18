@@ -36,7 +36,7 @@ export default function Button({
         Comp = Link;
     }
 
-    className = `flex items-center justify-center py-2 cursor-pointer disabled:cursor-default hover:opacity-90 ${clsx(
+    className = `flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90 ${clsx(
         {
             'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]':
                 variant === 'dark',

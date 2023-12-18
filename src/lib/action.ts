@@ -110,13 +110,11 @@ export async function createList(formData: FormData) {
     redirect(`/tasks/${list.id}`);
 }
 
-export async function deleteList(listId: string, formData: FormData) {
+export async function deleteList(listId: string) {
     const user = await getSessionUser();
-
     if (!user) return;
 
     const [lists, err] = await getLists();
-
     if (err) return;
 
     if (lists.length === 1) return;

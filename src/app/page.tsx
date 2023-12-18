@@ -1,5 +1,15 @@
 import Logo from '@/components/logo';
 import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
+import AlertDialog, {
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import Button from '@/components/ui/button';
 import Header from '@/components/ui/header';
 import UserButton from '@/components/ui/user-button';
@@ -32,7 +42,7 @@ function Introduce() {
                             href="/sign-up"
                             scroll={false}
                             variant="primary"
-                            className="group w-44 lg:w-40 pl-7"
+                            className="group w-44 lg:w-44 px-7 pl-8 py-3"
                         >
                             Get Started
                             <ArrowSmallRightIcon className="h-6 w-6 text-white group-hover:translate-x-1 transition-transform" />
@@ -92,7 +102,29 @@ export default function Home() {
             </Header>
             <main className="min-h-screen w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                <section className="w-full h-screen"></section>
+                <section className="w-full h-screen">
+                    <AlertDialog>
+                        <AlertDialogTrigger>
+                            <Button variant="outline">Click me</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will
+                                    permanently delete your list and remove all
+                                    data of list from our servers.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </section>
             </main>
         </>
     );

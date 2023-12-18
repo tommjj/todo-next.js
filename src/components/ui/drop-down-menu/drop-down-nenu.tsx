@@ -77,7 +77,7 @@ function useDropdownMenu() {
         window.addEventListener('click', handleClick);
 
         return () => {
-            window.addEventListener('click', handleClick);
+            window.removeEventListener('click', handleClick);
             window.removeEventListener('wheel', preventScroll);
         };
     }, [isOpen, handleClose]);
