@@ -33,7 +33,7 @@ export function AlertDialogTrigger({
     return (
         <div
             className="w-fit"
-            onClick={() => {
+            onClick={(e) => {
                 setIsOpen((prevState: any) => !prevState);
             }}
         >
@@ -78,6 +78,7 @@ export function AlertDialogContent({
                           onClick={(e) => {
                               if (ref.current === e.target) setIsOpen(false);
                           }}
+                          style={{ pointerEvents: 'auto' }}
                       >
                           <div className="w-full md:w-[512px] p-6 rounded-lg bg-white border dark:bg-[#111]">
                               {children}
@@ -155,7 +156,7 @@ export function AlertDialogAction({
     const [, setIsOpen] = useContext(Context)!;
     return (
         <>
-            {asChild ? (
+            {!asChild ? (
                 <Button
                     onClick={() => {
                         action && action();
@@ -170,7 +171,9 @@ export function AlertDialogAction({
                 <div
                     className="pl-2 w-fit"
                     onClick={() => {
-                        setIsOpen(false);
+                        setTimeout(() => {
+                            setIsOpen(false);
+                        });
                     }}
                 >
                     {children}

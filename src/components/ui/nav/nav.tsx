@@ -20,6 +20,17 @@ import {
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-nenu';
 import { deleteList } from '@/lib/action';
+import AlertDialog, {
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '../alert-dialog';
+import Button from '../button';
 
 function Nav({ lists }: { lists: Lists }) {
     const isOpen = useStore((state) => state.isOpenNav);
@@ -85,21 +96,23 @@ export function NavLink({
     const action = deleteList.bind(null, list.id);
 
     return (
-        <Link
-            href={`/tasks/${list.id}`}
-            className={`w-full h-12 pl-4 pr-1 flex items-center justify-between relative ${clsx(
-                {
-                    'font-light hover:bg-gray-100 dark:hover:bg-[#0D6EFD15]':
-                        !active,
-                    'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
-                        active,
-                }
-            )}`}
+        <div
+            className={`flex items-center ${clsx({
+                'font-light hover:bg-gray-100 dark:hover:bg-[#0D6EFD15]':
+                    !active,
+                'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
+                    active,
+            })}`}
         >
-            <div className="flex">
-                <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />
-                {list.name}
-            </div>
+            <Link
+                href={`/tasks/${list.id}`}
+                className={`flex-grow h-12 pl-4 pr-1 flex items-center relative`}
+            >
+                <div className="flex">
+                    <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />
+                    {list.name}
+                </div>
+            </Link>
             {active && (
                 <div
                     onClick={(e) => {
@@ -110,27 +123,55 @@ export function NavLink({
                     <DropdownMenu>
                         <DropdownMenuTrigger>
                             <EllipsisVerticalIcon
-                                className="h-6"
+                                className="h-6 cursor-pointer"
                                 strokeWidth={1}
                             />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="transition-all duration-75">
                             <DropdownMenuItem>
-                                <form action={action}>
-                                    <button
-                                        type="submit"
-                                        className="w-36 px-3 py-1 text-red-600 flex justify-center items-center"
-                                    >
-                                        <TrashIcon className="h-4 mr-2" />
-                                        delete list
-                                    </button>
-                                </form>
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                        <button className="w-36 px-3 py-1 text-red-600 flex justify-center items-center">
+                                            <TrashIcon className="h-4 mr-2" />
+                                            delete list
+                                        </button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Are you absolutely sure?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                                This will permanently delete
+                                                your list and remove all data of
+                                                list from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction asChild>
+                                                <form action={action}>
+                                                    <Button
+                                                        type="submit"
+                                                        variant="destructive"
+                                                    >
+                                                        <TrashIcon className="h-4 mr-2" />
+                                                        Continue
+                                                    </Button>
+                                                </form>
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
             )}
-        </Link>
+        </div>
     );
 }
 

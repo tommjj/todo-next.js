@@ -49,13 +49,20 @@ function useDropdownMenu() {
         })}
         `;
 
+        contentElement.onclick = () => {
+            setTimeout(() => {
+                handleClose();
+            });
+        };
+
         document.body.style.cssText = `pointer-events: none; touch-action: none;`;
 
         return () => {
             contentElement.style.cssText = '';
             document.body.style.cssText = '';
+            contentElement.onclick = null;
         };
-    }, [isOpen]);
+    }, [isOpen, handleClose]);
 
     useEffect(() => {
         function preventScroll(e: any) {
@@ -69,15 +76,17 @@ function useDropdownMenu() {
             handleClose();
         };
 
-        if (!isOpen) return;
+        window.addEventListener('click', handleClick);
+
+        if (!isOpen)
+            return () => {
+                window.removeEventListener('click', handleClick);
+            };
         window.addEventListener('wheel', preventScroll, {
             passive: false,
         });
 
-        window.addEventListener('click', handleClick);
-
         return () => {
-            window.removeEventListener('click', handleClick);
             window.removeEventListener('wheel', preventScroll);
         };
     }, [isOpen, handleClose]);
