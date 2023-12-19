@@ -29,7 +29,7 @@ import AlertDialog, {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '../alert-dialog';
+} from '../alert-dialog/alert-dialog';
 import Button from '../button';
 
 function Nav({ lists }: { lists: Lists }) {
@@ -158,7 +158,6 @@ export function NavLink({
                                                         type="submit"
                                                         variant="destructive"
                                                     >
-                                                        <TrashIcon className="h-4 mr-2" />
                                                         Continue
                                                     </Button>
                                                 </form>

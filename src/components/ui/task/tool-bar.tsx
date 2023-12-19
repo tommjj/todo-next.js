@@ -15,6 +15,17 @@ import {
 } from '../drop-down-menu/drop-down-nenu';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { deleteList } from '@/lib/action';
+import AlertDialog, {
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '../alert-dialog/alert-dialog';
+import Button from '../button';
 
 function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
     const isOpenNav = useStore((state) => state.isOpenNav);
@@ -50,15 +61,42 @@ function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="transition-all duration-75">
                         <DropdownMenuItem>
-                            <form action={deleteAction}>
-                                <button
-                                    type="submit"
-                                    className="w-36 px-3 py-1 text-red-600 flex justify-center items-center"
-                                >
-                                    <TrashIcon className="h-4 mr-2" />
-                                    delete list
-                                </button>
-                            </form>
+                            <AlertDialog>
+                                <AlertDialogTrigger>
+                                    <button className="w-36 px-3 py-1 text-red-600 flex justify-center items-center">
+                                        <TrashIcon className="h-4 mr-2" />
+                                        delete list
+                                    </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Are you absolutely sure?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This
+                                            will permanently delete your list
+                                            and remove all data of list from our
+                                            servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                            <form action={deleteAction}>
+                                                <Button
+                                                    type="submit"
+                                                    variant="destructive"
+                                                >
+                                                    Continue
+                                                </Button>
+                                            </form>
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

@@ -9,7 +9,7 @@ import AlertDialog, {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog/alert-dialog';
 import Button from '@/components/ui/button';
 import Header from '@/components/ui/header';
 import UserButton from '@/components/ui/user-button';
@@ -42,7 +42,7 @@ function Introduce() {
                             href="/sign-up"
                             scroll={false}
                             variant="primary"
-                            className="group w-44 lg:w-44 px-7 pl-8 py-3"
+                            className="group w-44 lg:w-44 px-7 pl-8 py-2"
                         >
                             Get Started
                             <ArrowSmallRightIcon className="h-6 w-6 text-white group-hover:translate-x-1 transition-transform" />

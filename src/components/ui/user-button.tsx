@@ -11,7 +11,7 @@ import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
 import AlertDialog, {
     AlertDialogContent,
     AlertDialogTrigger,
-} from './alert-dialog';
+} from './alert-dialog/alert-dialog';
 
 async function UserButton() {
     const session = await auth();

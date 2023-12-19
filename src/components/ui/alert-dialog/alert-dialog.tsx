@@ -8,7 +8,7 @@ import React, {
     useState,
 } from 'react';
 import { createPortal } from 'react-dom';
-import Button, { Variant } from './button';
+import Button, { Variant } from '../button';
 
 const Context = createContext<
     [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
@@ -34,7 +34,7 @@ export function AlertDialogTrigger({
         <div
             className="w-fit"
             onClick={(e) => {
-                setIsOpen((prevState: any) => !prevState);
+                setIsOpen((prevState) => !prevState);
             }}
         >
             {children}
@@ -74,13 +74,13 @@ export function AlertDialogContent({
                 ? createPortal(
                       <div
                           ref={ref}
-                          className="backdrop-blur-md shadow-md shadow-[#00000040] flex p-4 justify-center items-center fixed w-screen h-screen top-0 left-0 bg-[#11111160] z-[999] animate-[opacity0to100_.1s_ease-in-out]"
+                          className="backdrop-blur-md shadow-md shadow-[#00000040] flex p-4 justify-center items-center fixed w-screen h-screen top-0 left-0 bg-[#11111160] z-[999] animate-loaded"
                           onClick={(e) => {
                               if (ref.current === e.target) setIsOpen(false);
                           }}
                           style={{ pointerEvents: 'auto' }}
                       >
-                          <div className="w-full md:w-[512px] p-6 rounded-lg bg-white border dark:bg-[#111]">
+                          <div className="w-full md:w-[512px] px-6 py-4 rounded-lg bg-white border dark:bg-[#111]">
                               {children}
                           </div>
                       </div>,
@@ -101,7 +101,7 @@ export function AlertDialogHeader({
 
 export function AlertDialogTitle({ children }: { children?: React.ReactNode }) {
     return (
-        <p className="font-semibold text-lg text-[#333] dark:text-[#fff]">
+        <p className="font-semibold text-xl text-[#333] dark:text-[#fff]">
             {children}
         </p>
     );
@@ -112,7 +112,11 @@ export function AlertDialogDescription({
 }: {
     children?: React.ReactNode;
 }) {
-    return <p className="pt-2 text-[#444] dark:text-[#ccc]">{children}</p>;
+    return (
+        <p className="pt-2 text-[#555] dark:text-[#ccc] font-normal text-base">
+            {children}
+        </p>
+    );
 }
 
 export function AlertDialogFooter({
@@ -135,7 +139,7 @@ export function AlertDialogCancel({
                 setIsOpen(false);
             }}
             variant="outline"
-            className="py-1 ml-2"
+            className="py-1 ml-2 text-[#444] dark:text-[#ddd]"
         >
             {children}
         </Button>
