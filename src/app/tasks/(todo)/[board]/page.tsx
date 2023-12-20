@@ -1,4 +1,4 @@
-import SetList from '@/components/set-list';
+import SetList from '@/components/store/set-list';
 import TaskList from '@/components/ui/task/tast-list';
 import CreateTaskForm from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';

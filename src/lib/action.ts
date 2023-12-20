@@ -94,7 +94,7 @@ export async function createList(formData: FormData) {
 
     const listParse = z
         .object({
-            listName: z.string(),
+            listName: z.string().min(1).max(30),
         })
         .safeParse(Object.fromEntries(formData));
 
