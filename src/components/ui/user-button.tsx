@@ -8,10 +8,6 @@ import {
 } from './drop-down-menu/drop-down-nenu';
 import ThemeSelector from './theme-selection';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
-import AlertDialog, {
-    AlertDialogContent,
-    AlertDialogTrigger,
-} from './alert-dialog/alert-dialog';
 
 async function UserButton() {
     const session = await auth();

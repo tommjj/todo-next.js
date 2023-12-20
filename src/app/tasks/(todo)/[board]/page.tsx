@@ -13,7 +13,7 @@ async function Page({ params }: { params: { board: string } }) {
     return (
         <>
             <ToolBar list={list} />
-            <div className="flex flex-col px-3 md:p-5 w-full flex-grow">
+            <div className="flex flex-col px-3 md:p-5 w-full overflow-hidden flex-grow">
                 <CreateTaskForm listId={list.id} />
                 <SetList list={list} />
                 <TaskList />

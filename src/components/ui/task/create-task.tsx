@@ -2,10 +2,21 @@
 
 import { createTask } from '@/lib/action';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { ChangeEvent, useCallback } from 'react';
+import { ChangeEvent, useCallback, useRef, useState } from 'react';
 
 export default function CreateTaskForm({ listId }: { listId: string }) {
     const action = createTask.bind(null, listId);
+    const titleInput = useRef<HTMLInputElement>(null);
+    const dueDateInput = useRef<HTMLInputElement>(null);
+
+    const resetForm = useCallback(() => {
+        setTimeout(() => {
+            if (titleInput.current && dueDateInput.current) {
+                titleInput.current.value = '';
+                dueDateInput.current.value = '';
+            }
+        });
+    }, []);
 
     const handleDateInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === '') {
@@ -17,10 +28,11 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
 
     return (
         <div className="w-full border rounded-md shadow-sm shadow-[#00000040]">
-            <form className="" action={action}>
+            <form className="" action={action} onSubmit={resetForm}>
                 <div className="flex items-center p-4">
                     <PlusIcon className="h-6 mr-4 text-[#0D6EFD]" />
                     <input
+                        ref={titleInput}
                         className="flex-grow outline-none font-light dark:bg-[#111]"
                         name="title"
                         placeholder="add new task"
@@ -34,6 +46,7 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
                 <div className="flex w-full px-4 py-1">
                     <div className="flex-grow ">
                         <input
+                            ref={dueDateInput}
                             onChange={handleDateInput}
                             name="dueDate"
                             className="outline-none w-5 font-light dark:bg-[#111]"

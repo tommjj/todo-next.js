@@ -1,5 +1,4 @@
 import Logo from '@/components/logo';
-import ThemeToggleButton from '@/components/ui/ThemeToggleButton';
 import AlertDialog, {
     AlertDialogAction,
     AlertDialogCancel,
