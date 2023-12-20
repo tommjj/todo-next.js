@@ -111,15 +111,11 @@ export async function createList(formData: FormData) {
 }
 
 export async function deleteList(listId: string) {
-    const user = await getSessionUser();
-    if (!user) return;
-
     const [lists, err] = await getLists();
     if (err) return;
 
-    const isBelongToUser = await checkListBelongToUser(user.id, listId);
-
-    if (!isBelongToUser) return;
+    const deleteListIndex = lists.findIndex((e) => e.id === listId);
+    if (deleteListIndex === -1) return;
 
     try {
         await db.miniTask.deleteMany({
@@ -144,11 +140,10 @@ export async function deleteList(listId: string) {
     } catch (error) {
         console.log(err);
     }
+
     revalidatePath('/tasks', 'layout');
 
     if (lists.length === 1) redirect(`/tasks`);
-
-    const deleteListIndex = lists.findIndex((e) => e.id === listId);
 
     redirect(
         `/tasks/${lists[deleteListIndex === 0 ? 1 : deleteListIndex - 1].id}`

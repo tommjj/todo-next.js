@@ -17,11 +17,11 @@ const config: Config = {
                     '100%': { opacity: '1' },
                 },
                 open: {
-                    '0%': { transform: 'scale(0.4)' },
+                    '0%': { transform: 'scale(0.6)' },
                 },
             },
             animation: {
-                open: 'open .075s ease-in-out',
+                open: 'open .07s ease-in-out',
                 loaded: 'loaded .15s ease-in-out',
             },
         },
