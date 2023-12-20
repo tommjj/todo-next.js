@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { createUser, getList, getLists, getUser } from '@/lib/data';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
-import { getSessionUser } from './auth';
+import { checkListBelongToUser, getSessionUser } from './auth';
 import db from './db';
 import { revalidatePath } from 'next/cache';
 
@@ -118,6 +118,10 @@ export async function deleteList(listId: string) {
     if (err) return;
 
     if (lists.length === 1) return;
+
+    const isBelongToUser = await checkListBelongToUser(user.id, listId);
+
+    if (!isBelongToUser) return;
 
     try {
         await db.miniTask.deleteMany({
