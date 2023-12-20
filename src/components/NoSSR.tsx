@@ -23,7 +23,7 @@ export default async function NoSSR({
             }),
         {
             ssr: false,
-            loading: fallback || (() => <></>),
+            loading: fallback || undefined,
         }
     );
 

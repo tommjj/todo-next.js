@@ -1,24 +1,23 @@
 import { auth } from '@/auth';
+import { getSessionUser } from '@/lib/auth';
 import db from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 
 export default async function TasksPage() {
-    const session = await auth();
+    const user = await getSessionUser();
 
-    const name = session?.user?.name;
-
-    if (!name) {
+    if (!user) {
         notFound();
     }
 
     const todo = await db.list.findFirst({
         select: { id: true },
-        where: { user: { name: name } },
+        where: { user: { name: user.name } },
     });
 
-    if (!todo?.id) {
-        notFound();
+    if (todo) {
+        redirect(`tasks/${todo.id}`);
     }
 
-    redirect(`tasks/${todo.id}`);
+    return <h1>create your first list</h1>;
 }

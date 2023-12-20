@@ -117,8 +117,6 @@ export async function deleteList(listId: string) {
     const [lists, err] = await getLists();
     if (err) return;
 
-    if (lists.length === 1) return;
-
     const isBelongToUser = await checkListBelongToUser(user.id, listId);
 
     if (!isBelongToUser) return;
@@ -147,6 +145,8 @@ export async function deleteList(listId: string) {
         console.log(err);
     }
     revalidatePath('/tasks', 'layout');
+
+    if (lists.length === 1) redirect(`/tasks`);
 
     const deleteListIndex = lists.findIndex((e) => e.id === listId);
 
