@@ -1,37 +1,37 @@
 {
-  "name": "toto-clone",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@heroicons/react": "^2.0.18",
-    "@prisma/client": "^5.6.0",
-    "bcrypt": "^5.1.1",
-    "clsx": "^2.0.0",
-    "next": "14.0.3",
-    "next-auth": "^5.0.0-beta.3",
-    "next-themes": "^0.2.1",
-    "react": "^18",
-    "react-dom": "^18",
-    "zod": "^3.22.4",
-    "zustand": "^4.4.6"
-  },
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.3",
-    "postcss": "^8",
-    "prisma": "^5.6.0",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
-  }
+    "name": "todo-clone",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@heroicons/react": "^2.0.18",
+        "@prisma/client": "^5.6.0",
+        "bcrypt": "^5.1.1",
+        "clsx": "^2.0.0",
+        "next": "14.0.3",
+        "next-auth": "^5.0.0-beta.3",
+        "next-themes": "^0.2.1",
+        "react": "^18",
+        "react-dom": "^18",
+        "zod": "^3.22.4",
+        "zustand": "^4.4.6"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "autoprefixer": "^10.0.1",
+        "eslint": "^8",
+        "eslint-config-next": "14.0.3",
+        "postcss": "^8",
+        "prisma": "^5.6.0",
+        "tailwindcss": "^3.3.0",
+        "typescript": "^5"
+    }
 }
