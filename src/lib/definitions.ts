@@ -31,6 +31,7 @@ export type Task = {
     level: $Enums.Level | null;
     listId: string;
     order: number;
+    createAt: Date;
 };
 
 export type MiniTask = {

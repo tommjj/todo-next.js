@@ -97,7 +97,7 @@ export function NavLink({
 
     return (
         <div
-            className={`flex items-center ${clsx({
+            className={`flex items-center relative ${clsx({
                 'font-light hover:bg-gray-100 dark:hover:bg-[#0D6EFD15]':
                     !active,
                 'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
@@ -106,7 +106,7 @@ export function NavLink({
         >
             <Link
                 href={`/tasks/${list.id}`}
-                className={`flex-grow h-12 pl-4 pr-1 flex items-center relative`}
+                className={`flex-grow h-12 pl-4 pr-1 flex items-center `}
             >
                 <div className="flex">
                     <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />

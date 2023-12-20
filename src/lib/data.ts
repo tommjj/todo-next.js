@@ -52,6 +52,9 @@ const defaultListSelect = {
             listId: true,
             order: true,
         },
+        orderBy: {
+            order: 'desc',
+        },
     },
 } satisfies Prisma.ListSelect;
 
