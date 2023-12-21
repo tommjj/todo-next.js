@@ -1,6 +1,3 @@
-'use client';
-
-import useStore from '@/store/store';
 import { Task } from '@prisma/client';
 import {
     CheckIcon,
@@ -9,7 +6,7 @@ import {
 import { StarIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 
-function CheckBox({
+export function CheckBox({
     completed,
     taskId,
 }: {
@@ -35,7 +32,7 @@ function CheckBox({
     );
 }
 
-function Important({
+export function Important({
     important,
     taskId,
 }: {
@@ -66,18 +63,4 @@ function TaskItem({ task }: { task: Task }) {
         </div>
     );
 }
-
-function TaskList() {
-    const list = useStore((state) => state.list);
-
-    return (
-        <div className="w-full flex-grow mt-3 overflow-y-auto">
-            {list &&
-                list.tasks?.map((task) => (
-                    <TaskItem key={task.id} task={task} />
-                ))}
-        </div>
-    );
-}
-
-export default TaskList;
+export default TaskItem;

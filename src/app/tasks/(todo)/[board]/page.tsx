@@ -1,5 +1,5 @@
 import SetList from '@/components/store/set-list';
-import TaskList from '@/components/ui/task/tast-list';
+import TaskList from '@/components/ui/task/task-list';
 import CreateTaskForm from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';
 import { getList } from '@/lib/data';
