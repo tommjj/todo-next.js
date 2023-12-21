@@ -43,18 +43,6 @@ function Nav({ lists }: { lists: Lists }) {
         }
     }, [handleClose]);
 
-    useEffect(() => {
-        const handleReSize = (e: any) => {
-            console.log(e.target);
-        };
-
-        window.addEventListener('resize', handleReSize);
-
-        return () => {
-            window.removeEventListener('resize', handleReSize);
-        };
-    }, []);
-
     return (
         <nav
             className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r z-50 ${clsx(

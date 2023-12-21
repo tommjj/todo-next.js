@@ -23,7 +23,7 @@ export type Task = {
     title: string;
     important: boolean;
     completed: boolean;
-    dueDate: Date;
+    dueDate: Date | null;
     repeatInterval: $Enums.RepeatInterval;
     repeatCount: number | null;
     note: string | null;

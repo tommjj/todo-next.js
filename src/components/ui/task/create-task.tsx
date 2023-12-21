@@ -20,6 +20,7 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
 
     const handleShowDateInput = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
+            console.log(e.target.value);
             if (e.target.value === '') {
                 e.target.style.width = '20px';
             } else {
@@ -42,7 +43,6 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
                         type="text"
                         autoComplete="none"
                         autoCapitalize="none"
-                        required
                     />
                 </div>
                 <hr />
@@ -52,7 +52,7 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
                             ref={dueDateInput}
                             onChange={handleShowDateInput}
                             name="dueDate"
-                            className="outline-none w-5 font-light dark:bg-[#111]"
+                            className="outline-none w-5 font-light bg-white dark:bg-[#111]"
                             id="createTaskDate"
                             type="date"
                         ></input>

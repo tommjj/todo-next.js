@@ -31,7 +31,7 @@ model Task {
   important      Boolean        @default(false)
   completed      Boolean        @default(false)
   createAt       DateTime       @default(now()) @db.Date
-  dueDate        DateTime       @default(now()) @db.Date
+  dueDate        DateTime?      @db.Date
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?
   note           String?        @db.VarChar(255)

@@ -80,7 +80,7 @@ export function AlertDialogContent({
                           }}
                           style={{ pointerEvents: 'auto' }}
                       >
-                          <div className="w-full md:w-[512px] px-6 py-4 rounded-lg bg-white border dark:bg-[#111] animate-open">
+                          <div className="w-full md:w-[512px] px-6 py-4 rounded-md bg-white border dark:bg-[#111] animate-open">
                               {children}
                           </div>
                       </div>,

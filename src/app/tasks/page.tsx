@@ -25,7 +25,7 @@ export default async function TasksPage() {
             <HiddenNav />
             <div className="text-center">
                 <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-                    Create your first list to start
+                    Create your first list to get started
                 </h1>
                 <div className="mt-10 flex items-center justify-center gap-x-6 border px-4 rounded-lg mx-6">
                     <CreateListForm />
