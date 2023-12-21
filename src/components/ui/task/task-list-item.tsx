@@ -5,6 +5,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
+import useStore from '@/store/store';
+import { useCallback } from 'react';
 
 export function CheckBox({
     completed,
@@ -13,9 +15,18 @@ export function CheckBox({
     completed: boolean;
     taskId: string;
 }) {
+    const handleToggleCompleteTask = useStore(
+        (state) => state.handleToggleCompleteTask
+    );
+
+    const handleClick = useCallback(() => {
+        handleToggleCompleteTask(taskId);
+    }, [handleToggleCompleteTask, taskId]);
+
     return (
         <span className="flex justify-center px-2 text-[#0D6EFD]">
             <button
+                onClick={handleClick}
                 className={`flex justify-center items-center w-4 h-4 border border-[#0D6EFD] rounded-full group ${clsx(
                     { 'bg-[#0D6EFD]': completed }
                 )}`}
@@ -39,9 +50,20 @@ export function Important({
     important: boolean;
     taskId: string;
 }) {
+    const handleToggleImportantTask = useStore(
+        (state) => state.handleToggleImportantTask
+    );
+
+    const handleClick = useCallback(() => {
+        handleToggleImportantTask(taskId);
+    }, [handleToggleImportantTask, taskId]);
+
     return (
         <span className="flex justify-center px-2 text-[#0D6EFD]">
-            <button className={`flex justify-center items-center w-5 h-5`}>
+            <button
+                onClick={handleClick}
+                className={`flex justify-center items-center w-5 h-5`}
+            >
                 {important ? <StarIcon /> : <StarIconOutline strokeWidth={1} />}
             </button>
         </span>
