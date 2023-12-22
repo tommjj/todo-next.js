@@ -6,7 +6,8 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 import useStore from '@/store/store';
-import { useCallback } from 'react';
+import { MouseEventHandler, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function CheckBox({
     completed,
@@ -19,9 +20,13 @@ export function CheckBox({
         (state) => state.handleToggleCompleteTask
     );
 
-    const handleClick = useCallback(() => {
-        handleToggleCompleteTask(taskId);
-    }, [handleToggleCompleteTask, taskId]);
+    const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
+        (e) => {
+            e.stopPropagation();
+            handleToggleCompleteTask(taskId);
+        },
+        [handleToggleCompleteTask, taskId]
+    );
 
     return (
         <span className="flex justify-center px-2 text-[#0D6EFD]">
@@ -54,9 +59,13 @@ export function Important({
         (state) => state.handleToggleImportantTask
     );
 
-    const handleClick = useCallback(() => {
-        handleToggleImportantTask(taskId);
-    }, [handleToggleImportantTask, taskId]);
+    const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
+        (e) => {
+            e.stopPropagation();
+            handleToggleImportantTask(taskId);
+        },
+        [handleToggleImportantTask, taskId]
+    );
 
     return (
         <span className="flex justify-center px-2 text-[#0D6EFD]">
@@ -75,8 +84,13 @@ export function Important({
 }
 
 function TaskItem({ task }: { task: Task }) {
+    const { replace } = useRouter();
+
     return (
         <div
+            onClick={() => {
+                replace(`?details=${task.id}`);
+            }}
             draggable
             className="animate-expand flex items-center w-full h-[52px] mb-1 px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
         >
