@@ -1,4 +1,4 @@
-import type { Account, ListWithTasks } from '@/lib/definitions';
+import type { Account, ListWithTasks, Task } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
 import db from '@/lib/db';
 import { getSessionUser } from './auth';
@@ -43,6 +43,7 @@ const defaultListSelect = {
             title: true,
             important: true,
             completed: true,
+            createAt: true,
             dueDate: true,
             repeatInterval: true,
             repeatCount: true,
@@ -94,4 +95,38 @@ export async function getLists(): Promise<
     });
 
     return [lists, undefined];
+}
+
+const defaultTaskSelect = {
+    id: true,
+    title: true,
+    important: true,
+    completed: true,
+    createAt: true,
+    dueDate: true,
+    repeatInterval: true,
+    repeatCount: true,
+    note: true,
+    miniTasks: true,
+    level: true,
+    listId: true,
+    order: true,
+} satisfies Prisma.TaskSelect;
+
+export async function getTask(
+    id: string,
+    select: Prisma.TaskSelect = defaultTaskSelect
+): Promise<[undefined, Error] | [Task, undefined]> {
+    const user = await getSessionUser();
+    if (!user) return [undefined, new Error('miss user')];
+
+    const task = await db.task.findUnique({
+        select,
+        where: { id: id, list: { userId: user.id } },
+    });
+
+    if (!task) return [undefined, new Error('not found')];
+
+    const typedTask = task as Task;
+    return [typedTask, undefined];
 }
