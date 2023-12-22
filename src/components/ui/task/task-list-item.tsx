@@ -41,7 +41,7 @@ export function CheckBox({
                         'hidden md:group-hover:block': !completed,
                         'text-white': completed,
                     })}`}
-                    strokeWidth={2}
+                    strokeWidth={3}
                 />
             </button>
         </span>

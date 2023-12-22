@@ -24,7 +24,7 @@ function Header({ className = '', children }: HeaderProps) {
 
     return (
         <header
-            className={`flex items-center justify-between w-full h-14 z-50 dark:border-[#222] transition-all ${clsx(
+            className={`flex items-center justify-between w-full z-50 dark:border-[#222] transition-all ${clsx(
                 { 'border-y': isScroll }
             )} ${className}`}
         >

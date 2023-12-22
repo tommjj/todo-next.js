@@ -20,7 +20,7 @@ const config: Config = {
                     '0%': { transform: 'scale(0.6)' },
                 },
                 expand: {
-                    '0%': { height: '0' },
+                    '0%': { height: '0', opacity: '0' },
                 },
                 remove: {
                     '100%': { height: '0' },

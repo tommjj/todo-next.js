@@ -17,7 +17,7 @@ export async function generateMetadata(
 
     if (error)
         return {
-            title: '404',
+            title: 'not found',
         };
 
     let title = list.name;
@@ -28,7 +28,7 @@ export async function generateMetadata(
         });
 
         if (task) {
-            title += ` - ${task.title}`;
+            title = `${task.title} - ${title}`;
         }
     }
 

@@ -95,7 +95,7 @@ function Introduce() {
 export default function Home() {
     return (
         <>
-            <Header className="backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6 ">
+            <Header className="h-14 backdrop-blur-xl sticky top-0 left-0 px-1 md:h-16 md:px-4 lg:px-6 ">
                 <Logo />
                 <UserButton />
             </Header>
