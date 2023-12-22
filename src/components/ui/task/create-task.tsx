@@ -13,7 +13,9 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
         setTimeout(() => {
             if (titleInput.current && dueDateInput.current) {
                 titleInput.current.value = '';
+
                 dueDateInput.current.value = '';
+                dueDateInput.current.style.width = '20px';
             }
         });
     }, []);

@@ -3,7 +3,7 @@ import {
     CheckIcon,
     StarIcon as StarIconOutline,
 } from '@heroicons/react/24/outline';
-import { StarIcon } from '@heroicons/react/24/solid';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 import useStore from '@/store/store';
 import { useCallback } from 'react';
@@ -33,7 +33,7 @@ export function CheckBox({
             >
                 <CheckIcon
                     className={`h-2  ${clsx({
-                        'hidden group-hover:block': !completed,
+                        'hidden md:group-hover:block': !completed,
                         'text-white': completed,
                     })}`}
                     strokeWidth={2}
@@ -64,7 +64,11 @@ export function Important({
                 onClick={handleClick}
                 className={`flex justify-center items-center w-5 h-5`}
             >
-                {important ? <StarIcon /> : <StarIconOutline strokeWidth={1} />}
+                {important ? (
+                    <StarIconSolid />
+                ) : (
+                    <StarIconOutline strokeWidth={1} />
+                )}
             </button>
         </span>
     );
@@ -72,7 +76,10 @@ export function Important({
 
 function TaskItem({ task }: { task: Task }) {
     return (
-        <div className="w-full h-[52px] border rounded-md shadow-sm shadow-[#00000040] mb-1 px-2 flex items-center hover:bg-[#0D6EFD15] cursor-pointer">
+        <div
+            draggable
+            className="animate-expand flex items-center w-full h-[52px] mb-1 px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
+        >
             <CheckBox completed={task.completed} taskId={task.id} />
 
             <div className="px-2 text-[#444] flex-grow">

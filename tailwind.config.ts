@@ -19,8 +19,16 @@ const config: Config = {
                 open: {
                     '0%': { transform: 'scale(0.6)' },
                 },
+                expand: {
+                    '0%': { height: '0' },
+                },
+                remove: {
+                    '100%': { height: '0' },
+                },
             },
             animation: {
+                remove: 'remove .07s ease-in-out forwards',
+                expand: 'expand .07s ease-in-out',
                 open: 'open .07s ease-in-out',
                 loaded: 'loaded .15s ease-in-out',
             },
