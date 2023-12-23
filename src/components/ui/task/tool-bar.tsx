@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-nenu';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { deleteList } from '@/lib/action';
+import { deleteListAction } from '@/lib/action';
 import AlertDialog, {
     AlertDialogAction,
     AlertDialogCancel,
@@ -30,7 +30,7 @@ import Button from '../button';
 function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
     const isOpenNav = useStore((state) => state.isOpenNav);
     const handleOpenNav = useStore((state) => state.handleOpenNav);
-    const deleteAction = deleteList.bind(null, list.id);
+    const deleteAction = deleteListAction.bind(null, list.id);
 
     return (
         <div className=" flex-grow">

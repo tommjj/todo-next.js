@@ -1,7 +1,7 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/solid';
-import { createList } from '@/lib/action';
+import { createListAction } from '@/lib/action';
 import { ChangeEvent, useCallback, useState } from 'react';
 
 function CreateListForm() {
@@ -23,7 +23,7 @@ function CreateListForm() {
     return (
         <form
             className="flex items-center w-full"
-            action={createList}
+            action={createListAction}
             onSubmit={handleSubmit}
         >
             <PlusIcon className="h-6 text-[#0D6EFD] mr-4" />

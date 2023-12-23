@@ -1,11 +1,11 @@
 'use client';
 
-import { createTask } from '@/lib/action';
+import { createTaskAction } from '@/lib/action';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { ChangeEvent, useCallback, useRef } from 'react';
 
 export default function CreateTaskForm({ listId }: { listId: string }) {
-    const action = createTask.bind(null, listId);
+    const action = createTaskAction.bind(null, listId);
     const titleInput = useRef<HTMLInputElement>(null);
     const dueDateInput = useRef<HTMLInputElement>(null);
 

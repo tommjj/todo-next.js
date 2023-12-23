@@ -1,6 +1,6 @@
 'use client';
 
-import { Lists } from '@/lib/data';
+import { Lists } from '@/lib/data/get-data';
 import useStore from '@/store/store';
 import {
     Bars3Icon,
@@ -19,7 +19,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-nenu';
-import { deleteList } from '@/lib/action';
+import { deleteListAction } from '@/lib/action';
 import AlertDialog, {
     AlertDialogAction,
     AlertDialogCancel,
@@ -81,7 +81,7 @@ export function NavLink({
     active: boolean;
     list: { id: string; name: string };
 }) {
-    const action = deleteList.bind(null, list.id);
+    const action = deleteListAction.bind(null, list.id);
 
     return (
         <div

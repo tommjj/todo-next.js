@@ -1,20 +1,19 @@
 'use server';
 
 import { z } from 'zod';
-import { createUser, getList, getLists, getUser } from '@/lib/data';
+import {
+    createTask,
+    createUser,
+    deleteList,
+    getLists,
+    getUser,
+} from '@/lib/data/';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
-import { checkListBelongToUser, getSessionUser } from './auth';
+import { getSessionUser } from './auth';
 import db from './db';
 import { revalidatePath } from 'next/cache';
-
-const AccountSchema = z.object({
-    username: z.string({ invalid_type_error: 'please enter username' }).max(29),
-    password: z
-        .string({ invalid_type_error: 'please enter password' })
-        .min(8, { message: 'Password must be longer than 8 characters' }),
-    confirm: z.string({ invalid_type_error: 'please enter password' }).min(8),
-});
+import { AccountSchema, CreateTaskSchema } from './zod-schema';
 
 export type State =
     | {
@@ -87,9 +86,8 @@ export async function signInAction(
     return undefined;
 }
 
-export async function createList(formData: FormData) {
+export async function createListAction(formData: FormData) {
     const user = await getSessionUser();
-
     if (!user) return;
 
     const listParse = z
@@ -106,39 +104,22 @@ export async function createList(formData: FormData) {
             userId: user.id,
         },
     });
+
     revalidatePath('/tasks', 'layout');
     redirect(`/tasks/${list.id}`);
 }
 
-export async function deleteList(listId: string) {
+export async function deleteListAction(listId: string) {
     const [lists, err] = await getLists();
     if (err) return;
 
     const deleteListIndex = lists.findIndex((e) => e.id === listId);
     if (deleteListIndex === -1) return;
 
-    try {
-        await db.miniTask.deleteMany({
-            where: {
-                task: {
-                    listId: listId,
-                },
-            },
-        });
+    const deleteErr = await deleteList(listId);
 
-        await db.task.deleteMany({
-            where: {
-                listId: listId,
-            },
-        });
-
-        await db.list.delete({
-            where: {
-                id: listId,
-            },
-        });
-    } catch (error) {
-        console.log(err);
+    if (deleteErr) {
+        console.log(deleteErr);
     }
 
     revalidatePath('/tasks', 'layout');
@@ -150,27 +131,15 @@ export async function deleteList(listId: string) {
     );
 }
 
-const createTaskSchema = z.object({
-    title: z.string().min(1),
-    dueDate: z.coerce.date().or(
-        z
-            .string()
-            .max(0)
-            .transform((e) => undefined)
-    ),
-});
-
-export async function createTask(listId: string, formData: FormData) {
-    const taskPrase = createTaskSchema.safeParse(Object.fromEntries(formData));
+export async function createTaskAction(listId: string, formData: FormData) {
+    const taskPrase = CreateTaskSchema.safeParse(Object.fromEntries(formData));
 
     if (!taskPrase.success) return;
 
-    await db.task.create({
-        data: {
-            title: taskPrase.data.title,
-            dueDate: taskPrase.data.dueDate,
-            listId: listId,
-        },
+    await createTask({
+        title: taskPrase.data.title,
+        dueDate: taskPrase.data.dueDate,
+        listId: listId,
     });
 
     revalidatePath('/tasks', 'layout');

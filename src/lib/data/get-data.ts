@@ -1,29 +1,8 @@
-import type { Account, ListWithTasks, Task } from '@/lib/definitions';
-import bcrypt from 'bcrypt';
+import type { ListWithTasks, Task } from '@/lib/definitions';
 import db from '@/lib/db';
-import { getSessionUser } from './auth';
+import { getSessionUser } from '../auth';
 import { Prisma } from '@prisma/client';
 import { unstable_noStore as noStore } from 'next/cache';
-
-export async function createUser({ username, password }: Account) {
-    const hashPassword = await bcrypt.hash(password, 10);
-
-    try {
-        await db.user.create({
-            data: {
-                name: username,
-                password: hashPassword,
-                List: {
-                    create: {
-                        name: 'Todo',
-                    },
-                },
-            },
-        });
-    } catch (error) {
-        throw new Error((error as Error).message);
-    }
-}
 
 export async function getUser(username: string) {
     try {
@@ -33,6 +12,10 @@ export async function getUser(username: string) {
         return null;
     }
 }
+
+//********************* */
+//*********list******** */
+//********************* */
 
 const defaultListSelect = {
     id: true,
@@ -96,6 +79,10 @@ export async function getLists(): Promise<
 
     return [lists, undefined];
 }
+
+//************************ */
+//*******===task===******* */
+//************************ */
 
 const defaultTaskSelect = {
     id: true,

@@ -1,4 +1,4 @@
-import { $Enums } from '@prisma/client';
+import { $Enums, Prisma } from '@prisma/client';
 
 export type Account = {
     username: string;
@@ -47,3 +47,9 @@ export type ListWithTasks = {
     userId: string;
     tasks?: Task[];
 };
+
+export type CreateTask =
+    | (Prisma.Without<Prisma.TaskCreateInput, Prisma.TaskUncheckedCreateInput> &
+          Prisma.TaskUncheckedCreateInput)
+    | (Prisma.Without<Prisma.TaskUncheckedCreateInput, Prisma.TaskCreateInput> &
+          Prisma.TaskCreateInput);
