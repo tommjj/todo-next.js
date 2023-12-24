@@ -83,27 +83,33 @@ export function Important({
     );
 }
 
-function TaskItem({ task }: { task: Task }) {
+function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
     const { replace } = useRouter();
 
     return (
-        <div
-            onClick={() => {
-                replace(`?details=${task.id}`);
-            }}
-            draggable
-            className="animate-expand flex items-center w-full h-[52px] mb-1 px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
-        >
-            <CheckBox completed={task.completed} taskId={task.id} />
+        <>
+            {hidden ? (
+                <div className="animate-remove w-full h-[52px]"></div>
+            ) : (
+                <div
+                    onClick={() => {
+                        replace(`?details=${task.id}`);
+                    }}
+                    draggable
+                    className="animate-expand flex items-center w-full h-[52px] mb-1 px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
+                >
+                    <CheckBox completed={task.completed} taskId={task.id} />
 
-            <div className="px-2 text-[#444] flex-grow">
-                <p className="text-sm">{task.title}</p>
-                <p className="text-xs font-light">
-                    {task.dueDate?.toDateString()}
-                </p>
-            </div>
-            <Important important={task.important} taskId={task.id} />
-        </div>
+                    <div className="px-2 text-[#444] flex-grow">
+                        <p className="text-sm">{task.title}</p>
+                        <p className="text-xs font-light">
+                            {task.dueDate?.toDateString()}
+                        </p>
+                    </div>
+                    <Important important={task.important} taskId={task.id} />
+                </div>
+            )}
+        </>
     );
 }
 export default TaskItem;

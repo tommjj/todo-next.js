@@ -41,12 +41,13 @@ function CompletedTskList() {
             </div>
             <div>
                 {isOpen &&
-                    tasks.map(
-                        (task) =>
-                            task.completed && (
-                                <TaskItem key={task.id} task={task} />
-                            )
-                    )}
+                    tasks.map((task) => (
+                        <TaskItem
+                            key={task.id}
+                            task={task}
+                            hidden={!task.completed}
+                        />
+                    ))}
             </div>
         </>
     );
@@ -58,11 +59,13 @@ function TaskList() {
     return (
         <div className="w-full flex-grow mt-3 overflow-y-auto">
             {list &&
-                list.tasks?.map((task) =>
-                    task.completed ? null : (
-                        <TaskItem key={task.id} task={task} />
-                    )
-                )}
+                list.tasks?.map((task) => (
+                    <TaskItem
+                        key={task.id}
+                        task={task}
+                        hidden={task.completed}
+                    />
+                ))}
             <CompletedTskList />
         </div>
     );
