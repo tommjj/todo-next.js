@@ -1,3 +1,5 @@
+import DetailsContainer from '@/components/ui/details/detail';
+
 function DetailsPage({
     searchParams,
 }: {
@@ -5,7 +7,7 @@ function DetailsPage({
 }) {
     if (!searchParams?.details) return null;
 
-    return <h1>details {searchParams?.details}</h1>;
+    return <DetailsContainer id={searchParams.details} />;
 }
 
 export default DetailsPage;

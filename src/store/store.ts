@@ -26,16 +26,24 @@ const useStore = create<Data & Action>()((set) => ({
     handleToggleCompleteTask: (listId) =>
         set((state) => {
             const list = state.list;
-            const task = list?.tasks;
-            if (!task) return {};
-            const newTask = task.map((item): Task => {
+            const tasks = list?.tasks;
+            let complete = false;
+
+            if (!tasks) return {};
+            const newTasks = tasks.map((item): Task => {
                 if (item.id === listId) {
+                    complete = !item.completed;
                     return { ...item, completed: !item.completed };
                 }
                 return item;
             });
 
-            return { list: { ...list, tasks: [...newTask] } };
+            fetch(`/api/tasks/${listId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ id: listId, completed: complete }),
+            }).then(() => {});
+
+            return { list: { ...list, tasks: [...newTasks] } };
         }),
     handleToggleImportantTask: (listId) =>
         set((state) => {

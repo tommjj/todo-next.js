@@ -21,9 +21,9 @@ export function CheckBox({
     );
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-        (e) => {
+        async (e) => {
             e.stopPropagation();
-            handleToggleCompleteTask(taskId);
+            await handleToggleCompleteTask(taskId);
         },
         [handleToggleCompleteTask, taskId]
     );
@@ -89,14 +89,14 @@ function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
     return (
         <>
             {hidden ? (
-                <div className="animate-remove w-full h-[52px]"></div>
+                <div className="animate-remove mb-[6px] w-full h-[52px] "></div>
             ) : (
                 <div
                     onClick={() => {
                         replace(`?details=${task.id}`);
                     }}
                     draggable
-                    className="animate-expand flex items-center w-full h-[52px] mb-1 px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
+                    className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />
 

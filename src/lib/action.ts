@@ -13,7 +13,7 @@ import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
 import db from './db';
 import { revalidatePath } from 'next/cache';
-import { AccountSchema, CreateTaskSchema } from './zod-schema';
+import { AccountSchema, CreateTaskSchema } from './zod.schema';
 
 export type State =
     | {

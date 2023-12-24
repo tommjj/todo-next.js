@@ -34,9 +34,9 @@ function CompletedTskList() {
                         })}`}
                     />
                 </samp>
-                <div className="select-none">
+                <div className="select-none text-sm">
                     <span className="mr-2">completed</span>
-                    <span>{count}</span>
+                    <span className="font-light">{count}</span>
                 </div>
             </div>
             <div>
