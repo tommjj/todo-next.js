@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation';
 
 type Props = { params: { board: string }; searchParams?: { details?: string } };
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(
     { params, searchParams }: Props,
     parent: ResolvingMetadata
