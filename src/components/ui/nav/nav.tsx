@@ -18,7 +18,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '../drop-down-menu/drop-down-nenu';
+} from '../drop-down-menu/drop-down-menu';
 import { deleteListAction } from '@/lib/action';
 import AlertDialog, {
     AlertDialogAction,
@@ -93,6 +93,7 @@ export function NavLink({
             })}`}
         >
             <Link
+                prefetch={false}
                 href={`/tasks/${list.id}`}
                 className={`flex-grow h-12 pl-4 pr-1 flex items-center `}
             >

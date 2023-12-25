@@ -21,9 +21,9 @@ export function CheckBox({
     );
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-        async (e) => {
+        (e) => {
             e.stopPropagation();
-            await handleToggleCompleteTask(taskId);
+            handleToggleCompleteTask(taskId);
         },
         [handleToggleCompleteTask, taskId]
     );
@@ -84,16 +84,16 @@ export function Important({
 }
 
 function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     return (
         <>
             {hidden ? (
-                <div className="animate-remove mb-[6px] w-full h-[52px] "></div>
+                <div className="transition-all mb-[6px] w-full h-0"></div>
             ) : (
                 <div
                     onClick={() => {
-                        replace(`?details=${task.id}`);
+                        push(`?details=${task.id}`);
                     }}
                     draggable
                     className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"

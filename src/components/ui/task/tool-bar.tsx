@@ -12,7 +12,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '../drop-down-menu/drop-down-nenu';
+} from '../drop-down-menu/drop-down-menu';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { deleteListAction } from '@/lib/action';
 import AlertDialog, {
