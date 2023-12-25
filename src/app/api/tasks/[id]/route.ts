@@ -6,8 +6,8 @@ export function GET() {
     return new Response('hello world!', { status: 200 });
 }
 
-export async function PATCH(res: Request) {
-    const data = await res.json();
+export async function PATCH(req: Request) {
+    const data = await req.json();
     const dataParse = TaskUpdateSchema.safeParse(data);
 
     if (dataParse.success) {

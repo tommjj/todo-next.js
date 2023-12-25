@@ -41,7 +41,9 @@ const useStore = create<Data & Action>()((set) => ({
             fetch(`/api/tasks/${listId}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ id: listId, completed: complete }),
-            }).then(() => {});
+            })
+                .then(() => {})
+                .catch(() => {});
 
             return { list: { ...list, tasks: [...newTasks] } };
         }),
