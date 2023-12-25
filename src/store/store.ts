@@ -8,7 +8,7 @@ type Data = {
 };
 
 type Action = {
-    setList: (list: ListWithTasks) => void;
+    setList: (list: ListWithTasks | null) => void;
     handleToggleNav: () => void;
     handleCloseNav: () => void;
     handleOpenNav: () => void;

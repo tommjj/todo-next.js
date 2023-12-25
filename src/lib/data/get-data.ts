@@ -20,6 +20,7 @@ export async function getUser(username: string) {
 const defaultListSelect = {
     id: true,
     name: true,
+    userId: true,
     tasks: {
         select: {
             id: true,

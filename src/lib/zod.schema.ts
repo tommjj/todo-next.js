@@ -9,6 +9,36 @@ export const RepeatInterval = z.enum([
 ]);
 export const Level = z.enum(['EASY', 'MEDIUM', 'DIFFICULT']);
 
+export const MiniTasksSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    completed: z.boolean(),
+    taskId: z.string(),
+});
+
+export const TaskSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    important: z.boolean(),
+    completed: z.boolean(),
+    dueDate: z.null().or(z.coerce.date()),
+    repeatInterval: RepeatInterval,
+    repeatCount: z.number().or(z.null()),
+    note: z.string().or(z.null()),
+    miniTasks: z.array(MiniTasksSchema),
+    level: Level.or(z.null()),
+    listId: z.string(),
+    order: z.number(),
+    createAt: z.coerce.date(),
+});
+
+export const ListSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    userId: z.string(),
+    tasks: z.array(TaskSchema),
+});
+
 export const MiniTaskUpdateSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
