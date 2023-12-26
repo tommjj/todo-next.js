@@ -2,7 +2,6 @@ import type { Lists } from '@/lib/definitions';
 import db from '@/lib/db';
 import { getSessionUser } from '../auth';
 import { Prisma } from '@prisma/client';
-import { unstable_noStore as noStore } from 'next/cache';
 
 export async function getUser(username: string) {
     try {
@@ -17,7 +16,7 @@ export async function getUser(username: string) {
 //*********list******** */
 //********************* */
 
-export const defaultListSelect: Prisma.ListSelect = {
+export const defaultListSelect = {
     id: true,
     name: true,
     userId: true,
@@ -41,7 +40,7 @@ export const defaultListSelect: Prisma.ListSelect = {
             order: 'desc',
         },
     },
-};
+} satisfies Prisma.ListSelect;
 
 export async function getList<T extends Prisma.ListSelect>(
     listId: string,
@@ -50,7 +49,6 @@ export async function getList<T extends Prisma.ListSelect>(
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {
     const user = await getSessionUser();
-
     if (!user) return [undefined, new Error('miss user')];
 
     const list = await db.list.findUnique({
@@ -67,10 +65,7 @@ export async function getLists(): Promise<
     [undefined, Error] | [Lists, undefined]
 > {
     const user = await getSessionUser();
-
-    if (!user) {
-        return [undefined, new Error('miss user')];
-    }
+    if (!user) return [undefined, new Error('miss user')];
 
     const lists = await db.list.findMany({
         select: { id: true, name: true },

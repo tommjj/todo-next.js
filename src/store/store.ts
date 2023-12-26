@@ -1,4 +1,5 @@
 import { ListWithTasks } from '@/lib/definitions';
+import { TaskUpdate } from '@/lib/zod.schema';
 import { Task } from '@prisma/client';
 import { create } from 'zustand';
 
@@ -40,7 +41,9 @@ const useStore = create<Data & Action>()((set) => ({
 
             fetch(`/api/tasks/${listId}`, {
                 method: 'PATCH',
-                body: JSON.stringify({ id: listId, completed: complete }),
+                body: JSON.stringify({
+                    completed: complete,
+                } satisfies TaskUpdate),
             })
                 .then(() => {})
                 .catch(() => {});
@@ -51,13 +54,25 @@ const useStore = create<Data & Action>()((set) => ({
         set((state) => {
             const list = state.list;
             const task = list?.tasks;
+            let important = false;
+
             if (!task) return {};
             const newTask = task.map((item): Task => {
                 if (item.id === listId) {
+                    important = !item.important;
                     return { ...item, important: !item.important };
                 }
                 return item;
             });
+
+            fetch(`/api/tasks/${listId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    important: important,
+                } satisfies TaskUpdate),
+            })
+                .then(() => {})
+                .catch(() => {});
 
             return { list: { ...list, tasks: [...newTask] } };
         }),

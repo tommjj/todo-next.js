@@ -1,5 +1,4 @@
 import type { Metadata, ResolvingMetadata } from 'next';
-import SetList from '@/components/store/set-list';
 import TaskList from '@/components/ui/task/task-list';
 import CreateTaskForm from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';

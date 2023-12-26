@@ -6,11 +6,15 @@ export function GET() {
     return new Response('hello world!', { status: 200 });
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(
+    req: Request,
+    { params }: { params: { id: string } }
+) {
     const data = await req.json();
     const dataParse = TaskUpdateSchema.safeParse(data);
 
     if (dataParse.success) {
+        const miniTasks = dataParse.data.miniTasks;
         delete dataParse.data.miniTasks;
 
         const updateData = dataParse.data as Prisma.XOR<
@@ -23,7 +27,7 @@ export async function PATCH(req: Request) {
                 ...updateData,
             },
             where: {
-                id: dataParse.data.id,
+                id: params.id,
             },
         });
 
