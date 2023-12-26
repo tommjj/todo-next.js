@@ -1,4 +1,4 @@
-import type { ListWithTasks, Task } from '@/lib/definitions';
+import type { Lists } from '@/lib/definitions';
 import db from '@/lib/db';
 import { getSessionUser } from '../auth';
 import { Prisma } from '@prisma/client';
@@ -17,7 +17,7 @@ export async function getUser(username: string) {
 //*********list******** */
 //********************* */
 
-const defaultListSelect = {
+export const defaultListSelect: Prisma.ListSelect = {
     id: true,
     name: true,
     userId: true,
@@ -41,12 +41,14 @@ const defaultListSelect = {
             order: 'desc',
         },
     },
-} satisfies Prisma.ListSelect;
+};
 
-export async function getList(
+export async function getList<T extends Prisma.ListSelect>(
     listId: string,
-    select: Prisma.ListSelect = defaultListSelect
-): Promise<[undefined, Error] | [ListWithTasks, undefined]> {
+    select: T = defaultListSelect as T
+): Promise<
+    [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
+> {
     const user = await getSessionUser();
 
     if (!user) return [undefined, new Error('miss user')];
@@ -58,11 +60,8 @@ export async function getList(
 
     if (!list) return [undefined, new Error('not found')];
 
-    const typedList = list as ListWithTasks;
-    return [typedList, undefined];
+    return [list, undefined];
 }
-
-export type Lists = { id: string; name: string }[];
 
 export async function getLists(): Promise<
     [undefined, Error] | [Lists, undefined]
@@ -101,10 +100,12 @@ const defaultTaskSelect = {
     order: true,
 } satisfies Prisma.TaskSelect;
 
-export async function getTask(
+export async function getTask<T extends Prisma.TaskSelect>(
     id: string,
-    select: Prisma.TaskSelect = defaultTaskSelect
-): Promise<[undefined, Error] | [Task, undefined]> {
+    select: T = defaultTaskSelect as T
+): Promise<
+    [undefined, Error] | [Prisma.TaskGetPayload<{ select: T }>, undefined]
+> {
     const user = await getSessionUser();
     if (!user) return [undefined, new Error('miss user')];
 
@@ -115,6 +116,5 @@ export async function getTask(
 
     if (!task) return [undefined, new Error('not found')];
 
-    const typedTask = task as Task;
-    return [typedTask, undefined];
+    return [task, undefined];
 }
