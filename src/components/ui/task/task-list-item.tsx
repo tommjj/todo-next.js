@@ -71,7 +71,7 @@ export function Important({
         <span className="flex justify-center px-2 text-[#0D6EFD]">
             <button
                 onClick={handleClick}
-                className={`flex justify-center items-center w-5 h-5`}
+                className={`flex justify-center items-center w-5 h-5 `}
             >
                 {important ? (
                     <StarIconSolid />
