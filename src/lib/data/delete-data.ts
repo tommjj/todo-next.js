@@ -26,3 +26,24 @@ export async function deleteList(listId: string) {
         return err as Error;
     }
 }
+
+export async function deleteTask(id: string) {
+    try {
+        await db.miniTask.deleteMany({
+            where: {
+                task: {
+                    listId: id,
+                },
+            },
+        });
+
+        await db.task.delete({
+            where: {
+                id: id,
+            },
+        });
+        return undefined;
+    } catch (err) {
+        return err as Error;
+    }
+}

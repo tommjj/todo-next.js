@@ -5,7 +5,9 @@ import {
     createTask,
     createUser,
     deleteList,
+    deleteTask,
     getLists,
+    getTask,
     getUser,
 } from '@/lib/data/';
 import { redirect } from 'next/navigation';
@@ -129,6 +131,15 @@ export async function deleteListAction(listId: string) {
     redirect(
         `/tasks/${lists[deleteListIndex === 0 ? 1 : deleteListIndex - 1].id}`
     );
+}
+
+export async function deleteTaskAction(id: string) {
+    const [task, err] = await getTask(id, { id: true });
+
+    if (!task) return;
+
+    await deleteTask(id);
+    revalidatePath('/tasks', 'layout');
 }
 
 export async function createTaskAction(listId: string, formData: FormData) {
