@@ -1,3 +1,4 @@
+import { getSessionUser } from '@/lib/auth';
 import db from '@/lib/db';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
@@ -10,6 +11,9 @@ export async function PATCH(
     req: Request,
     { params }: { params: { id: string } }
 ) {
+    const user = await getSessionUser();
+    if (!user) return new Response('', { status: 400 });
+
     const data = await req.json();
     const dataParse = TaskUpdateSchema.safeParse(data);
 
@@ -28,6 +32,9 @@ export async function PATCH(
             },
             where: {
                 id: params.id,
+                list: {
+                    userId: user.id,
+                },
             },
         });
 

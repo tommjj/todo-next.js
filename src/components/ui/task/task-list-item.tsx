@@ -61,6 +61,7 @@ export function Important({
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
         (e) => {
+            e.stopPropagation();
             handleToggleImportantTask(taskId);
         },
         [handleToggleImportantTask, taskId]
@@ -83,16 +84,11 @@ export function Important({
 }
 
 function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
-    const ref = useRef<HTMLDivElement>(null);
     const { push } = useRouter();
 
-    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(
-        (e) => {
-            if (!ref.current) return;
-            if (e.target === ref.current) push(`?details=${task.id}`);
-        },
-        [push, task.id]
-    );
+    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
+        push(`?details=${task.id}`);
+    }, [push, task.id]);
 
     return (
         <>
@@ -100,7 +96,6 @@ function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
                 <div className="transition-all mb-[6px] w-full h-0"></div>
             ) : (
                 <div
-                    ref={ref}
                     onClick={handleClick}
                     draggable
                     className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
