@@ -1,11 +1,10 @@
 'use client';
 
-import { ListWithTasks } from './definitions';
-import { ListSchema } from './zod.schema';
+import { List, ListSchema } from './zod.schema';
 
 export async function getListById(
     id: string
-): Promise<[undefined, unknown] | [ListWithTasks, undefined]> {
+): Promise<[undefined, unknown] | [List, undefined]> {
     try {
         const data = await (await fetch(`/api/lists/${id}`)).json();
 

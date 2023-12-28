@@ -1,10 +1,10 @@
 'use client';
 
-import { ListWithTasks } from '@/lib/definitions';
+import { List } from '@/lib/zod.schema';
 import useStore from '@/store/store';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
-function SetList({ list }: { list: ListWithTasks }) {
+function SetList({ list }: { list: List }) {
     const setList = useStore((state) => state.setList);
 
     useEffect(() => {

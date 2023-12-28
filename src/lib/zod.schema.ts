@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// ENUM
 export const RepeatInterval = z.enum([
     'NONE',
     'DAILY',
@@ -12,13 +13,15 @@ export const Level = z.enum(['EASY', 'MEDIUM', 'DIFFICULT']);
 export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
     e === '' ? null : e
 );
+//----====SCHEMA====----\\
 
-export const MiniTasksSchema = z.object({
+export const MiniTaskSchema = z.object({
     id: z.string(),
     title: z.string(),
     completed: z.boolean(),
     taskId: z.string(),
 });
+export type MiniTask = z.infer<typeof MiniTaskSchema>;
 
 export const TaskSchema = z.object({
     id: z.string(),
@@ -29,12 +32,13 @@ export const TaskSchema = z.object({
     repeatInterval: RepeatInterval,
     repeatCount: z.nullable(z.number()),
     note: z.nullable(z.string()),
-    miniTasks: z.array(MiniTasksSchema),
+    miniTasks: z.array(MiniTaskSchema),
     level: z.nullable(Level),
     listId: z.string(),
     order: z.number(),
     createAt: z.coerce.date(),
 });
+export type Task = z.infer<typeof TaskSchema>;
 
 export const ListSchema = z.object({
     id: z.string(),
@@ -42,6 +46,16 @@ export const ListSchema = z.object({
     userId: z.string(),
     tasks: z.array(TaskSchema),
 });
+export type List = z.infer<typeof ListSchema>;
+
+export const UserSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    lists: z.array(ListSchema),
+});
+export type User = z.infer<typeof UserSchema>;
+
+//----====UPDATE SCHEMA====----\\
 
 export const MiniTaskUpdateSchema = z.object({
     id: z.string().optional(),

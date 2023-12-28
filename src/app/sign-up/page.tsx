@@ -1,3 +1,4 @@
+import Logo from '@/components/logo';
 import SignUpForm from '@/components/signup/signup-form';
 import Header from '@/components/ui/header';
 
@@ -7,7 +8,10 @@ function SignUpPage() {
             <Header
                 className="relative z-50 md:px-4 lg:px-6"
                 showUserInformation={false}
-            />
+            >
+                <Logo />
+                <div></div>
+            </Header>
             <main className="relative z-10 flex w-full h-screen justify-center items-center -mt-14">
                 <SignUpForm />
             </main>

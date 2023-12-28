@@ -21,7 +21,7 @@ export default function DetailsContainer({ id }: { id: string }) {
     return (
         <>
             {task && (
-                <div className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-[999] lg:shadow-[-2px_0_5px_rgba(0,0,0,0.2)]">
+                <div className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-10 lg:shadow-[-2px_0_5px_rgba(0,0,0,0.2)]">
                     <div
                         onClick={handleClickOverlay}
                         className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"

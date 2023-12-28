@@ -2,9 +2,10 @@
 
 import useStore from '@/store/store';
 import TaskItem from './task-list-item';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { Task } from '@prisma/client';
 
 function CompletedTskList() {
     const tasks = useStore((state) => state.list?.tasks);
@@ -53,19 +54,45 @@ function CompletedTskList() {
     );
 }
 
+function renderList(lastState: Map<string, number>, tasks: Task[]) {}
+
 function TaskList() {
     const list = useStore((state) => state.list);
+    const [lastListMap, setLastListMap] = useState(new Map<string, number>());
+    const listMap = useMemo(() => {
+        const listMap = new Map<string, number>();
+        if (list?.tasks) {
+            let count = 0;
+            list.tasks.forEach((element) => {
+                if (element.completed === false) {
+                    listMap.set(element.id, count++);
+                }
+            });
+        }
+        return listMap;
+    }, [list?.tasks]);
+
+    useEffect(() => {
+        const id = setTimeout(() => {
+            setLastListMap(listMap);
+        }, 100);
+        return () => {
+            clearTimeout(id);
+        };
+    }, [listMap]);
 
     return (
         <div className="w-full flex-grow mt-3 overflow-y-auto">
             {list &&
-                list.tasks?.map((task) => (
-                    <TaskItem
-                        key={task.id}
-                        task={task}
-                        hidden={task.completed}
-                    />
-                ))}
+                list.tasks?.map((task) => {
+                    return (
+                        <TaskItem
+                            key={task.id}
+                            task={task}
+                            hidden={task.completed}
+                        />
+                    );
+                })}
             <CompletedTskList />
         </div>
     );

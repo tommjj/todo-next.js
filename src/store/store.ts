@@ -1,15 +1,13 @@
-import { ListWithTasks } from '@/lib/definitions';
-import { TaskUpdate } from '@/lib/zod.schema';
-import { Task } from '@prisma/client';
+import { List, TaskUpdate, Task } from '@/lib/zod.schema';
 import { create } from 'zustand';
 
 type Data = {
     isOpenNav: boolean;
-    list: ListWithTasks | null;
+    list: List | null;
 };
 
 type Action = {
-    setList: (list: ListWithTasks | null) => void;
+    setList: (list: List | null) => void;
     handleToggleNav: () => void;
     handleCloseNav: () => void;
     handleOpenNav: () => void;
