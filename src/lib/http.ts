@@ -1,6 +1,6 @@
 'use client';
 
-import { List, ListSchema } from './zod.schema';
+import { List, ListSchema, TaskUpdate } from './zod.schema';
 
 export async function getListById(
     id: string
@@ -18,4 +18,19 @@ export async function getListById(
     } catch (error) {
         return [undefined, error];
     }
+}
+
+export function updateTaskById(id: string, task: TaskUpdate) {
+    return fetch(`/api/tasks/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+            ...task,
+        } satisfies TaskUpdate),
+    });
+}
+
+export async function deleteTaskById(id: string) {
+    return fetch(`/api/tasks/${id}`, {
+        method: 'DELETE',
+    });
 }

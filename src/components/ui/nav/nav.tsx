@@ -30,7 +30,7 @@ import AlertDialog, {
     AlertDialogTrigger,
 } from '../alert-dialog/alert-dialog';
 import Button from '../button';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 function Nav({ lists }: { lists: Lists }) {
     const [isSmS, setIsSmS] = useState(false);
@@ -39,6 +39,14 @@ function Nav({ lists }: { lists: Lists }) {
     const handleCloseNav = useStore((state) => state.handleCloseNav);
     const handleOpenNav = useStore((state) => state.handleOpenNav);
     const pathname = usePathname();
+
+    useLayoutEffect(() => {
+        if (window.innerWidth < 768) {
+            setIsSmS(true);
+        } else {
+            setIsSmS(false);
+        }
+    }, []);
 
     useEffect(() => {
         const handleResize = (e: Event) => {

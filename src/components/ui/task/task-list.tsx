@@ -2,13 +2,14 @@
 
 import useStore from '@/store/store';
 import TaskItem from './task-list-item';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { Task } from '@prisma/client';
 
 function CompletedTskList() {
     const tasks = useStore((state) => state.list?.tasks);
+    const bin = useStore((state) => state.bin);
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = useCallback(() => {
@@ -18,7 +19,7 @@ function CompletedTskList() {
     if (!tasks) return <></>;
 
     const count = tasks.reduce((count, item) => {
-        if (item.completed) return ++count;
+        if (item.completed && !bin.has(item.id)) return ++count;
         return count;
     }, 0);
 
@@ -46,7 +47,7 @@ function CompletedTskList() {
                         <TaskItem
                             key={task.id}
                             task={task}
-                            hidden={!task.completed}
+                            hidden={!task.completed || bin.has(task.id)}
                         />
                     ))}
             </div>
@@ -54,32 +55,9 @@ function CompletedTskList() {
     );
 }
 
-function renderList(lastState: Map<string, number>, tasks: Task[]) {}
-
 function TaskList() {
     const list = useStore((state) => state.list);
-    const [lastListMap, setLastListMap] = useState(new Map<string, number>());
-    const listMap = useMemo(() => {
-        const listMap = new Map<string, number>();
-        if (list?.tasks) {
-            let count = 0;
-            list.tasks.forEach((element) => {
-                if (element.completed === false) {
-                    listMap.set(element.id, count++);
-                }
-            });
-        }
-        return listMap;
-    }, [list?.tasks]);
-
-    useEffect(() => {
-        const id = setTimeout(() => {
-            setLastListMap(listMap);
-        }, 100);
-        return () => {
-            clearTimeout(id);
-        };
-    }, [listMap]);
+    const bin = useStore((state) => state.bin);
 
     return (
         <div className="w-full flex-grow mt-3 overflow-y-auto">
@@ -89,7 +67,7 @@ function TaskList() {
                         <TaskItem
                             key={task.id}
                             task={task}
-                            hidden={task.completed}
+                            hidden={task.completed || bin.has(task.id)}
                         />
                     );
                 })}

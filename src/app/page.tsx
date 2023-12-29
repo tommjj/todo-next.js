@@ -1,14 +1,5 @@
 import Logo from '@/components/logo';
-import AlertDialog, {
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog/alert-dialog';
+
 import Button from '@/components/ui/button';
 import Header from '@/components/ui/header';
 import UserButton from '@/components/ui/user-button';
@@ -101,29 +92,7 @@ export default function Home() {
             </Header>
             <main className="min-h-screen w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                <section className="w-full h-screen">
-                    <AlertDialog>
-                        <AlertDialogTrigger>
-                            <Button variant="outline">Click me</Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                    Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete your list and remove all
-                                    data of list from our servers.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction>Continue</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </section>
+                <section className="w-full h-screen"></section>
             </main>
         </>
     );

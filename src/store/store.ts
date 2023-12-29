@@ -1,9 +1,21 @@
 import { List, TaskUpdate, Task } from '@/lib/zod.schema';
 import { create } from 'zustand';
+import { setTaskById } from '@/lib/utils';
+import { updateTaskById } from '@/lib/http';
 
 type Data = {
     isOpenNav: boolean;
     list: List | null;
+    bin: Set<string>;
+};
+
+type Sync = {
+    sync: () => Promise<any>;
+};
+
+type DeleteSync = {
+    sync: () => Promise<any>;
+    cancel: () => void;
 };
 
 type Action = {
@@ -11,69 +23,63 @@ type Action = {
     handleToggleNav: () => void;
     handleCloseNav: () => void;
     handleOpenNav: () => void;
-    handleToggleCompleteTask: (listId: string) => void;
-    handleToggleImportantTask: (listId: string) => void;
+    handleToggleCompleteTask: (listId: string) => Sync;
+    handleToggleImportantTask: (listId: string) => Sync;
+    deleteTask: (taskId: string) => void;
 };
 
 const useStore = create<Data & Action>()((set) => ({
-    isOpenNav: true,
+    isOpenNav: false,
     list: null,
+    bin: new Set<string>(),
     setList: (list) => set(() => ({ list: list })),
-    handleToggleNav: () => set((state) => ({ isOpenNav: !state.isOpenNav })),
-    handleCloseNav: () => set((state) => ({ isOpenNav: false })),
-    handleOpenNav: () => set((state) => ({ isOpenNav: true })),
-    handleToggleCompleteTask: (listId) =>
-        set((state) => {
-            const list = state.list;
+    handleToggleNav: () => set((priv) => ({ isOpenNav: !priv.isOpenNav })),
+    handleCloseNav: () => set(() => ({ isOpenNav: false })),
+    handleOpenNav: () => set(() => ({ isOpenNav: true })),
+    handleToggleCompleteTask: (listId) => {
+        let complete = false;
+
+        set((priv) => {
+            const list = priv.list;
             const tasks = list?.tasks;
-            let complete = false;
 
             if (!tasks) return {};
-            const newTasks = tasks.map((item): Task => {
-                if (item.id === listId) {
-                    complete = !item.completed;
-                    return { ...item, completed: !item.completed };
-                }
-                return item;
-            });
+            const [newTasks, newTask] = setTaskById(tasks, listId, (state) => ({
+                ...state,
+                completed: !state.completed,
+            }));
+            complete = newTask?.completed || false;
 
-            fetch(`/api/tasks/${listId}`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    completed: complete,
-                } satisfies TaskUpdate),
-            })
-                .then(() => {})
-                .catch(() => {});
+            return { list: { ...list, tasks: newTasks } };
+        });
 
-            return { list: { ...list, tasks: [...newTasks] } };
-        }),
-    handleToggleImportantTask: (listId) =>
-        set((state) => {
-            const list = state.list;
-            const task = list?.tasks;
-            let important = false;
+        return {
+            sync: () => updateTaskById(listId, { completed: complete }),
+        };
+    },
+    handleToggleImportantTask: (listId) => {
+        let important = false;
 
-            if (!task) return {};
-            const newTask = task.map((item): Task => {
-                if (item.id === listId) {
-                    important = !item.important;
-                    return { ...item, important: !item.important };
-                }
-                return item;
-            });
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
 
-            fetch(`/api/tasks/${listId}`, {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    important: important,
-                } satisfies TaskUpdate),
-            })
-                .then(() => {})
-                .catch(() => {});
+            if (!tasks) return {};
+            const [newTasks, newTask] = setTaskById(tasks, listId, (state) => ({
+                ...state,
+                important: !state.important,
+            }));
+            important = newTask?.important || false;
 
-            return { list: { ...list, tasks: [...newTask] } };
-        }),
+            return { list: { ...list, tasks: newTasks } };
+        });
+        return {
+            sync: () => updateTaskById(listId, { important: important }),
+        };
+    },
+    deleteTask: (taskId) => {
+        set((priv) => ({ bin: new Set(priv.bin).add(taskId) }));
+    },
 }));
 
 export default useStore;

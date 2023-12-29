@@ -6,7 +6,13 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 import useStore from '@/store/store';
-import { MouseEventHandler, useCallback, useRef } from 'react';
+import {
+    MouseEventHandler,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { useRouter } from 'next/navigation';
 
 export function CheckBox({
@@ -21,9 +27,9 @@ export function CheckBox({
     );
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-        (e) => {
+        async (e) => {
             e.stopPropagation();
-            handleToggleCompleteTask(taskId);
+            await handleToggleCompleteTask(taskId).sync();
         },
         [handleToggleCompleteTask, taskId]
     );
@@ -60,9 +66,9 @@ export function Important({
     );
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-        (e) => {
+        async (e) => {
             e.stopPropagation();
-            handleToggleImportantTask(taskId);
+            await handleToggleImportantTask(taskId).sync();
         },
         [handleToggleImportantTask, taskId]
     );
@@ -84,16 +90,34 @@ export function Important({
 }
 
 function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
+    const [appeared, setAppeared] = useState(false);
+
     const { push } = useRouter();
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
         push(`?details=${task.id}`);
     }, [push, task.id]);
 
+    useEffect(() => {
+        if (!hidden) {
+            setAppeared(true);
+            return;
+        }
+        const timeOut = setTimeout(() => {
+            setAppeared(false);
+        }, 150);
+
+        return () => {
+            clearTimeout(timeOut);
+        };
+    }, [hidden]);
+
     return (
         <>
             {hidden ? (
-                <div className="transition-all mb-[6px] w-full h-0"></div>
+                appeared ? (
+                    <div className="transition-all mb-[6px] w-full h-0"></div>
+                ) : null
             ) : (
                 <div
                     onClick={handleClick}

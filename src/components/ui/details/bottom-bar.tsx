@@ -17,10 +17,13 @@ import AlertDialog, {
 } from '../alert-dialog/alert-dialog';
 import Button from '../button';
 import { deleteTaskAction } from '@/lib/action';
+import useStore from '@/store/store';
+import { deleteTaskById } from '@/lib/http';
 
 function BottomBar({ task }: { task: Task }) {
     const pathname = usePathname();
     const { push } = useRouter();
+    const deleteTask = useStore((state) => state.deleteTask);
 
     const handleClickOverlay = useCallback(() => {
         push(pathname);
@@ -63,15 +66,15 @@ function BottomBar({ task }: { task: Task }) {
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction asChild>
-                            <form action={action}>
-                                <Button
-                                    type="submit"
-                                    variant="destructive"
-                                    onClick={handleClickOverlay}
-                                >
-                                    Continue
-                                </Button>
-                            </form>
+                            <Button
+                                variant="dark"
+                                onClick={async () => {
+                                    deleteTask(task.id);
+                                    await deleteTaskById(task.id);
+                                }}
+                            >
+                                Continue
+                            </Button>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
