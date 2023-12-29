@@ -11,7 +11,6 @@ import {
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useLayoutEffect } from 'react';
 import CreateListForm from '../create-list/create-list-form';
 import {
     DropdownMenu,
@@ -31,21 +30,45 @@ import AlertDialog, {
     AlertDialogTrigger,
 } from '../alert-dialog/alert-dialog';
 import Button from '../button';
+import { useEffect, useState } from 'react';
 
 function Nav({ lists }: { lists: Lists }) {
+    const [isSmS, setIsSmS] = useState(false);
     const isOpen = useStore((state) => state.isOpenNav);
     const handleToggleNav = useStore((state) => state.handleToggleNav);
-    const handleClose = useStore((state) => state.handleCloseNav);
+    const handleCloseNav = useStore((state) => state.handleCloseNav);
+    const handleOpenNav = useStore((state) => state.handleOpenNav);
+    const pathname = usePathname();
 
-    useLayoutEffect(() => {
-        if (window.innerWidth < 768) {
-            handleClose();
+    useEffect(() => {
+        const handleResize = (e: Event) => {
+            const target = e.target as Window;
+
+            if (target.innerWidth < 768) {
+                setIsSmS(true);
+            } else {
+                setIsSmS(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    });
+
+    useEffect(() => {
+        if (isSmS) {
+            handleCloseNav();
+        } else {
+            handleOpenNav();
         }
-    }, [handleClose]);
+    }, [isSmS, handleCloseNav, handleOpenNav, pathname]);
 
     return (
         <nav
-            className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r z-50 ${clsx(
+            className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r z-10 ${clsx(
                 { hidden: !isOpen }
             )}`}
         >
