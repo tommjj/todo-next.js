@@ -1,7 +1,7 @@
 import { List, TaskUpdate, Task } from '@/lib/zod.schema';
 import { create } from 'zustand';
 import { setTaskById } from '@/lib/utils';
-import { updateTaskById } from '@/lib/http';
+import { deleteTaskById, updateTaskById } from '@/lib/http';
 
 type Data = {
     isOpenNav: boolean;
@@ -15,7 +15,7 @@ type Sync = {
 
 type DeleteSync = {
     sync: () => Promise<any>;
-    cancel: () => void;
+    cancel: () => boolean;
 };
 
 type Action = {
@@ -25,7 +25,7 @@ type Action = {
     handleOpenNav: () => void;
     handleToggleCompleteTask: (listId: string) => Sync;
     handleToggleImportantTask: (listId: string) => Sync;
-    deleteTask: (taskId: string) => void;
+    deleteTask: (taskId: string) => DeleteSync;
 };
 
 const useStore = create<Data & Action>()((set) => ({
@@ -78,7 +78,54 @@ const useStore = create<Data & Action>()((set) => ({
         };
     },
     deleteTask: (taskId) => {
+        var isCancel = false;
         set((priv) => ({ bin: new Set(priv.bin).add(taskId) }));
+        return {
+            sync: async () => {
+                if (isCancel) return;
+                try {
+                    await deleteTaskById(taskId);
+
+                    set((priv) => {
+                        const list = priv.list;
+                        const tasks = list?.tasks;
+                        const bin = priv.bin;
+                        bin.delete(taskId);
+
+                        if (!tasks) return {};
+                        const newTasks = tasks.filter(
+                            (task) => task.id !== taskId
+                        );
+
+                        return {
+                            list: { ...list, tasks: newTasks },
+                            bin: new Set(bin),
+                        };
+                    });
+                } catch (error) {
+                    set((priv) => {
+                        const bin = priv.bin;
+                        bin.delete(taskId);
+
+                        return {
+                            bin: new Set(bin),
+                        };
+                    });
+                }
+            },
+            cancel: () => {
+                isCancel = true;
+                set((priv) => {
+                    const bin = priv.bin;
+                    bin.delete(taskId);
+
+                    return {
+                        bin: new Set(bin),
+                    };
+                });
+                return true;
+            },
+        };
     },
 }));
 

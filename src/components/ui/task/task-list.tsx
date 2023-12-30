@@ -6,6 +6,8 @@ import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { Task } from '@prisma/client';
+import Button from '../button';
+import { toast } from '../sonner/sonner';
 
 function CompletedTskList() {
     const tasks = useStore((state) => state.list?.tasks);

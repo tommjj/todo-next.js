@@ -3,6 +3,7 @@ import { Providers } from '@/components/providers';
 import { inter } from '../components/font';
 
 import './globals.css';
+import Toaster from '@/components/ui/sonner/sonner';
 
 export const metadata: Metadata = {
     title: 'TODO',
@@ -19,6 +20,7 @@ export default function RootLayout(props: {
                 <Providers>
                     {props.children}
                     {props.modal}
+                    <Toaster />
                 </Providers>
             </body>
         </html>

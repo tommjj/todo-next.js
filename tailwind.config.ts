@@ -16,6 +16,9 @@ const config: Config = {
                     '0%': { opacity: '0' },
                     '100%': { opacity: '1' },
                 },
+                up: {
+                    '0%': { transform: 'translateY(300%)' },
+                },
                 open: {
                     '0%': { transform: 'scale(0.6)' },
                 },
@@ -30,6 +33,7 @@ const config: Config = {
                 },
             },
             animation: {
+                up: 'up .2s ease-in-out',
                 expandX: 'expandX .55s ease-in-out',
                 remove: 'remove .07s ease-in-out forwards',
                 expand: 'expand .07s ease-in-out',
