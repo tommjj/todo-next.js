@@ -38,6 +38,12 @@ function ResizeContainer({
     }, []);
 
     useEffect(() => {
+        setWidth((priv) =>
+            priv > maxWidth ? maxWidth : priv < minWidth ? minWidth : priv
+        );
+    }, [maxWidth, minWidth]);
+
+    useEffect(() => {
         if (!ref.current) return;
         if (!isMouseDown) return;
 
@@ -71,7 +77,9 @@ function ResizeContainer({
         const handleMouseClick = () => {
             setIsMouseDown(false);
 
-            setWidth((privState) => privState - offset);
+            var rect = ref.current?.getBoundingClientRect()!;
+
+            setWidth(rect.width - offset);
             setOffset(0);
         };
 

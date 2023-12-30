@@ -22,11 +22,15 @@ const config: Config = {
                 expand: {
                     '0%': { height: '0', opacity: '0' },
                 },
+                expandX: {
+                    '0%': { transform: 'translateX(100%)', opacity: '0' },
+                },
                 remove: {
                     '100%': { height: '0', opacity: '0' },
                 },
             },
             animation: {
+                expandX: 'expandX .55s ease-in-out',
                 remove: 'remove .07s ease-in-out forwards',
                 expand: 'expand .07s ease-in-out',
                 open: 'open .07s ease-in-out',

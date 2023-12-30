@@ -9,7 +9,7 @@ function Template({ children }: { children: React.ReactNode }) {
                 <aside>
                     <SideNav />
                 </aside>
-                <div className="flex grow">{children}</div>
+                <div className="flex grow overflow-hidden">{children}</div>
             </div>
         </div>
     );

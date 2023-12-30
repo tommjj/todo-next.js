@@ -122,7 +122,7 @@ function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
                 <div
                     onClick={handleClick}
                     draggable
-                    className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] hover:bg-[#0D6EFD15] cursor-pointer transition-all"
+                    className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#0D6EFD15] cursor-pointer transition-all"
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />
 

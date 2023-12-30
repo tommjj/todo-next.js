@@ -32,7 +32,7 @@ function BottomBar({ task }: { task: Task }) {
     const action = deleteTaskAction.bind(null, task.id);
 
     return (
-        <div className="h-14 flex items-center px-5 border-t justify-between font-light text-[#333]">
+        <div className="h-14 flex items-center px-5 border-t justify-between font-light text-[#333] ">
             <button
                 className="py-2"
                 onClick={handleClickOverlay}
@@ -41,7 +41,7 @@ function BottomBar({ task }: { task: Task }) {
                 <ArrowRightIcon className="h-[19px]" strokeWidth={1} />
             </button>
             <span className="text-sm">
-                Create at {task.createAt.toDateString()}
+                Created at {task.createAt.toDateString()}
             </span>
             <AlertDialog>
                 <AlertDialogTrigger>

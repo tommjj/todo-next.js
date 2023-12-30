@@ -10,7 +10,7 @@ function Layout({
     return (
         <>
             <main className="w-full h-full flex flex-col">{children}</main>
-            <aside>{details}</aside>
+            {details}
             {search}
         </>
     );

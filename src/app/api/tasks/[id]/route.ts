@@ -51,10 +51,10 @@ export async function DELETE(
 ) {
     const [task] = await getTask(params.id, { id: true });
 
-    if (!task) return new Response('', { status: 401 });
+    if (!task) return new Response(undefined, { status: 401 });
 
     const err = await deleteTask(params.id);
 
-    if (err) return new Response('', { status: 410 });
+    if (err) return new Response(undefined, { status: 410 });
     return new Response(undefined, { status: 204 });
 }
