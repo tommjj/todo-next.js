@@ -5,6 +5,8 @@ import ResizeContainer from '../resize-container';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BottomBar from './bottom-bar';
+import Button from '../button';
+import { toast } from '../sonner/sonner';
 
 export default function DetailsContainer({ id }: { id: string }) {
     const [maxWidth, setMaxWidth] = useState(700);
@@ -60,7 +62,24 @@ export default function DetailsContainer({ id }: { id: string }) {
                         minWidth={360}
                         maxWidth={maxWidth}
                     >
-                        <div className="w-full flex-grow  p-2"></div>
+                        <div className="w-full flex-grow  p-2">
+                            <Button
+                                onClick={() => {
+                                    toast({
+                                        title: 'deleted',
+                                        description: `deleted ${Date.now()}`,
+                                        callBack: async () => {},
+                                        action: {
+                                            label: 'cancel',
+                                            onClick: () => {},
+                                        },
+                                    });
+                                }}
+                                variant="dark"
+                            >
+                                Click me!
+                            </Button>
+                        </div>
                         <BottomBar task={task} />
                     </ResizeContainer>
                 </aside>

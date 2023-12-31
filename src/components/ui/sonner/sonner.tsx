@@ -5,10 +5,12 @@ import {
     MouseEventHandler,
     useCallback,
     useEffect,
+    useRef,
     useState,
 } from 'react';
 import Button, { Variant } from '../button';
 import clsx from 'clsx';
+import { useDrag } from '@/components/hook';
 
 type Toast = {
     title: string;
@@ -48,22 +50,12 @@ export function ToastItem({
     index: number;
     remove: (id: number) => void;
 }) {
-    const [state, setState] = useState({
-        isMouseDown: false,
-        y: 0,
-        currentY: 0,
-    });
+    const { ref, translateY, isMouseDown } = useDrag();
+    const [removed, setRemoved] = useState(false);
 
-    const handleMouseDown: MouseEventHandler = useCallback((e) => {
-        const newState = { isMouseDown: true, y: e.clientY, currentY: 0 };
-        setState(newState);
-    }, []);
-
-    const translate = state.isMouseDown
+    const translate = isMouseDown
         ? ({
-              top: `${
-                  state.currentY - state.y < 0 ? 0 : state.currentY - state.y
-              }px`,
+              transform: `translateY(${translateY < 0 ? 0 : translateY}px)`,
           } satisfies CSSProperties)
         : {};
 
@@ -74,41 +66,23 @@ export function ToastItem({
     }, [toast]);
 
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            if (state.isMouseDown) {
-                setState({
-                    isMouseDown: true,
-                    currentY: e.clientY,
-                    y: state.y,
-                });
-            }
-        };
-
-        document.addEventListener('mousemove', handleMouseMove);
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-        };
-    }, [state.isMouseDown, state.y]);
-
-    useEffect(() => {
         const handleMouseClick = () => {
-            if (state.currentY - state.y > 18) {
-                remove(id);
+            if (translateY > 18) {
+                setRemoved(true);
+                setTimeout(() => {
+                    remove(id);
+                }, 200);
             }
-            setState({
-                isMouseDown: false,
-                y: 0,
-                currentY: 0,
-            });
         };
 
-        document.addEventListener('click', handleMouseClick);
+        document.addEventListener('touchend', handleMouseClick);
+        document.addEventListener('mouseup', handleMouseClick);
 
         return () => {
-            document.removeEventListener('click', handleMouseClick);
+            document.removeEventListener('touchend', handleMouseClick);
+            document.removeEventListener('mouseup', handleMouseClick);
         };
-    }, [id, remove, state.currentY, state.y]);
+    }, [id, remove, translateY]);
 
     const handleClickAction = (
         action: MouseEventHandler
@@ -121,13 +95,15 @@ export function ToastItem({
 
     return (
         <div
-            onMouseDown={handleMouseDown}
+            ref={ref}
             style={translate}
             className={`relative w-full sm:w-[22rem] animate-up select-none ${clsx(
                 {
                     'h-3 group-hover:h-16 group-hover:mt-2': index < 2,
                     'opacity-0 h-0 overflow-hidden': index > 2,
-                    'transition-all duration-300': !state.isMouseDown,
+                    'transition-all duration-300': !isMouseDown,
+                    'transition-all duration-150 translate-y-60 opacity-0':
+                        removed,
                     'h-16 mt-2 ': open && index < 3,
                 }
             )} `}
@@ -241,7 +217,7 @@ export default function Toaster() {
             onMouseDown={onMouseDown}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
-            className={`group fixed bottom-4 w-screen sm:w-auto p-2 right-0 sm:right-8 z-50 flex flex-col justify-between items-center bg-white transition-all duration-150 ${clsx(
+            className={`group fixed bottom-4 w-screen sm:w-auto p-2 right-0 sm:right-8 z-50 flex flex-col justify-between items-center transition-all duration-150 touch-none ${clsx(
                 {
                     hidden: toasts.length === 0,
                     'translate-y-96': startClose,
