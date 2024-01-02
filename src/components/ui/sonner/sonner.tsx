@@ -97,16 +97,14 @@ export function ToastItem({
         <div
             ref={ref}
             style={translate}
-            className={`relative w-full sm:w-[22rem] animate-up select-none ${clsx(
-                {
-                    'h-3 group-hover:h-16 group-hover:mt-2': index < 2,
-                    'opacity-0 h-0 overflow-hidden': index > 2,
-                    'transition-all duration-300': !isMouseDown,
-                    'transition-all duration-150 translate-y-60 opacity-0':
-                        removed,
-                    'h-16 mt-2 ': open && index < 3,
-                }
-            )} `}
+            className={`relative w-full sm:w-[22rem] select-none ${clsx({
+                'h-3 group-hover:h-16 group-hover:mt-2': index < 2,
+                'opacity-0 h-0 overflow-hidden': index > 2,
+                'transition-all duration-300': !isMouseDown,
+                'animate-deflate': removed,
+                'animate-up': !removed,
+                'h-16 mt-2 ': open && index < 3,
+            })} `}
         >
             <div
                 className={`absolute bottom-0 left-0 w-full sm:w-[22rem] p-3 border rounded-md  text-[13px] bg-white dark:bg-[#111] shadow-lg transition-all duration-300 ${clsx(
@@ -114,6 +112,8 @@ export function ToastItem({
                         'scale-95  group-hover:scale-100 ': index === 1,
                         'scale-90 group-hover:scale-100': index === 2,
                         'scale-100': open && index < 3,
+                        'transition-all duration-200 translate-y-[280px] opacity-0':
+                            removed,
                     }
                 )}`}
             >
@@ -125,8 +125,10 @@ export function ToastItem({
                     })}`}
                 >
                     <div className=" text-[#333] dark:text-white flex-grow h-9">
-                        <div className="font-semibold">{toast.title}</div>
-                        <div>{toast.description}</div>
+                        <div className="font-semibold line-clamp-1">
+                            {toast.title}
+                        </div>
+                        <div className="line-clamp-1">{toast.description}</div>
                     </div>
                     <div className="flex justify-center items-center ml-2">
                         {toast.action && (

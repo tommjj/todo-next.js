@@ -16,6 +16,8 @@ export const useDrag = () => {
         if (!ref.current) return;
         const element = ref.current;
         const handleMouseDown = (e: MouseEvent) => {
+            window?.getSelection()?.removeAllRanges();
+
             setState({
                 isMouseDown: true,
                 startX: e.clientX,
@@ -27,6 +29,8 @@ export const useDrag = () => {
             });
         };
         const handleTouchStart = (e: TouchEvent) => {
+            window?.getSelection()?.removeAllRanges();
+
             setState({
                 isMouseDown: true,
                 startX: e.changedTouches[0].clientX,

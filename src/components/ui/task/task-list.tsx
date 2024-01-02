@@ -5,6 +5,7 @@ import TaskItem from './task-list-item';
 import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { DNDProvider, DnDContainer } from '../drag-a-drop/drag-a-drop';
 
 function CompletedTskList() {
     const tasks = useStore((state) => state.list?.tasks);
@@ -60,17 +61,21 @@ function TaskList() {
 
     return (
         <div className="w-full flex-grow mt-3 overflow-y-auto">
-            {list &&
-                list.tasks?.map((task) => {
-                    return (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            hidden={task.completed || bin.has(task.id)}
-                        />
-                    );
-                })}
-            <CompletedTskList />
+            <DNDProvider>
+                <DnDContainer>
+                    {list &&
+                        list.tasks?.map((task) => {
+                            return (
+                                <TaskItem
+                                    key={task.id}
+                                    task={task}
+                                    hidden={task.completed || bin.has(task.id)}
+                                />
+                            );
+                        })}
+                    <CompletedTskList />
+                </DnDContainer>
+            </DNDProvider>
         </div>
     );
 }

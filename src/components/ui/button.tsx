@@ -1,19 +1,22 @@
 'use client';
 
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
-export type Variant =
-    | ''
-    | 'link'
-    | 'ghost'
-    | 'primary'
-    | 'warning'
-    | 'success'
-    | 'secondary'
-    | 'destructive'
-    | 'outline'
-    | 'dark';
+const buttonVariant = {
+    ghost: 'hover:bg-[#09090920] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
+    primary: 'bg-[#0D6EFD] text-[#FAFAFA] dark:bg-[#0058dc]',
+    warning: 'bg-[#FFC107] text-[#FAFAFA]',
+    success: 'bg-[#198754] text-[#FAFAFA]',
+    secondary:
+        'bg-[#F4F4F5] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA]',
+    destructive: 'bg-[#DC2626] text-[#FAFAFA]',
+    outline: '',
+    dark: 'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]',
+    link: 'text-[#0D6EFD] underline',
+};
+
+export type Variant = keyof typeof buttonVariant;
 
 interface Button extends React.ButtonHTMLAttributes<{}> {
     variant?: Variant;
@@ -27,37 +30,23 @@ export default function Button({
     className,
     disabled = false,
     roundedFull = false,
-    variant = '',
+    variant = 'dark',
     ...props
 }: Button) {
-    let Comp: any = 'button';
+    let Comp: any = props.href ? Link : 'button';
 
-    if (props.href) {
-        Comp = Link;
-    }
-
-    className = `flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90 ${clsx(
+    const ClassName = cn(
+        'flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90',
+        buttonVariant[variant],
         {
-            'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]':
-                variant === 'dark',
-            'bg-[#0D6EFD] text-[#FAFAFA] dark:bg-[#0058dc]':
-                variant === 'primary',
-            'bg-[#198754] text-[#FAFAFA]': variant === 'success',
-            'bg-[#F4F4F5] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA]':
-                variant === 'secondary',
-            'bg-[#FFC107] text-[#FAFAFA]': variant === 'warning',
-            'bg-[#DC2626] text-[#FAFAFA]': variant === 'destructive',
-            'text-[#0D6EFD] underline ': variant === 'link',
-            border: variant === 'outline',
-            'hover:bg-[#09090920] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]':
-                variant === 'ghost',
             'rounded-full px-5': roundedFull,
             'rounded-md px-4': !roundedFull,
-        }
-    )} ${className}`;
+        },
+        className
+    );
 
     return (
-        <Comp className={className} {...props}>
+        <Comp className={ClassName} {...props}>
             {children}
         </Comp>
     );

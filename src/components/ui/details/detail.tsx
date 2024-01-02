@@ -30,7 +30,6 @@ export default function DetailsContainer({ id }: { id: string }) {
             const w = element.parentElement?.getBoundingClientRect().width;
 
             if (w && window.innerWidth > 1024) {
-                console.log(w);
                 setMaxWidth(w - 350);
             } else {
                 setMaxWidth(700);
@@ -63,22 +62,7 @@ export default function DetailsContainer({ id }: { id: string }) {
                         maxWidth={maxWidth}
                     >
                         <div className="w-full flex-grow  p-2">
-                            <Button
-                                onClick={() => {
-                                    toast({
-                                        title: 'deleted',
-                                        description: `deleted ${Date.now()}`,
-                                        callBack: async () => {},
-                                        action: {
-                                            label: 'cancel',
-                                            onClick: () => {},
-                                        },
-                                    });
-                                }}
-                                variant="dark"
-                            >
-                                Click me!
-                            </Button>
+                            <Button variant="dark">Click me!</Button>
                         </div>
                         <BottomBar task={task} />
                     </ResizeContainer>

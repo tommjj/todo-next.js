@@ -1,19 +1,22 @@
-import { Task } from '@prisma/client';
+import {
+    MouseEventHandler,
+    memo,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
+import { Task } from '@/lib/zod.schema';
 import {
     CheckIcon,
     StarIcon as StarIconOutline,
 } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
+
 import useStore from '@/store/store';
-import {
-    MouseEventHandler,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
-import { useRouter } from 'next/navigation';
+import { useDrag } from '@/components/ui/drag-a-drop/drag-a-drop';
+import { cn } from '@/lib/utils';
 
 export function CheckBox({
     completed,
@@ -89,9 +92,15 @@ export function Important({
     );
 }
 
-function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
+const TaskItem = ({
+    task,
+    hidden = false,
+}: {
+    task: Task;
+    hidden?: boolean;
+}) => {
+    const { ref, translateY, isMouseDown } = useDrag({ id: task.id });
     const [appeared, setAppeared] = useState(false);
-
     const { push } = useRouter();
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
@@ -116,13 +125,33 @@ function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
         <>
             {hidden ? (
                 appeared ? (
-                    <div className="transition-all mb-[6px] w-full h-0"></div>
+                    <div
+                        ref={ref as any}
+                        className="transition-all mb-[6px] w-full h-0"
+                    ></div>
                 ) : null
             ) : (
                 <div
+                    ref={ref as any}
                     onClick={handleClick}
-                    draggable
-                    className="animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#0D6EFD15] cursor-pointer transition-all"
+                    onDragStart={(e) => {
+                        console.log(e);
+                    }}
+                    onDragOver={(e) => {
+                        console.log('over', e.dataTransfer.getData('id'));
+                    }}
+                    style={
+                        isMouseDown
+                            ? {
+                                  transform: `translateY(${translateY}px)`,
+                                  transition: 'none',
+                              }
+                            : {}
+                    }
+                    className={cn(
+                        'touch-none animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#0D6EFD15] cursor-pointer transition-all',
+                        ''
+                    )}
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />
 
@@ -137,5 +166,5 @@ function TaskItem({ task, hidden = false }: { task: Task; hidden?: boolean }) {
             )}
         </>
     );
-}
+};
 export default TaskItem;

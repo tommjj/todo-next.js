@@ -17,7 +17,14 @@ const config: Config = {
                     '100%': { opacity: '1' },
                 },
                 up: {
-                    '0%': { transform: 'translateY(300%)' },
+                    '0%': {
+                        transform: 'translateY(280px)',
+                        opacity: '0',
+                        height: '0',
+                    },
+                },
+                deflate: {
+                    '100%': { height: '0' },
                 },
                 open: {
                     '0%': { transform: 'scale(0.6)' },
@@ -33,6 +40,7 @@ const config: Config = {
                 },
             },
             animation: {
+                deflate: 'deflate .3s ease-in-out',
                 up: 'up .2s ease-in-out',
                 expandX: 'expandX .55s ease-in-out',
                 remove: 'remove .07s ease-in-out forwards',
