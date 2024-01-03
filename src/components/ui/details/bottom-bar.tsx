@@ -34,8 +34,9 @@ function BottomBar({ task }: { task: Task }) {
             <button
                 className="py-2"
                 onClick={async () => {
-                    const { sync, cancel } = deleteTask(task.id);
                     handleClickOverlay();
+                    const { sync, cancel } = deleteTask(task.id);
+
                     toast({
                         title: 'deleted',
                         description: `deleted ${task.title}`,

@@ -15,7 +15,7 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 
 import useStore from '@/store/store';
-import { useDrag } from '@/components/ui/drag-a-drop/drag-a-drop';
+import { useDndDrag } from '@/components/ui/drag-a-drop/drag-a-drop';
 import { cn } from '@/lib/utils';
 import { date } from 'zod';
 
@@ -100,7 +100,7 @@ const TaskItem = ({
     task: Task;
     hidden?: boolean;
 }) => {
-    const { ref, translateY, isMouseDown } = useDrag({
+    const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,
         delay: 1000,
     });
@@ -161,22 +161,23 @@ const TaskItem = ({
                         console.log('end', e.dataTransfer.getData('id'));
                     }}
                     style={
-                        isMouseDown
+                        isDrag
                             ? {
                                   transform: `translateY(${translateY}px)`,
                                   transition: 'none',
-                                  zIndex: 100,
+                                  touchAction: 'none',
+                                  pointerEvents: 'none',
                               }
                             : {}
                     }
                     className={cn(
                         'animate-expand bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
-                        { 'shadow-lg touch-none bg-[#DCEAFF]': isMouseDown }
+                        { 'shadow-lg touch-none bg-[#DCEAFF]': isDrag }
                     )}
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />
 
-                    <div className="px-2 text-[#444] flex-grow">
+                    <div className={cn('px-2 text-[#444] flex-grow touch')}>
                         <p className="text-sm">{task.title}</p>
                         <p className="text-xs font-light">
                             {task.dueDate?.toDateString()}
