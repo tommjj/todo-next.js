@@ -1,8 +1,8 @@
 import {
     MouseEventHandler,
-    memo,
     useCallback,
     useEffect,
+    useRef,
     useState,
 } from 'react';
 import { Task } from '@/lib/zod.schema';
@@ -17,6 +17,7 @@ import clsx from 'clsx';
 import useStore from '@/store/store';
 import { useDrag } from '@/components/ui/drag-a-drop/drag-a-drop';
 import { cn } from '@/lib/utils';
+import { date } from 'zod';
 
 export function CheckBox({
     completed,
@@ -99,12 +100,20 @@ const TaskItem = ({
     task: Task;
     hidden?: boolean;
 }) => {
-    const { ref, translateY, isMouseDown } = useDrag({ id: task.id });
+    const { ref, translateY, isMouseDown } = useDrag({
+        id: task.id,
+        delay: 1000,
+    });
+    const timeStartClick = useRef(0);
     const [appeared, setAppeared] = useState(false);
     const { push } = useRouter();
 
+    const handleStartClick = useCallback(() => {
+        timeStartClick.current = Date.now();
+    }, []);
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
-        push(`?details=${task.id}`);
+        if (timeStartClick.current + 900 > Date.now())
+            push(`?details=${task.id}`);
     }, [push, task.id]);
 
     useEffect(() => {
@@ -134,23 +143,35 @@ const TaskItem = ({
                 <div
                     ref={ref as any}
                     onClick={handleClick}
+                    onMouseDown={handleStartClick}
+                    onTouchStart={handleStartClick}
                     onDragStart={(e) => {
                         console.log(e);
                     }}
                     onDragOver={(e) => {
                         console.log('over', e.dataTransfer.getData('id'));
                     }}
+                    onDragLeave={(e) => {
+                        console.log('leave', e.dataTransfer.getData('id'));
+                    }}
+                    onDragEnter={(e) => {
+                        console.log('enter', e.dataTransfer.getData('id'));
+                    }}
+                    onDragEnd={(e) => {
+                        console.log('end', e.dataTransfer.getData('id'));
+                    }}
                     style={
                         isMouseDown
                             ? {
                                   transform: `translateY(${translateY}px)`,
                                   transition: 'none',
+                                  zIndex: 100,
                               }
                             : {}
                     }
                     className={cn(
-                        'touch-none animate-expand flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#0D6EFD15] cursor-pointer transition-all',
-                        ''
+                        'animate-expand bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
+                        { 'shadow-lg touch-none bg-[#DCEAFF]': isMouseDown }
                     )}
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 export const useDrag = () => {
     const ref = useRef<any>();
     const [state, setState] = useState({
-        isMouseDown: false,
+        isDragging: false,
         startX: 0,
         startY: 0,
         currentX: 0,
@@ -12,6 +12,7 @@ export const useDrag = () => {
         translateY: 0,
     });
 
+    //handle drag start
     useEffect(() => {
         if (!ref.current) return;
         const element = ref.current;
@@ -19,7 +20,7 @@ export const useDrag = () => {
             window?.getSelection()?.removeAllRanges();
 
             setState({
-                isMouseDown: true,
+                isDragging: true,
                 startX: e.clientX,
                 startY: e.clientY,
                 currentX: e.clientX,
@@ -32,7 +33,7 @@ export const useDrag = () => {
             window?.getSelection()?.removeAllRanges();
 
             setState({
-                isMouseDown: true,
+                isDragging: true,
                 startX: e.changedTouches[0].clientX,
                 startY: e.changedTouches[0].clientY,
                 currentX: e.changedTouches[0].clientX,
@@ -51,11 +52,12 @@ export const useDrag = () => {
         };
     }, []);
 
+    //handle drag
     useEffect(() => {
-        if (!state.isMouseDown) return;
+        if (!state.isDragging) return;
         const handleMouseMove = (e: MouseEvent) => {
             setState({
-                isMouseDown: true,
+                isDragging: true,
                 currentX: e.clientX,
                 currentY: e.clientY,
                 startX: state.startX,
@@ -67,7 +69,7 @@ export const useDrag = () => {
 
         const handleTouchMove = (e: TouchEvent) => {
             setState({
-                isMouseDown: true,
+                isDragging: true,
                 currentX: e.changedTouches[0].clientX,
                 currentY: e.changedTouches[0].clientY,
                 startX: state.startX,
@@ -83,13 +85,15 @@ export const useDrag = () => {
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('touchmove', handleTouchMove);
         };
-    }, [state.isMouseDown, state.startX, state.startY]);
+    }, [state.isDragging, state.startX, state.startY]);
 
+    // drag end
     useEffect(() => {
+        if (state.isDragging) return;
         const handleUp = () => {
             setState((priv) => ({
                 ...priv,
-                isMouseDown: false,
+                isDragging: false,
             }));
         };
 
@@ -100,7 +104,7 @@ export const useDrag = () => {
             document.removeEventListener('touchend', handleUp);
             document.removeEventListener('mouseup', handleUp);
         };
-    }, []);
+    }, [state.isDragging]);
 
     return { ...state, ref };
 };

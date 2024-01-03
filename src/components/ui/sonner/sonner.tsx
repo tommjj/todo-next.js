@@ -50,7 +50,7 @@ export function ToastItem({
     index: number;
     remove: (id: number) => void;
 }) {
-    const { ref, translateY, isMouseDown } = useDrag();
+    const { ref, translateY, isDragging: isMouseDown } = useDrag();
     const [removed, setRemoved] = useState(false);
 
     const translate = isMouseDown

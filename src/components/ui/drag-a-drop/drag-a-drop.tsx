@@ -1,4 +1,4 @@
-import { calculateOverlapArea } from '@/lib/utils';
+import { calculateOverlapArea, createDebounce } from '@/lib/utils';
 import {
     Dispatch,
     SetStateAction,
@@ -6,6 +6,7 @@ import {
     useCallback,
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react';
@@ -26,7 +27,7 @@ type DndItem = {
 };
 
 type ContextState = {
-    dragging: DndItem | null;
+    dragging: React.MutableRefObject<DndItem | null>;
     dragItems: DndItem[];
     dropItems: DndItem[];
 };
@@ -35,7 +36,7 @@ type ContextState = {
 
 export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, setState] = useState<ContextState>({
-        dragging: null,
+        dragging: useRef<DndItem | null>(null),
         dragItems: [],
         dropItems: [],
     });
@@ -57,12 +58,12 @@ export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
         }));
     }, []);
 
-    const setDragging = useCallback((item: DndItem | null) => {
-        setState((priv) => ({
-            ...priv,
-            dragging: item,
-        }));
-    }, []);
+    const setDragging = useCallback(
+        (item: DndItem | null) => {
+            state.dragging.current = item;
+        },
+        [state.dragging]
+    );
 
     return (
         <DndContext.Provider
@@ -80,19 +81,22 @@ export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
+    const over = useRef<DndItem | null>(null);
     const {
         state: { dragging, dragItems },
     } = useContext(DndContext)!;
 
     useEffect(() => {
-        if (!dragging) return;
         const handleMove = (e: MouseEvent) => {
-            const draggingRect = dragging?.ref.current?.getBoundingClientRect();
+            if (!dragging.current?.ref.current) return;
+
+            const draggingRect =
+                dragging.current.ref.current.getBoundingClientRect();
 
             let max = 0;
             const overElement = dragItems.reduce<DndItem | undefined>(
                 (elem, item) => {
-                    if (item.id === dragging.id) return elem;
+                    if (item.id === dragging.current?.id) return elem;
                     const ref = item.ref;
                     if (ref.current) {
                         const rect = ref.current?.getBoundingClientRect();
@@ -107,10 +111,25 @@ export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
                 },
                 undefined
             );
+            const dataTransfer = new DataTransfer();
+            dataTransfer.setData('id', dragging.current.id);
 
             if (overElement?.id) {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.setData('id', overElement.id);
+                if (over.current?.id !== overElement.id) {
+                    over.current?.ref.current?.dispatchEvent(
+                        new DragEvent('dragleave', {
+                            bubbles: true,
+                            dataTransfer: dataTransfer,
+                        })
+                    );
+                    overElement.ref.current?.dispatchEvent(
+                        new DragEvent('dragenter', {
+                            bubbles: true,
+                            dataTransfer: dataTransfer,
+                        })
+                    );
+                    over.current = overElement;
+                }
 
                 overElement.ref.current?.dispatchEvent(
                     new DragEvent('dragover', {
@@ -118,19 +137,45 @@ export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
                         dataTransfer: dataTransfer,
                     })
                 );
+            } else {
+                over.current?.ref.current?.dispatchEvent(
+                    new DragEvent('dragleave', {
+                        bubbles: true,
+                        dataTransfer: dataTransfer,
+                    })
+                );
+                over.current = null;
             }
         };
 
+        const handleMouseUp = () => {
+            if (over.current?.ref && dragging.current) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.setData('id', dragging.current.id);
+
+                over.current.ref.current?.dispatchEvent(
+                    new DragEvent('dragend', {
+                        bubbles: true,
+                        dataTransfer: dataTransfer,
+                    })
+                );
+                over.current = null;
+            }
+        };
+
+        document.addEventListener('mouseup', handleMouseUp);
         document.addEventListener('mousemove', handleMove);
         return () => {
+            document.removeEventListener('mouseup', handleMouseUp);
+
             document.removeEventListener('mousemove', handleMove);
         };
-    }, [dragging, dragItems]);
+    }, [dragItems, dragging]);
 
     return <>{children}</>;
 };
 
-export const useDrag = (props: { id: string }) => {
+export const useDrag = (props: { id: string; delay?: number }) => {
     const ref = useRef<HTMLBaseElement>(null);
     const { addDragItem, removeDragItem, setDragging } =
         useContext(DndContext)!;
@@ -157,42 +202,44 @@ export const useDrag = (props: { id: string }) => {
         if (!ref.current || state.isMouseDown) return;
         const element = ref.current;
 
-        const handle = () => {
+        const handle = (clientX: number, clientY: number) => {
             window?.getSelection()?.removeAllRanges();
             setDragging({ id: props.id, ref });
+            setState({
+                isMouseDown: true,
+                startX: clientX,
+                startY: clientY,
+                currentX: clientX,
+                currentY: clientY,
+                translateX: 0,
+                translateY: 0,
+            });
         };
 
+        const deb = createDebounce(handle, props.delay || 0);
+
         const handleMouseDown = (e: MouseEvent) => {
-            handle();
-            setState({
-                isMouseDown: true,
-                startX: e.clientX,
-                startY: e.clientY,
-                currentX: e.clientX,
-                currentY: e.clientY,
-                translateX: 0,
-                translateY: 0,
-            });
+            deb.func(e.clientX, e.clientY);
         };
         const handleTouchStart = (e: TouchEvent) => {
-            handle();
-            setState({
-                isMouseDown: true,
-                startX: e.changedTouches[0].clientX,
-                startY: e.changedTouches[0].clientY,
-                currentX: e.changedTouches[0].clientX,
-                currentY: e.changedTouches[0].clientY,
-                translateX: 0,
-                translateY: 0,
-            });
+            deb.func(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        };
+        const handleClear = () => {
+            deb.clear();
         };
 
         element.addEventListener('mousedown', handleMouseDown);
         element.addEventListener('touchstart', handleTouchStart);
+        element.addEventListener('mouseup', handleClear);
+        element.addEventListener('mouseleave', handleClear);
+        element.addEventListener('touchend', handleClear);
 
         return () => {
             element.removeEventListener('mousedown', handleMouseDown);
             element.removeEventListener('touchstart', handleTouchStart);
+            element.removeEventListener('mouseup', handleClear);
+            element.removeEventListener('mouseleave', handleClear);
+            element.removeEventListener('touchend', handleClear);
         };
     }, [props, setDragging, state.isMouseDown]);
 
