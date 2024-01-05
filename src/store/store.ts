@@ -1,6 +1,6 @@
 import { List, TaskUpdate, Task } from '@/lib/zod.schema';
 import { create } from 'zustand';
-import { setTaskById } from '@/lib/utils';
+import { arrayMove, setTaskById } from '@/lib/utils';
 import { deleteTaskById, updateTaskById } from '@/lib/http';
 
 type Data = {
@@ -26,6 +26,12 @@ type Action = {
     handleToggleCompleteTask: (listId: string) => Sync;
     handleToggleImportantTask: (listId: string) => Sync;
     deleteTask: (taskId: string) => DeleteSync;
+    moveItem: (fromIndex: number, toIndex: number) => void;
+    moveItemById: (
+        itemIdMove: string,
+        ItemIdMilestones: string,
+        dir: 'top' | 'bottom'
+    ) => void;
 };
 
 const useStore = create<Data & Action>()((set) => ({
@@ -126,6 +132,49 @@ const useStore = create<Data & Action>()((set) => ({
                 return true;
             },
         };
+    },
+    moveItem: (fromIndex, toIndex) => {
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
+            if (!tasks) return {};
+
+            const newList = [...tasks];
+
+            arrayMove(newList, fromIndex, toIndex);
+            return {
+                list: { ...list, tasks: [...newList] },
+            };
+        });
+    },
+    moveItemById: (itemIdMove, itemIdMilestones, dir) => {
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
+            if (!tasks) return {};
+
+            const fromIndex = tasks.findIndex((e) => e.id === itemIdMove);
+            const toIndex = tasks.findIndex((e) => e.id === itemIdMilestones);
+
+            if (fromIndex === -1 || toIndex === -1) return {};
+
+            const setIndex = () => {
+                return dir === 'bottom'
+                    ? fromIndex < toIndex
+                        ? toIndex
+                        : toIndex + 1
+                    : fromIndex > toIndex
+                    ? toIndex
+                    : toIndex - 1;
+            };
+
+            const newList = [...tasks];
+
+            arrayMove(newList, fromIndex, setIndex());
+            return {
+                list: { ...list, tasks: [...newList] },
+            };
+        });
     },
 }));
 

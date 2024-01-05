@@ -17,6 +17,8 @@ const DndContext = createContext<{
     state: ContextState;
     setState: Dispatch<SetStateAction<ContextState>>;
     addDragItem: (id: string, ref: React.RefObject<HTMLBaseElement>) => void;
+    getItemById: (id: string) => HTMLBaseElement | undefined | null;
+    getDraggingItem: () => HTMLBaseElement | null;
     removeDragItem: (is: string) => void;
     setDragging: (item: DndItem | null) => void;
 } | null>(null);
@@ -65,6 +67,18 @@ export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
         [state.dragging]
     );
 
+    const getItemById = useCallback(
+        (id: String) => {
+            const item = state.dragItems.find((e) => e.id === id);
+            return item?.ref.current;
+        },
+        [state.dragItems]
+    );
+
+    const getDraggingItem = useCallback(() => {
+        return state.dragging.current?.ref.current || null;
+    }, [state.dragging]);
+
     return (
         <DndContext.Provider
             value={{
@@ -73,6 +87,8 @@ export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
                 addDragItem,
                 removeDragItem,
                 setDragging,
+                getItemById,
+                getDraggingItem,
             }}
         >
             {children}
@@ -179,6 +195,8 @@ export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>;
 };
 
+//----====HOOK====----\\
+
 export const useDndDrag = (props: { id: string; delay?: number }) => {
     const ref = useRef<HTMLBaseElement>(null);
     const { addDragItem, removeDragItem, setDragging } =
@@ -207,12 +225,14 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
         const element = ref.current;
 
         const handle = (clientX: number, clientY: number) => {
+            const rect = ref.current?.getBoundingClientRect()!;
+
             window?.getSelection()?.removeAllRanges();
             setDragging({ id: props.id, ref });
             setState({
                 isDrag: true,
-                startX: clientX,
-                startY: clientY,
+                startX: clientX - rect.x,
+                startY: clientY - rect.y,
                 currentX: clientX,
                 currentY: clientY,
                 translateX: 0,
@@ -222,34 +242,78 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
 
         const deb = createDebounce(handle, props.delay || 0);
 
-        const handleMouseDown = (e: MouseEvent) => {
-            deb.func(e.clientX, e.clientY);
-        };
-        const handleTouchStart = (e: TouchEvent) => {
-            deb.func(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-        };
         const handleClear = () => {
             deb.clear();
         };
 
+        const handleMouseDown = (e: MouseEvent) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            deb.func(x, y);
+
+            if (props.delay) {
+                const handleClearTimeout = (e: MouseEvent) => {
+                    const edge1 = e.clientX - x;
+                    const edge2 = e.clientY - y;
+                    if (Math.sqrt(edge1 * edge1 + edge2 * edge2) > 12) {
+                        deb.clear();
+                    }
+                };
+
+                element.addEventListener('mouseup', handleClear);
+
+                document.addEventListener('mousemove', handleClearTimeout);
+                setTimeout(() => {
+                    document.removeEventListener(
+                        'mousemove',
+                        handleClearTimeout
+                    );
+                    element.removeEventListener('mouseup', handleClear);
+                }, props.delay);
+            }
+        };
+        const handleTouchStart = (e: TouchEvent) => {
+            const x = e.changedTouches[0].clientX;
+            const y = e.changedTouches[0].clientY;
+            deb.func(x, y);
+
+            if (props.delay) {
+                const handleClearTimeout = (e: TouchEvent) => {
+                    const edge1 = e.changedTouches[0].clientX - x;
+                    const edge2 = e.changedTouches[0].clientY - y;
+                    if (Math.sqrt(edge1 * edge1 + edge2 * edge2) > 12) {
+                        deb.clear();
+                    }
+                };
+
+                document.addEventListener('touchmove', handleClearTimeout);
+                element.addEventListener('touchend', handleClear);
+                setTimeout(() => {
+                    document.removeEventListener(
+                        'touchmove',
+                        handleClearTimeout
+                    );
+                    element.removeEventListener('touchend', handleClear);
+                }, props.delay);
+            }
+        };
+
         element.addEventListener('mousedown', handleMouseDown);
         element.addEventListener('touchstart', handleTouchStart);
-        element.addEventListener('mouseup', handleClear);
-        element.addEventListener('mouseleave', handleClear);
-        element.addEventListener('touchend', handleClear);
 
         return () => {
             element.removeEventListener('mousedown', handleMouseDown);
             element.removeEventListener('touchstart', handleTouchStart);
-            element.removeEventListener('mouseup', handleClear);
-            element.removeEventListener('mouseleave', handleClear);
-            element.removeEventListener('touchend', handleClear);
         };
     }, [props, setDragging, state.isDrag]);
 
     useEffect(() => {
         if (!state.isDrag) return;
+
         const handleMouseMove = (e: MouseEvent) => {
+            const rect = ref.current?.getBoundingClientRect()!;
+            var matrix = new WebKitCSSMatrix(ref.current?.style.transform);
+
             window?.getSelection()?.removeAllRanges();
             setState({
                 isDrag: true,
@@ -257,13 +321,16 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
                 currentY: e.clientY,
                 startX: state.startX,
                 startY: state.startY,
-                translateX: e.clientX - state.startX,
-                translateY: e.clientY - state.startY,
+                translateX: e.clientX - (state.startX + (rect.x - matrix.m41)),
+                translateY: e.clientY - (state.startY + (rect.y - matrix.m42)),
             });
         };
 
         const handleTouchMove = (e: TouchEvent) => {
             e.preventDefault();
+            const rect = ref.current?.getBoundingClientRect()!;
+            var matrix = new WebKitCSSMatrix(ref.current?.style.transform);
+
             window?.getSelection()?.removeAllRanges();
             setState({
                 isDrag: true,
@@ -271,8 +338,12 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
                 currentY: e.changedTouches[0].clientY,
                 startX: state.startX,
                 startY: state.startY,
-                translateX: e.changedTouches[0].clientX - state.startX,
-                translateY: e.changedTouches[0].clientY - state.startY,
+                translateX:
+                    e.changedTouches[0].clientX -
+                    (state.startX + (rect.x - matrix.m41)),
+                translateY:
+                    e.changedTouches[0].clientY -
+                    (state.startY + (rect.y - matrix.m42)),
             });
         };
 
@@ -307,4 +378,9 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
     }, [setDragging, state.isDrag]);
 
     return { ...state, ref };
+};
+
+export const useDndMethods = () => {
+    const { getItemById, getDraggingItem } = useContext(DndContext)!;
+    return { getItemById, getDraggingItem };
 };

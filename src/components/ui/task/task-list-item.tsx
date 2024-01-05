@@ -1,4 +1,5 @@
 import {
+    DragEventHandler,
     MouseEventHandler,
     useCallback,
     useEffect,
@@ -15,9 +16,11 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 
 import useStore from '@/store/store';
-import { useDndDrag } from '@/components/ui/drag-a-drop/drag-a-drop';
+import {
+    useDndDrag,
+    useDndMethods,
+} from '@/components/ui/drag-a-drop/drag-a-drop';
 import { cn } from '@/lib/utils';
-import { date } from 'zod';
 
 export function CheckBox({
     completed,
@@ -104,9 +107,13 @@ const TaskItem = ({
         id: task.id,
         delay: 1000,
     });
+    const moveItemById = useStore((state) => state.moveItemById);
+    const { getDraggingItem } = useDndMethods();
+    const { push } = useRouter();
+
     const timeStartClick = useRef(0);
     const [appeared, setAppeared] = useState(false);
-    const { push } = useRouter();
+    const [over, setOver] = useState({ dir: true, isOver: false });
 
     const handleStartClick = useCallback(() => {
         timeStartClick.current = Date.now();
@@ -130,6 +137,43 @@ const TaskItem = ({
         };
     }, [hidden]);
 
+    const handleOver: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect)
+                setOver({ dir: draggingRect.y < rect.y, isOver: true });
+        },
+        [getDraggingItem, ref]
+    );
+    const handleEnd: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect) {
+                moveItemById(
+                    e.dataTransfer.getData('id'),
+                    task.id,
+                    draggingRect.y < rect.y ? 'top' : 'bottom'
+                );
+            }
+            setOver({ dir: false, isOver: false });
+        },
+        [getDraggingItem, moveItemById, ref, task.id]
+    );
+    const handleEnter: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect)
+                setOver({ dir: draggingRect.y < rect.y, isOver: true });
+        },
+        [getDraggingItem, ref]
+    );
+    const handleLeave: DragEventHandler = useCallback((e) => {
+        setOver({ dir: false, isOver: false });
+    }, []);
+
     return (
         <>
             {hidden ? (
@@ -148,31 +192,28 @@ const TaskItem = ({
                     onDragStart={(e) => {
                         console.log(e);
                     }}
-                    onDragOver={(e) => {
-                        console.log('over', e.dataTransfer.getData('id'));
-                    }}
-                    onDragLeave={(e) => {
-                        console.log('leave', e.dataTransfer.getData('id'));
-                    }}
-                    onDragEnter={(e) => {
-                        console.log('enter', e.dataTransfer.getData('id'));
-                    }}
-                    onDragEnd={(e) => {
-                        console.log('end', e.dataTransfer.getData('id'));
-                    }}
+                    onDragOver={handleOver}
+                    onDragLeave={handleLeave}
+                    onDragEnter={handleEnter}
+                    onDragEnd={handleEnd}
                     style={
                         isDrag
                             ? {
                                   transform: `translateY(${translateY}px)`,
                                   transition: 'none',
-                                  touchAction: 'none',
-                                  pointerEvents: 'none',
                               }
                             : {}
                     }
                     className={cn(
-                        'animate-expand bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
-                        { 'shadow-lg touch-none bg-[#DCEAFF]': isDrag }
+                        'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
+                        {
+                            'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50':
+                                isDrag,
+                            'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[2px] before:z-40 z-20 before:left-0 ':
+                                over.isOver,
+                            'before:top-[-5px] ': over.dir,
+                            'before:bottom-[-5px]': !over.dir,
+                        }
                     )}
                 >
                     <CheckBox completed={task.completed} taskId={task.id} />

@@ -60,7 +60,7 @@ function TaskList() {
     const bin = useStore((state) => state.bin);
 
     return (
-        <div className="w-full flex-grow mt-3 px-3 overflow-y-auto relative">
+        <div className="w-full flex-grow mt-3 px-3 lg:px-5 overflow-y-auto relative">
             <DNDProvider>
                 <DnDContainer>
                     {list &&

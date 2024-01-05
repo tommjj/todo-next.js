@@ -15,6 +15,8 @@ export default function DetailsContainer({ id }: { id: string }) {
     const ref = useRef<HTMLDivElement>(null);
     const task = list && list.tasks?.find((e) => e.id === id);
 
+    const moveItem = useStore((state) => state.moveItem);
+
     const pathname = usePathname();
     const { push } = useRouter();
 
@@ -61,7 +63,12 @@ export default function DetailsContainer({ id }: { id: string }) {
                         minWidth={360}
                         maxWidth={maxWidth}
                     >
-                        <div className="w-full flex-grow  p-2">
+                        <div
+                            className="w-full flex-grow  p-2"
+                            onClick={() => {
+                                moveItem(0, 2);
+                            }}
+                        >
                             <Button variant="dark">Click me!</Button>
                         </div>
                         <BottomBar task={task} />
