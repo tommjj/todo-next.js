@@ -1,3 +1,5 @@
+'use client';
+
 import { calculateOverlapArea, createDebounce } from '@/lib/utils';
 import {
     Dispatch,
@@ -30,7 +32,7 @@ type DndItem = {
 
 type ContextState = {
     dragging: React.MutableRefObject<DndItem | null>;
-    dragItems: DndItem[];
+    dragItems: React.MutableRefObject<DndItem[]>;
     dropItems: DndItem[];
 };
 
@@ -39,26 +41,25 @@ type ContextState = {
 export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, setState] = useState<ContextState>({
         dragging: useRef<DndItem | null>(null),
-        dragItems: [],
+        dragItems: useRef<DndItem[]>([]),
         dropItems: [],
     });
 
     const addDragItem = useCallback(
         (id: string, ref: React.RefObject<HTMLBaseElement>) => {
-            setState((priv) => ({
-                ...priv,
-                dragItems: [...priv.dragItems, { id, ref }],
-            }));
+            state.dragItems.current = [...state.dragItems.current, { id, ref }];
         },
-        []
+        [state.dragItems]
     );
 
-    const removeDragItem = useCallback((id: string) => {
-        setState((priv) => ({
-            ...priv,
-            dragItems: [...priv.dragItems.filter((i) => i.id !== id)],
-        }));
-    }, []);
+    const removeDragItem = useCallback(
+        (id: string) => {
+            state.dragItems.current = [
+                ...state.dragItems.current.filter((e) => e.id !== id),
+            ];
+        },
+        [state.dragItems]
+    );
 
     const setDragging = useCallback(
         (item: DndItem | null) => {
@@ -69,7 +70,7 @@ export const DNDProvider = ({ children }: { children: React.ReactNode }) => {
 
     const getItemById = useCallback(
         (id: String) => {
-            const item = state.dragItems.find((e) => e.id === id);
+            const item = state.dragItems.current.find((e) => e.id === id);
             return item?.ref.current;
         },
         [state.dragItems]
@@ -110,7 +111,7 @@ export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
                 dragging.current.ref.current.getBoundingClientRect();
 
             let max = 0;
-            const overElement = dragItems.reduce<DndItem | undefined>(
+            const overElement = dragItems.current.reduce<DndItem | undefined>(
                 (elem, item) => {
                     if (item.id === dragging.current?.id) return elem;
                     const ref = item.ref;
@@ -218,7 +219,7 @@ export const useDndDrag = (props: { id: string; delay?: number }) => {
         return () => {
             removeDragItem(props.id);
         };
-    }, [addDragItem, removeDragItem, props.id]);
+    }, [addDragItem, removeDragItem, props]);
 
     useEffect(() => {
         if (!ref.current || state.isDrag) return;

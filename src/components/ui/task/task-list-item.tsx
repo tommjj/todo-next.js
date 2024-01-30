@@ -1,3 +1,5 @@
+'use client';
+
 import {
     DragEventHandler,
     MouseEventHandler,
@@ -96,13 +98,39 @@ export function Important({
     );
 }
 
-const TaskItem = ({
-    task,
-    hidden = false,
+export const RemoveAnimation = ({
+    children,
 }: {
-    task: Task;
-    hidden?: boolean;
+    children: React.ReactNode;
 }) => {
+    const [isNull, setIsNull] = useState(true);
+
+    useEffect(() => {
+        if (children) {
+            setIsNull(false);
+            return;
+        }
+        const id = setTimeout(() => {
+            setIsNull(true);
+        }, 1000);
+
+        return () => {
+            clearTimeout(id);
+        };
+    }, [children]);
+
+    return (
+        <>
+            {isNull ? null : children ? (
+                <>{children}</>
+            ) : (
+                <div className="animate-remove w-full h-[52px] mb-[6px]"></div>
+            )}
+        </>
+    );
+};
+
+const TaskItem = ({ task }: { task: Task }) => {
     const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,
         delay: 1000,
@@ -112,7 +140,6 @@ const TaskItem = ({
     const { push } = useRouter();
 
     const timeStartClick = useRef(0);
-    const [appeared, setAppeared] = useState(false);
     const [over, setOver] = useState({ dir: true, isOver: false });
 
     const handleStartClick = useCallback(() => {
@@ -122,20 +149,6 @@ const TaskItem = ({
         if (timeStartClick.current + 900 > Date.now())
             push(`?details=${task.id}`);
     }, [push, task.id]);
-
-    useEffect(() => {
-        if (!hidden) {
-            setAppeared(true);
-            return;
-        }
-        const timeOut = setTimeout(() => {
-            setAppeared(false);
-        }, 150);
-
-        return () => {
-            clearTimeout(timeOut);
-        };
-    }, [hidden]);
 
     const handleOver: DragEventHandler = useCallback(
         (e) => {
@@ -175,59 +188,44 @@ const TaskItem = ({
     }, []);
 
     return (
-        <>
-            {hidden ? (
-                appeared ? (
-                    <div
-                        ref={ref as any}
-                        className="transition-all mb-[6px] w-full h-0"
-                    ></div>
-                ) : null
-            ) : (
-                <div
-                    ref={ref as any}
-                    onClick={handleClick}
-                    onMouseDown={handleStartClick}
-                    onTouchStart={handleStartClick}
-                    onDragStart={(e) => {
-                        console.log(e);
-                    }}
-                    onDragOver={handleOver}
-                    onDragLeave={handleLeave}
-                    onDragEnter={handleEnter}
-                    onDragEnd={handleEnd}
-                    style={
-                        isDrag
-                            ? {
-                                  transform: `translateY(${translateY}px)`,
-                                  transition: 'none',
-                              }
-                            : {}
-                    }
-                    className={cn(
-                        'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
-                        {
-                            'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50':
-                                isDrag,
-                            'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[2px] before:z-40 z-20 before:left-0 ':
-                                over.isOver,
-                            'before:top-[-5px] ': over.dir,
-                            'before:bottom-[-5px]': !over.dir,
-                        }
-                    )}
-                >
-                    <CheckBox completed={task.completed} taskId={task.id} />
-
-                    <div className={cn('px-2 text-[#444] flex-grow touch')}>
-                        <p className="text-sm">{task.title}</p>
-                        <p className="text-xs font-light">
-                            {task.dueDate?.toDateString()}
-                        </p>
-                    </div>
-                    <Important important={task.important} taskId={task.id} />
-                </div>
+        <div
+            ref={ref as any}
+            onClick={handleClick}
+            onMouseDown={handleStartClick}
+            onTouchStart={handleStartClick}
+            onDragOver={handleOver}
+            onDragLeave={handleLeave}
+            onDragEnter={handleEnter}
+            onDragEnd={handleEnd}
+            style={
+                isDrag
+                    ? {
+                          transform: `translateY(${translateY}px)`,
+                          transition: 'none',
+                      }
+                    : {}
+            }
+            className={cn(
+                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
+                {
+                    'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50': isDrag,
+                    'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[2px] before:z-40 z-20 before:left-0 ':
+                        over.isOver,
+                    'before:top-[-5px] ': over.dir,
+                    'before:bottom-[-5px]': !over.dir,
+                }
             )}
-        </>
+        >
+            <CheckBox completed={task.completed} taskId={task.id} />
+
+            <div className={cn('px-2 text-[#444] flex-grow touch')}>
+                <p className="text-sm">{task.title}</p>
+                <p className="text-xs font-light">
+                    {task.dueDate?.toDateString()}
+                </p>
+            </div>
+            <Important important={task.important} taskId={task.id} />
+        </div>
     );
 };
 export default TaskItem;

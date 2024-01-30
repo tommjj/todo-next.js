@@ -1,7 +1,7 @@
 'use client';
 
 import useStore from '@/store/store';
-import TaskItem from './task-list-item';
+import TaskItem, { RemoveAnimation } from './task-list-item';
 import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
@@ -43,36 +43,40 @@ function CompletedTskList() {
             </div>
             <div>
                 {isOpen &&
-                    tasks.map((task) => (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            hidden={!task.completed || bin.has(task.id)}
-                        />
-                    ))}
+                    tasks.map((task) =>
+                        !task.completed || bin.has(task.id) ? null : (
+                            <TaskItem key={task.id} task={task} />
+                        )
+                    )}
             </div>
         </>
     );
 }
 
-function TaskList() {
+const TodoList = () => {
     const list = useStore((state) => state.list);
     const bin = useStore((state) => state.bin);
 
     return (
+        <>
+            {list &&
+                list.tasks?.map((task) => (
+                    <RemoveAnimation key={task.id}>
+                        {task.completed || bin.has(task.id) ? null : (
+                            <TaskItem task={task} />
+                        )}
+                    </RemoveAnimation>
+                ))}
+        </>
+    );
+};
+
+function TaskList() {
+    return (
         <div className="w-full flex-grow mt-3 px-3 lg:px-5 overflow-y-auto relative">
             <DNDProvider>
                 <DnDContainer>
-                    {list &&
-                        list.tasks?.map((task) => {
-                            return (
-                                <TaskItem
-                                    key={task.id}
-                                    task={task}
-                                    hidden={task.completed || bin.has(task.id)}
-                                />
-                            );
-                        })}
+                    <TodoList />
                     <CompletedTskList />
                 </DnDContainer>
             </DNDProvider>

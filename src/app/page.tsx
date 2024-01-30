@@ -1,7 +1,12 @@
 import Logo from '@/components/logo';
 
 import Button from '@/components/ui/button';
+import {
+    DNDProvider,
+    DnDContainer,
+} from '@/components/ui/drag-a-drop/drag-a-drop';
 import Header from '@/components/ui/header';
+import TaskItem from '@/components/ui/task/task-list-item';
 import UserButton from '@/components/ui/user-button';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
@@ -92,8 +97,38 @@ export default function Home() {
             </Header>
             <main className="min-h-screen w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                <section className="w-full h-screen"></section>
+                <section className="w-full h-screen">
+                    <Test></Test>
+                </section>
             </main>
         </>
     );
 }
+
+const Test = () => {
+    'use client';
+    return (
+        <DNDProvider>
+            <DnDContainer>
+                <TaskItem
+                    key={'efew'}
+                    task={{
+                        completed: false,
+                        id: 'efew',
+                        createAt: new Date(),
+                        dueDate: new Date(),
+                        important: false,
+                        listId: 'adwd',
+                        order: 1,
+                        repeatInterval: 'NONE',
+                        title: 'an com',
+                        level: null,
+                        miniTasks: [],
+                        note: null,
+                        repeatCount: null,
+                    }}
+                ></TaskItem>
+            </DnDContainer>
+        </DNDProvider>
+    );
+};
