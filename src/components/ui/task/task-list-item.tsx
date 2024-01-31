@@ -124,7 +124,7 @@ export const RemoveAnimation = ({
             {isNull ? null : children ? (
                 <>{children}</>
             ) : (
-                <div className="animate-remove w-full h-[52px] mb-[6px]"></div>
+                <div className="animate-remove w-full h-[58px]"></div>
             )}
         </>
     );

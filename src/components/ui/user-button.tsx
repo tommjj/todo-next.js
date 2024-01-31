@@ -6,7 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from './drop-down-menu/drop-down-menu';
-import ThemeSelector from './theme-selection';
+import ThemeSelector from './theme-selector';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
 
 async function UserButton() {
