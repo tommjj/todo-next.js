@@ -2,14 +2,14 @@
 
 import useStore from '@/store/store';
 import ResizeContainer from '../resize-container';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BottomBar from './bottom-bar';
 import Button from '../button';
-import { toast } from '../sonner/sonner';
 
 export default function DetailsContainer({ id }: { id: string }) {
     const [maxWidth, setMaxWidth] = useState(700);
+    const { board } = useParams();
     const list = useStore((state) => state.list);
     const isOpenNav = useStore((state) => state.isOpenNav);
     const ref = useRef<HTMLDivElement>(null);
@@ -17,12 +17,11 @@ export default function DetailsContainer({ id }: { id: string }) {
 
     const moveItem = useStore((state) => state.moveItem);
 
-    const pathname = usePathname();
     const { push } = useRouter();
 
     const handleClickOverlay = useCallback(() => {
-        push(pathname);
-    }, [pathname, push]);
+        push(`/tasks/${board}`);
+    }, [board, push]);
 
     useEffect(() => {
         const handleResize = () => {

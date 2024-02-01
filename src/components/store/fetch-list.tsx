@@ -2,12 +2,12 @@
 
 import { getListById } from '@/lib/http';
 import useStore from '@/store/store';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 function FetchList(props: { id: string }) {
     const setList = useStore((state) => state.setList);
-    const pathname = usePathname();
+    const { board } = useParams();
 
     useEffect(() => {
         getListById(props.id).then(([list]) => {
@@ -19,7 +19,7 @@ function FetchList(props: { id: string }) {
         () => () => {
             setList(null);
         },
-        [pathname, setList]
+        [board, setList]
     );
 
     return null;

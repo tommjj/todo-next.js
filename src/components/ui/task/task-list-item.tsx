@@ -138,6 +138,7 @@ const TaskItem = ({ task }: { task: Task }) => {
     const moveItemById = useStore((state) => state.moveItemById);
     const { getDraggingItem } = useDndMethods();
     const { push } = useRouter();
+    const listId = useStore((state) => state.list?.id);
 
     const timeStartClick = useRef(0);
     const [over, setOver] = useState({ dir: true, isOver: false });
@@ -147,8 +148,8 @@ const TaskItem = ({ task }: { task: Task }) => {
     }, []);
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
         if (timeStartClick.current + 900 > Date.now())
-            push(`?details=${task.id}`);
-    }, [push, task.id]);
+            push(`/tasks/${listId}/details/${task.id}`);
+    }, [push, task.id, listId]);
 
     const handleOver: DragEventHandler = useCallback(
         (e) => {

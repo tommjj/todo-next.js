@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import CreateListForm from '../create-list/create-list-form';
 import {
     DropdownMenu,
@@ -38,7 +38,7 @@ function Nav({ lists }: { lists: Lists }) {
     const handleToggleNav = useStore((state) => state.handleToggleNav);
     const handleCloseNav = useStore((state) => state.handleCloseNav);
     const handleOpenNav = useStore((state) => state.handleOpenNav);
-    const pathname = usePathname();
+    const { board } = useParams();
 
     useLayoutEffect(() => {
         if (window.innerWidth < 768) {
@@ -72,7 +72,7 @@ function Nav({ lists }: { lists: Lists }) {
         } else {
             handleOpenNav();
         }
-    }, [isSmS, handleCloseNav, handleOpenNav, pathname]);
+    }, [isSmS, handleCloseNav, handleOpenNav, board]);
 
     return (
         <nav
@@ -195,16 +195,13 @@ export function NavLink({
 }
 
 export function NavLinks({ lists }: { lists: Lists }) {
-    const pathname = usePathname();
+    const { board } = useParams();
 
     return (
         <ul className="flex flex-col">
             {lists.map((item) => (
                 <li key={item.id}>
-                    <NavLink
-                        active={`/tasks/${item.id}` === pathname}
-                        list={item}
-                    />
+                    <NavLink active={`${item.id}` === board} list={item} />
                 </li>
             ))}
         </ul>
