@@ -6,10 +6,10 @@ import { getList, getTask } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 
-type Props = { params: { board: string }; searchParams?: { details?: string } };
+type Props = { params: { board: string } };
 
 export async function generateMetadata(
-    { params, searchParams }: Props,
+    { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const id = params.board;
@@ -21,16 +21,6 @@ export async function generateMetadata(
         };
 
     let title = list.name;
-
-    if (searchParams?.details) {
-        const [task] = await getTask(searchParams.details, {
-            title: true,
-        });
-
-        if (task) {
-            title = `${task.title} - ${title}`;
-        }
-    }
 
     return {
         title,
