@@ -17,7 +17,7 @@ export default async function TasksPage() {
     });
 
     if (todo) {
-        redirect(`tasks/${todo.id}`);
+        redirect(`/tasks/${todo.id}`);
     }
 
     return (

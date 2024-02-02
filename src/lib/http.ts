@@ -95,7 +95,7 @@ class Http extends Fetcher {
     }
 }
 
-export const fetcher = new Fetcher(API_HOST);
+export const fetcher = new Fetcher();
 
 export async function getListById(
     id: string

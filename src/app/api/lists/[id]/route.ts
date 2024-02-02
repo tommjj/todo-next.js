@@ -1,4 +1,6 @@
 import { getList } from '@/lib/data';
+import db from '@/lib/db';
+import { CreateTaskSchema } from '@/lib/zod.schema';
 
 export async function GET(
     req: Request,
@@ -6,7 +8,27 @@ export async function GET(
 ) {
     const [list, err] = await getList(params.id);
 
-    if (list) return new Response(JSON.stringify(list), { status: 200 });
+    if (list) return Response.json(list, { status: 200 });
 
-    return new Response(`{"message": "${err.message}"}`, { status: 410 });
+    return Response.json({ message: err.message }, { status: 410 });
+}
+
+export async function POST(
+    req: Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const body = await req.json();
+
+        const bodyParse = CreateTaskSchema.safeParse(body);
+        if (!bodyParse.success) return new Response(undefined, { status: 400 });
+
+        const task = await db.task.create({
+            data: { ...bodyParse.data, listId: params.id },
+        });
+
+        return Response.json(task, { status: 200 });
+    } catch (e) {
+        return new Response(undefined, { status: 400 });
+    }
 }

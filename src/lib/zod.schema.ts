@@ -83,8 +83,18 @@ export const TaskUpdateSchema = z.object({
 export type TaskUpdate = z.infer<typeof TaskUpdateSchema>;
 
 export const CreateTaskSchema = z.object({
+    id: z.string().optional(),
     title: z.string().min(1),
-    dueDate: EmptyStringToNull(z.nullable(z.coerce.date())),
+    important: z.boolean().optional(),
+    completed: z.boolean().optional(),
+    repeatInterval: RepeatInterval.optional(),
+    repeatCount: z.nullable(z.number()).optional(),
+    dueDate: EmptyStringToNull(z.nullable(z.coerce.date())).optional(),
+    note: z.nullable(z.string()).optional(),
+    level: z.nullable(Level).optional(),
+    listId: z.string().optional(),
+    order: z.number().optional(),
+    createAt: z.coerce.date().optional(),
 });
 
 export const AccountSchema = z.object({
@@ -95,4 +105,4 @@ export const AccountSchema = z.object({
     confirm: z.string({ invalid_type_error: 'please enter password' }).min(8),
 });
 
-export type CreateTaskSchema = z.infer<typeof CreateTaskSchema>;
+export type CreateTask = z.infer<typeof CreateTaskSchema>;

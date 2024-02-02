@@ -32,6 +32,7 @@ type Action = {
         ItemIdMilestones: string,
         dir: 'top' | 'bottom'
     ) => void;
+    addTask: (task: Task) => void;
 };
 
 const useStore = create<Data & Action>()((set) => ({
@@ -176,6 +177,16 @@ const useStore = create<Data & Action>()((set) => ({
             };
         });
     },
+    addTask: (task) =>
+        set((p) => {
+            const list = p.list;
+            const tasks = list?.tasks;
+            if (!tasks) return {};
+
+            return {
+                list: { ...list, tasks: [task, ...tasks] },
+            };
+        }),
 }));
 
 export default useStore;
