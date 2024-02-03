@@ -18,6 +18,10 @@ export async function POST(
     { params }: { params: { id: string } }
 ) {
     try {
+        //auth
+        const [list] = await getList(params.id, { id: true });
+        if (!list) return new Response(undefined, { status: 401 });
+
         const body = await req.json();
 
         const bodyParse = CreateTaskSchema.safeParse(body);
