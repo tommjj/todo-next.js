@@ -2,12 +2,12 @@
 
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
-import { Task } from '@prisma/client';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 import useStore from '@/store/store';
 import { toast } from '../sonner/sonner';
+import { Task } from '@/lib/zod.schema';
 
 function BottomBar({ task }: { task: Task }) {
     const { board } = useParams();

@@ -19,7 +19,10 @@ export async function POST(
 ) {
     try {
         //auth
-        const [list] = await getList(params.id, { id: true });
+        const [list] = await getList(params.id, {
+            id: true,
+            _count: { select: { tasks: true } },
+        });
         if (!list) return new Response(undefined, { status: 401 });
 
         const body = await req.json();
@@ -28,7 +31,11 @@ export async function POST(
         if (!bodyParse.success) return new Response(undefined, { status: 400 });
 
         const task = await db.task.create({
-            data: { ...bodyParse.data, listId: params.id },
+            data: {
+                ...bodyParse.data,
+                listId: params.id,
+                order: list._count.tasks,
+            },
         });
 
         return Response.json(task, { status: 200 });

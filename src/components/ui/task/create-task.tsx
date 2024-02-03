@@ -1,13 +1,11 @@
 'use client';
 
-import { createTaskAction } from '@/lib/action';
 import { fetcher } from '@/lib/http';
 import { CreateTask, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/store/store';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Task } from '@prisma/client';
 import { ChangeEvent, useCallback, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 export default function CreateTaskForm({ listId }: { listId: string }) {
     const titleInput = useRef<HTMLInputElement>(null);

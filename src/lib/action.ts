@@ -141,17 +141,3 @@ export async function deleteTaskAction(id: string) {
     await deleteTask(id);
     revalidatePath('/tasks', 'layout');
 }
-
-export async function createTaskAction(listId: string, formData: FormData) {
-    const taskPrase = CreateTaskSchema.safeParse(Object.fromEntries(formData));
-
-    if (!taskPrase.success) return;
-
-    await createTask({
-        title: taskPrase.data.title,
-        dueDate: taskPrase.data.dueDate,
-        listId: listId,
-    });
-
-    revalidatePath('/tasks', 'layout');
-}

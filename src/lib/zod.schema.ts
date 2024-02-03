@@ -35,7 +35,7 @@ export const TaskSchema = z.object({
     miniTasks: z.array(MiniTaskSchema),
     level: z.nullable(Level),
     listId: z.string(),
-    order: z.number(),
+    order: z.coerce.number(),
     createAt: z.coerce.date(),
 });
 export type Task = z.infer<typeof TaskSchema>;
@@ -77,7 +77,7 @@ export const TaskUpdateSchema = z.object({
     miniTasks: z.array(MiniTaskUpdateSchema).optional(),
     level: z.nullable(Level).optional(),
     listId: z.string().optional(),
-    order: z.number().optional(),
+    order: z.coerce.number().optional(),
     createAt: z.coerce.date().optional(),
 });
 export type TaskUpdate = z.infer<typeof TaskUpdateSchema>;
