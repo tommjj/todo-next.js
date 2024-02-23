@@ -131,13 +131,15 @@ export const RemoveAnimation = ({
 };
 
 const TaskItem = ({ task }: { task: Task }) => {
+    const { push } = useRouter();
+    const moveItemById = useStore((state) => state.moveItemById);
+
     const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,
         delay: 1000,
     });
-    const moveItemById = useStore((state) => state.moveItemById);
     const { getDraggingItem } = useDndMethods();
-    const { push } = useRouter();
+
     const listId = useStore((state) => state.list?.id);
 
     const timeStartClick = useRef(0);
