@@ -1,4 +1,4 @@
-import redis from '@/lib/data/redis.init';
+import redis from '@/lib/db/redis.init';
 
 export const dynamic = 'force-dynamic';
 
