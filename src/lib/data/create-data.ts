@@ -1,6 +1,6 @@
 import type { Account, CreateTask } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
-import db from '../db';
+import db from '../db/prisma.init';
 import { Task, User } from '.prisma/client';
 
 export async function createUser({

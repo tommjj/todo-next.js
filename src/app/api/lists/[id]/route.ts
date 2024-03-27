@@ -1,5 +1,5 @@
 import { getList } from '@/lib/data';
-import db from '@/lib/db';
+import db from '@/lib/db/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 
 export async function GET(

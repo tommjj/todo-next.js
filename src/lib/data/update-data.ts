@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import db from '../db';
+import db from '../db/prisma.init';
 import { z } from 'zod';
 
 export async function updateTask(

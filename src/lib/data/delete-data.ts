@@ -1,4 +1,4 @@
-import db from '../db';
+import db from '../db/prisma.init';
 
 export async function deleteList(listId: string) {
     try {

@@ -1,6 +1,6 @@
 import { getSessionUser } from '@/lib/auth';
 import { deleteTask, getTask } from '@/lib/data';
-import db from '@/lib/db';
+import db from '@/lib/db/prisma.init';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
 

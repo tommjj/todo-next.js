@@ -13,7 +13,7 @@ import {
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
-import db from './db';
+import db from './db/prisma.init';
 import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 
