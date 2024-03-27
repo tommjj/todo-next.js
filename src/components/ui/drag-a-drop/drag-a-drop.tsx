@@ -115,10 +115,11 @@ export const DnDContainer = ({ children }: { children: React.ReactNode }) => {
                 (elem, item) => {
                     if (item.id === dragging.current?.id) return elem;
                     const ref = item.ref;
-                    if (ref.current) {
-                        const rect = ref.current?.getBoundingClientRect();
 
-                        const area = calculateOverlapArea(draggingRect!, rect);
+                    if (ref.current) {
+                        const rect = ref.current.getBoundingClientRect();
+
+                        const area = calculateOverlapArea(draggingRect, rect);
                         if (max < area) {
                             max = area;
                             return item;
