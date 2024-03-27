@@ -35,6 +35,7 @@ export async function createAccountAction(
 
     const validatedFields = AccountSchema.safeParse({
         username: newAccount.username,
+        email: 'nndang.dev@gmail.com',
         password: newAccount.password,
         confirm: newAccount.confirm,
     });
@@ -46,7 +47,7 @@ export async function createAccountAction(
         };
     }
 
-    const { username, password, confirm } = validatedFields.data;
+    const { username, email, password, confirm } = validatedFields.data;
 
     const user = await getUser(username);
 
@@ -65,7 +66,7 @@ export async function createAccountAction(
     }
 
     try {
-        await createUser({ username, password });
+        await createUser({ username, email, password });
     } catch (e) {
         console.log(e);
     }

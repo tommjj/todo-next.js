@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 
 export type Account = {
     username: string;
+    email: string;
     password: string;
 };
 

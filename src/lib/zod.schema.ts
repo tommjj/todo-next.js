@@ -50,6 +50,7 @@ export type List = z.infer<typeof ListSchema>;
 
 export const UserSchema = z.object({
     id: z.string(),
+    email: z.string().email(),
     name: z.string(),
     lists: z.array(ListSchema),
 });
@@ -99,6 +100,7 @@ export const CreateTaskSchema = z.object({
 
 export const AccountSchema = z.object({
     username: z.string({ invalid_type_error: 'please enter username' }).max(29),
+    email: z.string().email(),
     password: z
         .string({ invalid_type_error: 'please enter password' })
         .min(8, { message: 'Password must be longer than 8 characters' }),

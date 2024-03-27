@@ -5,6 +5,7 @@ import { Task, User } from '.prisma/client';
 
 export async function createUser({
     username,
+    email,
     password,
 }: Account): Promise<[User, undefined] | [undefined, Error]> {
     const hashPassword = await bcrypt.hash(password, 10);
@@ -13,6 +14,7 @@ export async function createUser({
         const user = await db.user.create({
             data: {
                 name: username,
+                email: email,
                 password: hashPassword,
                 List: {
                     create: {
