@@ -4,7 +4,7 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 
 import { authConfig } from '@/auth.config';
-import { getUser } from './lib/data/';
+import { getUserByUsername } from './lib/service';
 
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
@@ -21,7 +21,7 @@ export const { auth, signIn, signOut } = NextAuth({
                 if (parsedCredentials.success) {
                     const { username, password } = parsedCredentials.data;
 
-                    const user = await getUser(username);
+                    const user = await getUserByUsername(username);
 
                     if (!user) return null;
 

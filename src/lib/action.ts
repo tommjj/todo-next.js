@@ -5,14 +5,14 @@ import {
     createUser,
     deleteList,
     deleteTask,
-    getLists,
-    getTask,
-    getUser,
-} from '@/lib/data/';
+    getAllListsBySession,
+    getTaskById,
+    getUserByUsername,
+} from '@/lib/service';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
-import prisma from './db/prisma.init';
+import prisma from './database/prisma.init';
 import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 
@@ -48,7 +48,7 @@ export async function createAccountAction(
 
     const { username, email, password, confirm } = validatedFields.data;
 
-    const user = await getUser(username);
+    const user = await getUserByUsername(username);
 
     if (user) {
         return {
@@ -112,7 +112,7 @@ export async function createListAction(formData: FormData) {
 }
 
 export async function deleteListAction(listId: string) {
-    const [lists, err] = await getLists();
+    const [lists, err] = await getAllListsBySession();
     if (err) return;
 
     const deleteListIndex = lists.findIndex((e) => e.id === listId);
@@ -134,7 +134,13 @@ export async function deleteListAction(listId: string) {
 }
 
 export async function deleteTaskAction(id: string) {
-    const [task, err] = await getTask(id, { id: true });
+    const user = await getSessionUser();
+    if (!user) return;
+
+    const [task, err] = await getTaskById(
+        { taskId: id, userId: user.id },
+        { id: true }
+    );
 
     if (!task) return;
 

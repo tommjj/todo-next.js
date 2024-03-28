@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
-import prisma from '../db/prisma.init';
-import { getSessionUser } from '../auth';
+import prisma from '../database/prisma.init';
 
 import type { CreateTask } from '@/lib/definitions';
 import { Task } from '.prisma/client';
@@ -21,18 +20,17 @@ const defaultTaskSelect = {
     order: true,
 } satisfies Prisma.TaskSelect;
 
-export async function getTask<T extends Prisma.TaskSelect>(
-    id: string,
+export async function getTaskById<T extends Prisma.TaskSelect>(
+    { taskId, userId }: { taskId: string; userId?: string },
     select: T = defaultTaskSelect as T
 ): Promise<
     [undefined, Error] | [Prisma.TaskGetPayload<{ select: T }>, undefined]
 > {
-    const user = await getSessionUser();
-    if (!user) return [undefined, new Error('miss user')];
-
     const task = await prisma.task.findUnique({
         select,
-        where: { id: id, list: { userId: user.id } },
+        where: userId
+            ? { id: taskId, list: { userId: userId } }
+            : { id: taskId },
     });
 
     if (!task) return [undefined, new Error('not found')];

@@ -1,12 +1,19 @@
-import { getList } from '@/lib/data';
-import prisma from '@/lib/db/prisma.init';
+import { getListById } from '@/lib/service';
+import prisma from '@/lib/database/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
+import { getSessionUser } from '@/lib/auth';
 
 export async function GET(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const [list, err] = await getList(params.id);
+    const user = await getSessionUser();
+    if (!user) return new Response(undefined, { status: 401 });
+
+    const [list, err] = await getListById({
+        listId: params.id,
+        userId: user.id,
+    });
 
     if (list) return Response.json(list, { status: 200 });
 
@@ -18,11 +25,20 @@ export async function POST(
     { params }: { params: { id: string } }
 ) {
     try {
-        //auth
-        const [list] = await getList(params.id, {
-            id: true,
-            _count: { select: { tasks: true } },
-        });
+        const user = await getSessionUser();
+        if (!user) return new Response(undefined, { status: 401 });
+
+        const [list] = await getListById(
+            {
+                listId: params.id,
+                userId: user.id,
+            },
+            {
+                id: true,
+                _count: { select: { tasks: true } },
+            }
+        );
+
         if (!list) return new Response(undefined, { status: 401 });
 
         const body = await req.json();

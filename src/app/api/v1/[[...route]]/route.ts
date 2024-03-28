@@ -1,4 +1,4 @@
-import redis from '@/lib/db/redis.init';
+import redis from '@/lib/database/redis.init';
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 

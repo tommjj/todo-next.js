@@ -1,6 +1,6 @@
 import { getSessionUser } from '@/lib/auth';
-import { deleteTask, getTask } from '@/lib/data';
-import prisma from '@/lib/db/prisma.init';
+import { deleteTask, getTaskById } from '@/lib/service';
+import prisma from '@/lib/database/prisma.init';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
 
@@ -45,7 +45,13 @@ export async function DELETE(
     req: Request,
     { params }: { params: { id: string } }
 ) {
-    const [task] = await getTask(params.id, { id: true });
+    const user = await getSessionUser();
+    if (!user) return new Response(undefined, { status: 401 });
+
+    const [task] = await getTaskById(
+        { taskId: params.id, userId: user.id },
+        { id: true }
+    );
 
     if (!task) return new Response(undefined, { status: 401 });
 

@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { getSessionUser } from '../auth';
-import prisma from '../db/prisma.init';
+import prisma from '../database/prisma.init';
 
 import type { Lists } from '@/lib/definitions';
 
@@ -30,18 +30,19 @@ export const defaultListSelect = {
     },
 } satisfies Prisma.ListSelect;
 
-export async function getList<T extends Prisma.ListSelect>(
-    listId: string,
+/*
+ * ----==== GET ====----
+ */
+
+export async function getListById<T extends Prisma.ListSelect>(
+    { listId, userId }: { listId: string; userId?: string },
     select: T = defaultListSelect as T
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {
-    const user = await getSessionUser();
-    if (!user) return [undefined, new Error('miss user')];
-
     const list = await prisma.list.findUnique({
         select,
-        where: { id: listId, userId: user.id },
+        where: { id: listId, userId: userId },
     });
 
     if (!list) return [undefined, new Error('not found')];
@@ -49,7 +50,7 @@ export async function getList<T extends Prisma.ListSelect>(
     return [list, undefined];
 }
 
-export async function getLists(): Promise<
+export async function getAllListsBySession(): Promise<
     [undefined, Error] | [Lists, undefined]
 > {
     const user = await getSessionUser();
@@ -62,6 +63,10 @@ export async function getLists(): Promise<
 
     return [lists, undefined];
 }
+
+/*
+ * ----==== DELETE ====----
+ */
 
 export async function deleteList(listId: string) {
     try {
