@@ -1,5 +1,5 @@
 import { getList } from '@/lib/data';
-import db from '@/lib/db/prisma.init';
+import prisma from '@/lib/db/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 
 export async function GET(
@@ -30,7 +30,7 @@ export async function POST(
         const bodyParse = CreateTaskSchema.safeParse(body);
         if (!bodyParse.success) return new Response(undefined, { status: 400 });
 
-        const task = await db.task.create({
+        const task = await prisma.task.create({
             data: {
                 ...bodyParse.data,
                 listId: params.id,

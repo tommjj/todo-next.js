@@ -1,3 +1,3 @@
-export * from '@/lib/data/get-data';
-export * from '@/lib/data/create-data';
-export * from '@/lib/data/delete-data';
+export * from '@/lib/data/list.data';
+export * from '@/lib/data/task.data';
+export * from '@/lib/data/user.data';

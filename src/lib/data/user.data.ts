@@ -1,7 +1,17 @@
-import type { Account, CreateTask } from '@/lib/definitions';
 import bcrypt from 'bcrypt';
-import db from '../db/prisma.init';
-import { Task, User } from '.prisma/client';
+
+import type { Account } from '@/lib/definitions';
+import prisma from '../db/prisma.init';
+import { User } from '.prisma/client';
+
+export async function getUser(username: string) {
+    try {
+        return await prisma.user.findUnique({ where: { name: username } });
+    } catch (error) {
+        console.log((error as Error).message);
+        return null;
+    }
+}
 
 export async function createUser({
     username,
@@ -11,7 +21,7 @@ export async function createUser({
     const hashPassword = await bcrypt.hash(password, 10);
 
     try {
-        const user = await db.user.create({
+        const user = await prisma.user.create({
             data: {
                 name: username,
                 email: email,
@@ -24,21 +34,6 @@ export async function createUser({
             },
         });
         return [user, undefined];
-    } catch (error) {
-        return [undefined, error as Error];
-    }
-}
-
-export async function createTask(
-    data: CreateTask
-): Promise<[Task, undefined] | [undefined, Error]> {
-    try {
-        const task = await db.task.create({
-            data: {
-                ...data,
-            },
-        });
-        return [task, undefined];
     } catch (error) {
         return [undefined, error as Error];
     }

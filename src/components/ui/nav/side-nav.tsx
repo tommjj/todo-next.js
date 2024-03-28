@@ -1,6 +1,6 @@
 'use server';
 
-import { getLists } from '@/lib/data/get-data';
+import { getLists } from '@/lib/data/index';
 import Nav from './nav';
 
 export default async function SideNav() {

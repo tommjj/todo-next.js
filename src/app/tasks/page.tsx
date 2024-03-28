@@ -1,7 +1,7 @@
 import HiddenNav from '@/components/store/hidden-nav';
 import CreateListForm from '@/components/ui/create-list/create-list-form';
 import { getSessionUser } from '@/lib/auth';
-import db from '@/lib/db/prisma.init';
+import prisma from '@/lib/db/prisma.init';
 import { notFound, redirect } from 'next/navigation';
 
 export default async function TasksPage() {
@@ -11,7 +11,7 @@ export default async function TasksPage() {
         notFound();
     }
 
-    const todo = await db.list.findFirst({
+    const todo = await prisma.list.findFirst({
         select: { id: true },
         where: { user: { name: user.name } },
     });

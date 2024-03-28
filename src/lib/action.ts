@@ -2,7 +2,6 @@
 
 import { z } from 'zod';
 import {
-    createTask,
     createUser,
     deleteList,
     deleteTask,
@@ -13,7 +12,7 @@ import {
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
-import db from './db/prisma.init';
+import prisma from './db/prisma.init';
 import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 
@@ -101,7 +100,7 @@ export async function createListAction(formData: FormData) {
 
     if (!listParse.success) return;
 
-    const list = await db.list.create({
+    const list = await prisma.list.create({
         data: {
             name: listParse.data.listName,
             userId: user.id,

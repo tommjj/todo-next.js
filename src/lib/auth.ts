@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import db from './db/prisma.init';
+import prisma from './db/prisma.init';
 
 export async function getSessionUser() {
     const session = await auth();
@@ -16,7 +16,7 @@ export async function getSessionUser() {
 }
 
 export async function checkListBelongToUser(userId: string, listId: string) {
-    const list = await db.list.findUnique({
+    const list = await prisma.list.findUnique({
         where: { userId: userId, id: listId },
     });
 

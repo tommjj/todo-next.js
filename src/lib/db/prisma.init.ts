@@ -2,10 +2,10 @@ import { PrismaClient } from '@prisma/client';
 
 const logs = { log: ['query', 'info'] };
 
-let db: PrismaClient;
+let prisma: PrismaClient;
 
 if (process.env.NODE_ENV === 'production') {
-    db = new PrismaClient();
+    prisma = new PrismaClient();
 } else {
     let globalWithPrisma = global as typeof globalThis & {
         prisma: PrismaClient;
@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
     if (!globalWithPrisma.prisma) {
         globalWithPrisma.prisma = new PrismaClient();
     }
-    db = globalWithPrisma.prisma;
+    prisma = globalWithPrisma.prisma;
 }
 
-export default db;
+export default prisma;

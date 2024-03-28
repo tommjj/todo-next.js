@@ -1,5 +1,5 @@
 import { useAuth } from '@/lib/api.hook';
-import db from '@/lib/db/prisma.init';
+import prisma from '@/lib/db/prisma.init';
 
 export async function POST() {
     const [user, response] = await useAuth();
@@ -10,7 +10,7 @@ export async function GET() {
     const [user, err] = await useAuth();
     if (err) return err;
 
-    const lists = await db.list.findMany({
+    const lists = await prisma.list.findMany({
         select: {
             id: true,
             name: true,
