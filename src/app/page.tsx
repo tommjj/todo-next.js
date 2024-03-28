@@ -12,7 +12,7 @@ import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 function Introduce() {
     return (
-        <section className="relative z-20 flex w-full h-screen overflow-hidden">
+        <section className="snap-always snap-center relative z-20 flex w-full h-screen overflow-hidden">
             <div className="flex relative z-10 items-center lg:items-start flex-col text-center lg:text-left justify-center w-full lg:w-1/2 h-full">
                 <div className="relative pb-12  pt-32 lg:pt-0 flex flex-col justify-around sm:justify-center h-full lg:h-auto lg:block w-full p-4 lg:pb-4 lg:pl-10 max-w-[670px]">
                     <div></div>
@@ -45,7 +45,7 @@ function Introduce() {
                     </div>
                 </div>
             </div>
-            <div className="absolute h-14 z-0 lg:z-20 w-full bottom-0 lg:static lg:flex lg:items-center lg:justify-end lg:w-1/2 lg:h-full ">
+            <div className=" absolute h-14 z-0 lg:z-20 w-full bottom-0 lg:static lg:flex lg:items-center lg:justify-end lg:w-1/2 lg:h-full ">
                 <div
                     className={`absolute w-screen h-[200%] bg-white dark:bg-[#09001B] border top-0 rounded-2xl lg:rotate-45 lg:translate-x-2/4 shadow-md shadow-[#e8e9f0] lg:h-0 lg:right-[-20%] lg:top-2/4  lg:bg-gradient-to-r lg:from-[#f8f7f7] lg:to-90% lg:to-[#ecedf3] lg:rounded-[324px] dark:lg:from-[#09001B] dark:lg:to-[#040130] lg:w-screen lg:pt-[100%] lg:-translate-y-2/4 dark:shadow-gray-500`}
                 ></div>
@@ -95,9 +95,9 @@ export default function Home() {
                 <Logo />
                 <UserButton />
             </Header>
-            <main className="min-h-screen w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
+            <main className="no-scrollbar snap-mandatory snap-y scroll-smooth min-h-screen max-h-screen overflow-y-auto w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                <section className="w-full h-screen"></section>
+                <section className="snap-always snap-center w-full h-screen"></section>
             </main>
         </>
     );
