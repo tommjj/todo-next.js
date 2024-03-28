@@ -8,11 +8,11 @@ export async function getSessionUser() {
 
     if (!user) return undefined;
 
-    const { name, email } = user;
+    const { name, email, id } = user;
 
     if (!(name && email)) return undefined;
 
-    return { name, id: email };
+    return { name, id: id, email: email };
 }
 
 export async function checkListBelongToUser(userId: string, listId: string) {

@@ -13,3 +13,15 @@ export type CreateTask =
           Prisma.TaskUncheckedCreateInput)
     | (Prisma.Without<Prisma.TaskUncheckedCreateInput, Prisma.TaskCreateInput> &
           Prisma.TaskCreateInput);
+
+export type ArgumentTypes<F extends Function> = F extends (
+    ...args: infer A
+) => any
+    ? A
+    : never;
+
+export type ReturnTypes<F extends Function> = F extends (
+    ...args: any
+) => infer A
+    ? A
+    : never;

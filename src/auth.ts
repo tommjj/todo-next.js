@@ -8,6 +8,21 @@ import { getUserByUsername } from './lib/service';
 
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
+    callbacks: {
+        ...authConfig.callbacks,
+        jwt: async ({ token, user, account, profile, isNewUser }) => {
+            if (user) {
+                token.id = user.id;
+            }
+            return token;
+        },
+        session: async ({ session, token }) => {
+            if (session.user) {
+                session.user.id = token.sub || '';
+            }
+            return session;
+        },
+    },
     providers: [
         Credentials({
             async authorize(credentials) {
@@ -29,7 +44,7 @@ export const { auth, signIn, signOut } = NextAuth({
                         return {
                             id: user.id,
                             name: user.name,
-                            email: user.id,
+                            email: user.email,
                         };
                     }
                 }

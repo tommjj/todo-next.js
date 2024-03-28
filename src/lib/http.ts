@@ -1,5 +1,3 @@
-'use client';
-
 import { List, ListSchema, TaskUpdate } from './zod.schema';
 
 import { User } from './zod.schema';

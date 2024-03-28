@@ -20,8 +20,10 @@ const defaultTaskSelect = {
     order: true,
 } satisfies Prisma.TaskSelect;
 
+type TaskIdUserId = { taskId: string; userId?: string };
+
 export async function getTaskById<T extends Prisma.TaskSelect>(
-    { taskId, userId }: { taskId: string; userId?: string },
+    { taskId, userId }: TaskIdUserId,
     select: T = defaultTaskSelect as T
 ): Promise<
     [undefined, Error] | [Prisma.TaskGetPayload<{ select: T }>, undefined]
