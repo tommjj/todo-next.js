@@ -4,10 +4,6 @@ import db from '@/lib/db/prisma.init';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
 
-export function GET() {
-    return new Response('hello world!', { status: 200 });
-}
-
 export async function PATCH(
     req: Request,
     { params }: { params: { id: string } }
