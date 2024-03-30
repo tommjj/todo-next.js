@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import prisma from './database/prisma.init';
+import prisma from './databases/prisma.init';
 
 export async function getSessionUser() {
     const session = await auth();

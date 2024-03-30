@@ -1,5 +1,5 @@
-import { getListById } from '@/lib/service';
-import prisma from '@/lib/database/prisma.init';
+import { getListById } from '@/lib/services';
+import prisma from '@/lib/databases/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 import { getSessionUser } from '@/lib/auth';
 

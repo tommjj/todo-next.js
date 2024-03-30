@@ -8,11 +8,11 @@ import {
     getAllListsBySession,
     getTaskById,
     getUserByUsername,
-} from '@/lib/service';
+} from '@/lib/services';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
-import prisma from './database/prisma.init';
+import prisma from './databases/prisma.init';
 import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 

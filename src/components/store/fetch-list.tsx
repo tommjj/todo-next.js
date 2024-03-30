@@ -1,7 +1,7 @@
 'use client';
 
 import { getListById } from '@/lib/http';
-import useStore from '@/lib/store/store';
+import useStore from '@/lib/stores/app.store';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 

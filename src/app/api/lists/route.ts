@@ -1,5 +1,5 @@
 import { useAuth } from '@/lib/api.hook';
-import prisma from '@/lib/database/prisma.init';
+import prisma from '@/lib/databases/prisma.init';
 
 export async function POST() {
     const [user, response] = await useAuth();

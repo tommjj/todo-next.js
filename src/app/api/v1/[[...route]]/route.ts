@@ -1,9 +1,9 @@
 import { auth } from '@/lib/controllers/middleware';
-import redis from '@/lib/database/redis.init';
+import redis from '@/lib/databases/redis.init';
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
-import router from '@router/index.router';
+import router from '@/lib/routers/index.router';
 
 const app = new Hono().basePath('/api/v1');
 

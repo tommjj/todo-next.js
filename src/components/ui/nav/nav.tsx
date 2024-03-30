@@ -1,7 +1,7 @@
 'use client';
 
 import { Lists } from '@/lib/definitions';
-import useStore from '@/lib/store/store';
+import useStore from '@/lib/stores/app.store';
 import {
     Bars3Icon,
     ListBulletIcon,

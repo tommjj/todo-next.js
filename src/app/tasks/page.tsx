@@ -1,7 +1,7 @@
 import HiddenNav from '@/components/store/hidden-nav';
 import CreateListForm from '@/components/ui/create-list/create-list-form';
 import { getSessionUser } from '@/lib/auth';
-import prisma from '@/lib/database/prisma.init';
+import prisma from '@/lib/databases/prisma.init';
 import { notFound, redirect } from 'next/navigation';
 
 export default async function TasksPage() {

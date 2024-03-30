@@ -21,8 +21,8 @@
         "paths": {
             "@/*": ["./src/*"],
             "@controllers/*": ["./src/lib/controllers/*"],
-            "@service/*": ["./src/lib/service/*"],
-            "@router/*": ["./src/lib/router/*"]
+            "@services/*": ["./src/lib/services/*"],
+            "@routers/*": ["./src/lib/routers/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

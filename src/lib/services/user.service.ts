@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 import type { Account } from '@/lib/definitions';
-import prisma from '../database/prisma.init';
+import prisma from '../databases/prisma.init';
 import { User } from '.prisma/client';
 
 export async function getUserByUsername(username: string) {

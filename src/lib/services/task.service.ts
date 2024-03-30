@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import prisma from '../database/prisma.init';
+import prisma from '../databases/prisma.init';
 
 import type { CreateTask } from '@/lib/definitions';
 import { Task } from '.prisma/client';

@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import TaskList from '@/components/ui/task/task-list';
 import CreateTaskForm from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';
-import { getListById, getTaskById } from '@/lib/service';
+import { getListById, getTaskById } from '@/lib/services';
 import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';

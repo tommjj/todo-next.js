@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { getSessionUser } from '../auth';
-import prisma from '../database/prisma.init';
+import prisma from '../databases/prisma.init';
 
 import type { Lists } from '@/lib/definitions';
 

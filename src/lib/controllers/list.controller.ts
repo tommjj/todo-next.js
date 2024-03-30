@@ -1,4 +1,3 @@
-import { Hono } from 'hono';
 import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';

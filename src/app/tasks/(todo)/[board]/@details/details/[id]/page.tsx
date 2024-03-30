@@ -1,6 +1,6 @@
 import DetailsContainer from '@/components/ui/details/detail';
 import { getSessionUser } from '@/lib/auth';
-import { getListById, getTaskById } from '@/lib/service';
+import { getListById, getTaskById } from '@/lib/services';
 import { Metadata, ResolvingMetadata } from 'next';
 
 type Props = { params: { board: string; id: string } };

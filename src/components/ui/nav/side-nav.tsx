@@ -1,6 +1,6 @@
 'use server';
 
-import { getAllListsBySession } from '@/lib/service/index';
+import { getAllListsBySession } from '@/lib/services/index';
 import Nav from './nav';
 
 export default async function SideNav() {
