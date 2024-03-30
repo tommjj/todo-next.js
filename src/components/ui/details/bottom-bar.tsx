@@ -5,7 +5,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
-import useStore from '@/store/store';
+import useStore from '@/lib/store/store';
 import { toast } from '../sonner/sonner';
 import { Task } from '@/lib/zod.schema';
 

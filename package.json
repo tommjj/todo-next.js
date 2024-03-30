@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.0.18",
+        "@hono/zod-validator": "^0.2.1",
         "@prisma/client": "^5.11.0",
         "bcrypt": "^5.1.1",
         "class-variance-authority": "^0.7.0",

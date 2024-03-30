@@ -2,7 +2,7 @@
 
 import { fetcher } from '@/lib/http';
 import { CreateTask, TaskSchema } from '@/lib/zod.schema';
-import useStore from '@/store/store';
+import useStore from '@/lib/store/store';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { Task } from '@prisma/client';
 import { ChangeEvent, useCallback, useRef } from 'react';

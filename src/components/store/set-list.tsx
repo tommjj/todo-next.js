@@ -1,7 +1,7 @@
 'use client';
 
 import { List } from '@/lib/zod.schema';
-import useStore from '@/store/store';
+import useStore from '@/lib/store/store';
 import { useEffect } from 'react';
 
 function SetList({ list }: { list: List }) {

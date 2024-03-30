@@ -9,14 +9,13 @@ type Data = {
     bin: Set<string>;
 };
 
-type Sync = {
+interface Sync {
     sync: () => Promise<any>;
-};
+}
 
-type DeleteSync = {
-    sync: () => Promise<any>;
+interface DeleteWithCancel extends Sync {
     cancel: () => boolean;
-};
+}
 
 type Action = {
     setList: (list: List | null) => void;
@@ -25,7 +24,7 @@ type Action = {
     handleOpenNav: () => void;
     handleToggleCompleteTask: (listId: string) => Sync;
     handleToggleImportantTask: (listId: string) => Sync;
-    deleteTask: (taskId: string) => DeleteSync;
+    deleteTask: (taskId: string) => DeleteWithCancel;
     moveItem: (fromIndex: number, toIndex: number) => void;
     moveItemById: (
         itemIdMove: string,
