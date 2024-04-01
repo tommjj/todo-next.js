@@ -83,10 +83,10 @@ function ResizeContainer({
             setOffset(0);
         };
 
-        document.addEventListener('click', handleMouseClick);
+        document.addEventListener('mouseup', handleMouseClick);
 
         return () => {
-            document.removeEventListener('click', handleMouseClick);
+            document.removeEventListener('mouseup', handleMouseClick);
         };
     }, [isMouseDown, offset]);
 

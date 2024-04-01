@@ -38,7 +38,7 @@ model Task {
   level          Level?
   listId         String
   list           List           @relation(fields: [listId], references: [id])
-  order          Decimal
+  order          Int
 }
 
 model MiniTask {
