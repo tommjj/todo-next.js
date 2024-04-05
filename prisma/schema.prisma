@@ -9,19 +9,31 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  name     String @unique
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String  @unique
   password String
   List     List[]
+  Share    Share[]
 }
 
 model List {
+  id         String  @id @default(uuid())
+  name       String  @db.VarChar(30)
+  userId     String
+  user       User    @relation(fields: [userId], references: [id])
+  color      String?
+  shareToken String?
+  tasks      Task[]
+  Share      Share[]
+}
+
+model Share {
   id     String @id @default(uuid())
-  name   String @db.VarChar(30)
+  listId String
   userId String
   user   User   @relation(fields: [userId], references: [id])
-  tasks  Task[]
+  list   List   @relation(fields: [listId], references: [id])
 }
 
 model Task {

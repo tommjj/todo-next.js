@@ -13,7 +13,7 @@ export const Level = z.enum(['EASY', 'MEDIUM', 'DIFFICULT']);
 export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
     e === '' ? null : e
 );
-//----====SCHEMA====----\\
+//*----====SCHEMA====----\\
 
 export const MiniTaskSchema = z.object({
     id: z.string(),
@@ -44,6 +44,7 @@ export const ListSchema = z.object({
     id: z.string(),
     name: z.string(),
     userId: z.string(),
+    color: z.nullable(z.string()),
     tasks: z.array(TaskSchema),
 });
 export type List = z.infer<typeof ListSchema>;
@@ -56,7 +57,9 @@ export const UserSchema = z.object({
 });
 export type User = z.infer<typeof UserSchema>;
 
-//----====UPDATE SCHEMA====----\\
+/*
+ * ----==== UPDATE SCHEMA ====----
+ */
 
 export const MiniTaskUpdateSchema = z.object({
     id: z.string().optional(),

@@ -7,6 +7,7 @@ import type { Lists } from '@/lib/definitions';
 export const defaultListSelect = {
     id: true,
     name: true,
+    color: true,
     userId: true,
     tasks: {
         select: {
