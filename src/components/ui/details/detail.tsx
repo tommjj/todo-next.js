@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/lib/stores/app.store';
+import useStore from '@/lib/stores/index.store';
 import ResizeContainer from '../resize-container';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';

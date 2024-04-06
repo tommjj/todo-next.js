@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 
-import useStore from '@/lib/stores/app.store';
+import useStore from '@/lib/stores/index.store';
 import {
     useDndDrag,
     useDndMethods,

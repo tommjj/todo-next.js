@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/lib/stores/app.store';
+import useStore from '@/lib/stores/index.store';
 import TaskItem, { RemoveAnimation } from './task-list-item';
 import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';

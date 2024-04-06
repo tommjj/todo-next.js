@@ -1,6 +1,6 @@
 'use client';
 
-import useStore from '@/lib/stores/app.store';
+import useStore from '@/lib/stores/index.store';
 import { useEffect } from 'react';
 
 function HiddenNav() {
