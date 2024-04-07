@@ -1,13 +1,9 @@
-## Getting Started
+# TODO PROJECT
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## todo
+
+-   [-] mail service
+-   [ ] update api to v1
+-   [ ]
