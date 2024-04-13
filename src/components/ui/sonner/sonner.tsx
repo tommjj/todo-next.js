@@ -37,7 +37,7 @@ export function toast(toast: Toast) {
     document.dispatchEvent(eventCreateToast);
 }
 
-//----====Toast Item====----\\
+//*----====Toast Item====----\\
 
 export function ToastItem({
     toast: { id, toast },

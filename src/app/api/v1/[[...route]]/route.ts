@@ -4,7 +4,11 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
-import { createRandomOTP, sendOTP } from '@services/email.service';
+import {
+    createRandomOTP,
+    sendOTP,
+    verifyOTP,
+} from '@/lib/services/otp.service';
 
 const app = new Hono().basePath('/api/v1');
 
@@ -25,13 +29,21 @@ app.get('/hello', auth, async (c) => {
     });
 });
 
+//! test
 app.get('/email', auth, async (c) => {
     try {
-        await sendOTP('nndang.sc@gmail.com', createRandomOTP());
+        await sendOTP('nndang.sc@gmail.com');
         return c.json({ mess: 'ok' });
     } catch (error) {
-        return c.json({ mess: 'error' }, { status: 400 });
+        return c.json({ mess: (error as Error).message }, { status: 400 });
     }
+});
+
+//! test
+app.get('/otp/:code', auth, async (c) => {
+    const otp = c.req.param('code');
+
+    return c.json({ mess: await verifyOTP('nndang.sc@gmail.com', otp) });
 });
 
 const handler = handle(app);

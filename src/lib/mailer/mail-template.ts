@@ -25,16 +25,16 @@ export const HTML_OTP_TEMPLATE = (otp: number) => {
         <body>
             <main>
                 <h1 style="font-size: 30px">Verify your email</h1>
-                <p style="margin-bottom: 10px; font-size: 24px; margin-top: 15px">
+                <p style="margin-bottom: 10px; font-size: 20px; margin-top: 15px">
                     Hi,
                 </p>
-                <p style="font-size: 20px">
+                <p style="font-size: 18px">
                     Please use the following OTP to access the form
                     <samp style="font-weight: 600">${otp}</samp>. Do not share
                     this OTP with any one.
                 </p>
     
-                <p style="margin-top: 10px; font-size: 20px">Thank you!</p>
+                <p style="margin-top: 10px; font-size: 18px">Thank you!</p>
             </main>
         </body>
     </html>`;
