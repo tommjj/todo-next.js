@@ -1,20 +1,16 @@
 'use server';
 
 import { z } from 'zod';
-import {
-    createUser,
-    deleteList,
-    deleteTask,
-    getAllListsBySession,
-    getTaskById,
-    getUserByUsername,
-} from '@/lib/services';
+
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { getSessionUser } from './auth';
 import prisma from './databases/prisma.init';
 import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
+import { createUser, getUserByUsername } from './services/user.service';
+import { deleteList, getAllListsBySession } from './services/list.service';
+import { deleteTask, getTaskById } from './services/task.service';
 
 export type State =
     | {

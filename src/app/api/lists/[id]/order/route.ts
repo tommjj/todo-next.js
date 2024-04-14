@@ -1,5 +1,5 @@
 import { getSessionUser } from '@/lib/auth';
-import { getListById } from '@/lib/services';
+import { getListById } from '@/lib/services/list.service';
 
 export async function GET() {
     return new Response(undefined, { status: 204 });

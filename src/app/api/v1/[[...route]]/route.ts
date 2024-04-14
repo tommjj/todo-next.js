@@ -4,11 +4,7 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
-import {
-    createRandomOTP,
-    sendOTP,
-    verifyOTP,
-} from '@/lib/services/otp.service';
+import { sendOTP, verifyOTP } from '@/lib/services/otp.service';
 
 const app = new Hono().basePath('/api/v1');
 

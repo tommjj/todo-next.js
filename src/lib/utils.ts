@@ -51,6 +51,7 @@ export function calculateOverlapArea(rectangle1: DOMRect, rectangle2: DOMRect) {
 
     return area;
 }
+
 export function createDebounce(func: Function, timeout: number) {
     let timer: string | number | NodeJS.Timeout | undefined;
     return {

@@ -1,7 +1,7 @@
-import { getListById } from '@/lib/services';
 import prisma from '@/lib/databases/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 import { getSessionUser } from '@/lib/auth';
+import { getListById } from '@/lib/services/list.service';
 
 export async function GET(
     req: Request,

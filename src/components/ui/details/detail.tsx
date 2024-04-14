@@ -1,8 +1,8 @@
 'use client';
 
 import useStore from '@/lib/stores/index.store';
-import ResizeContainer from '../resize-container';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { ResizeContainerLeft } from '../resize-container';
+import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BottomBar from './bottom-bar';
 import Button from '../button';
@@ -56,7 +56,7 @@ export default function DetailsContainer({ id }: { id: string }) {
                         onClick={handleClickOverlay}
                         className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"
                     ></div>
-                    <ResizeContainer
+                    <ResizeContainerLeft
                         className="bg-white dark:bg-[#111]  flex flex-col  lg:shadow-[-2px_0_5px_rgba(0,0,0,0.2)] "
                         defaultWidth={360}
                         minWidth={360}
@@ -71,7 +71,7 @@ export default function DetailsContainer({ id }: { id: string }) {
                             <Button variant="dark">Click me!</Button>
                         </div>
                         <BottomBar task={task} />
-                    </ResizeContainer>
+                    </ResizeContainerLeft>
                 </aside>
             )}
         </>
