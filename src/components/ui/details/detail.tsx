@@ -1,23 +1,26 @@
 'use client';
 
 import useStore from '@/lib/stores/index.store';
-import { ResizeContainerLeft } from '../resize-container';
+import { ResizeContainer } from '../resize-container';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import BottomBar from './bottom-bar';
 import Button from '../button';
+import { Test } from '@/components/session-context';
+
+const StorageKey = 'detailWidth';
 
 export default function DetailsContainer({ id }: { id: string }) {
-    const [maxWidth, setMaxWidth] = useState(700);
+    const [maxWidth, setMaxWidth] = useState(900);
     const { board } = useParams();
     const list = useStore((state) => state.list);
-    const isOpenNav = useStore((state) => state.isOpenNav);
     const ref = useRef<HTMLDivElement>(null);
-    const task = list && list.tasks?.find((e) => e.id === id);
 
     const moveItem = useStore((state) => state.moveItem);
 
     const { push } = useRouter();
+
+    const task = list && list.tasks?.find((e) => e.id === id);
 
     const handleClickOverlay = useCallback(() => {
         push(`/tasks/${board}`);
@@ -43,25 +46,33 @@ export default function DetailsContainer({ id }: { id: string }) {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [task, isOpenNav]);
+    }, [task]);
 
+    const handleSizeChanged = useCallback((w: number) => {
+        localStorage.setItem(StorageKey, w.toString());
+    }, []);
     return (
         <>
             {task && (
                 <aside
                     ref={ref}
-                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-20 "
+                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-20 lg:border-l "
                 >
                     <div
                         onClick={handleClickOverlay}
                         className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"
                     ></div>
-                    <ResizeContainerLeft
-                        className="bg-white dark:bg-[#111]  flex flex-col  lg:shadow-[-2px_0_5px_rgba(0,0,0,0.2)] "
-                        defaultWidth={360}
+                    <ResizeContainer
+                        className="bg-white dark:bg-[#111]  flex flex-col relative"
+                        defaultWidth={Number(
+                            localStorage.getItem(StorageKey) || 360
+                        )}
                         minWidth={360}
                         maxWidth={maxWidth}
+                        resizeDir="Left"
+                        onSizeChanged={handleSizeChanged}
                     >
+                        <Test></Test>
                         <div
                             className="w-full flex-grow  p-2"
                             onClick={() => {
@@ -71,7 +82,7 @@ export default function DetailsContainer({ id }: { id: string }) {
                             <Button variant="dark">Click me!</Button>
                         </div>
                         <BottomBar task={task} />
-                    </ResizeContainerLeft>
+                    </ResizeContainer>
                 </aside>
             )}
         </>

@@ -1,4 +1,4 @@
-import SideNav from '@/components/ui/nav/side-nav';
+import SideNav from '@/components/ui/nav/nav';
 
 function Template({ children }: { children: React.ReactNode }) {
     return (
@@ -7,7 +7,7 @@ function Template({ children }: { children: React.ReactNode }) {
                 <aside>
                     <SideNav />
                 </aside>
-                <div className="flex grow ">{children}</div>
+                <div className="flex grow justify-center">{children}</div>
             </div>
         </div>
     );

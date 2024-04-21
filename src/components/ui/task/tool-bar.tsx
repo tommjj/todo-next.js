@@ -28,24 +28,13 @@ import AlertDialog, {
 import Button from '../button';
 
 function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
-    const isOpenNav = useStore((state) => state.isOpenNav);
-    const handleOpenNav = useStore((state) => state.handleOpenNav);
     const deleteAction = deleteListAction.bind(null, list.id);
 
     return (
         <div className=" flex-grow">
             <div className="h-14 flex items-center pl-4">
-                {!isOpenNav ? (
-                    <button
-                        className="mr-2 text-[#333] dark:text-white"
-                        onClick={handleOpenNav}
-                        aria-label="open nav"
-                    >
-                        <Bars3Icon className="h-6" strokeWidth={1} />
-                    </button>
-                ) : (
-                    <ListBulletIcon className="h-6 mr-2" strokeWidth={1} />
-                )}
+                <ListBulletIcon className="h-6 mr-2" strokeWidth={1} />
+
                 <span className="font-medium text-xl tracking-tight mr-2">
                     {list.name}
                 </span>

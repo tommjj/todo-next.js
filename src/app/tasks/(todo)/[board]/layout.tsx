@@ -1,4 +1,4 @@
-import { ResizeContainerRight } from '@/components/ui/resize-container';
+import { ResizeContainer } from '@/components/ui/resize-container';
 
 function Layout({
     children,
@@ -11,13 +11,14 @@ function Layout({
 }) {
     return (
         <>
-            <aside>
-                <ResizeContainerRight
-                    className="bg-white dark:bg-[#111]  flex flex-col  lg:shadow-[-2px_0_5px_rgba(0,0,0,0.2)]"
-                    defaultWidth={360}
+            <aside className="relative -mr-[300px] -translate-x-[300px] z-0">
+                <ResizeContainer
+                    className="bg-white dark:bg-[#111]  flex flex-col  "
+                    defaultWidth={300}
                     minWidth={100}
                     maxWidth={600}
-                ></ResizeContainerRight>
+                    resizeDir="Left"
+                ></ResizeContainer>
             </aside>
 
             <main className="w-full h-full flex flex-col">{children}</main>

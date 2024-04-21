@@ -7,211 +7,138 @@ import {
     useEffect,
     useRef,
     useState,
+    forwardRef,
+    useImperativeHandle,
 } from 'react';
 
 type Props = {
     defaultWidth: number;
-    className?: string;
     minWidth?: number;
     maxWidth?: number;
-    children?: React.ReactNode;
-};
+    resizeDir: 'Left' | 'Right';
+    onSizeChanged?: (w: number) => void;
+} & React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+>;
 
-export const ResizeContainerLeft = ({
-    className = '',
-    children,
-    defaultWidth,
-    minWidth = 0,
-    maxWidth = 9999,
-}: Props) => {
-    const ref = useRef<HTMLDivElement>(null);
+export const ResizeContainer = forwardRef<HTMLDivElement, Props>(
+    function ResizeContainerLeft(
+        {
+            className = '',
+            children,
+            defaultWidth,
+            minWidth = 0,
+            maxWidth = 9999,
+            resizeDir,
+            onSizeChanged,
+            ...props
+        }: Props,
+        ref
+    ) {
+        const containerRef = useRef<HTMLDivElement>(null);
 
-    const [width, setWidth] = useState(defaultWidth);
-    const [offset, setOffset] = useState(0);
-    const [isMouseDown, setIsMouseDown] = useState(false);
+        const [width, setWidth] = useState(defaultWidth);
+        const [offset, setOffset] = useState(0);
+        const [isMouseDown, setIsMouseDown] = useState(false);
 
-    const handleMouseDown: MouseEventHandler = useCallback((e) => {
-        if (e.button === 0) {
-            window?.getSelection()?.removeAllRanges();
+        useImperativeHandle(ref, () => containerRef.current!, []);
+
+        const handleMouseDown: MouseEventHandler = useCallback((e) => {
+            if (e.button === 0) {
+                window?.getSelection()?.removeAllRanges();
+                setIsMouseDown(true);
+            }
             setIsMouseDown(true);
-        }
-        setIsMouseDown(true);
-    }, []);
+        }, []);
 
-    useEffect(() => {
-        setWidth((priv) =>
-            priv > maxWidth ? maxWidth : priv < minWidth ? minWidth : priv
-        );
-    }, [maxWidth, minWidth]);
+        useEffect(() => {
+            onSizeChanged && onSizeChanged(width);
+        }, [onSizeChanged, width]);
 
-    useEffect(() => {
-        if (!ref.current) return;
-        if (!isMouseDown) return;
-
-        const handleMouseMove = (e: MouseEvent) => {
-            window?.getSelection()?.removeAllRanges();
-
-            var rect = ref.current?.getBoundingClientRect()!;
-
-            const offset = e.x - rect.left - 2;
-            const maxOffset = rect.width - minWidth;
-            const minOffset = rect.width - maxWidth;
-            setOffset(
-                offset < minOffset
-                    ? minOffset
-                    : offset > maxOffset
-                    ? maxOffset
-                    : offset
+        // set width when min and max size
+        useEffect(() => {
+            setWidth((priv) =>
+                priv > maxWidth ? maxWidth : priv < minWidth ? minWidth : priv
             );
-        };
+        }, [maxWidth, minWidth]);
 
-        document.addEventListener('mousemove', handleMouseMove);
+        useEffect(() => {
+            if (!containerRef.current) return;
+            if (!isMouseDown) return;
 
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-        };
-    }, [isMouseDown, maxWidth, minWidth]);
+            const handleMouseMove = (e: MouseEvent) => {
+                window?.getSelection()?.removeAllRanges();
 
-    useEffect(() => {
-        if (!isMouseDown) return;
+                var rect = containerRef.current?.getBoundingClientRect()!;
 
-        const handleMouseClick = () => {
-            setIsMouseDown(false);
+                const offset =
+                    resizeDir === 'Left'
+                        ? e.x - rect.left - 2
+                        : -(e.x - (rect.left + rect.width) + 3);
+                const maxOffset = rect.width - minWidth;
+                const minOffset = rect.width - maxWidth;
+                setOffset(
+                    offset < minOffset
+                        ? minOffset
+                        : offset > maxOffset
+                        ? maxOffset
+                        : offset
+                );
+            };
 
-            var rect = ref.current?.getBoundingClientRect()!;
+            document.addEventListener('mousemove', handleMouseMove);
 
-            setWidth(rect.width - offset);
-            setOffset(0);
-        };
+            return () => {
+                document.removeEventListener('mousemove', handleMouseMove);
+            };
+        }, [isMouseDown, maxWidth, minWidth, resizeDir]);
 
-        document.addEventListener('mouseup', handleMouseClick);
+        useEffect(() => {
+            if (!isMouseDown) return;
 
-        return () => {
-            document.removeEventListener('mouseup', handleMouseClick);
-        };
-    }, [isMouseDown, offset]);
+            const handleMouseClick = () => {
+                setIsMouseDown(false);
 
-    return (
-        <div
-            ref={ref}
-            className={`relative h-full ${className} ${
-                !isMouseDown && 'transition-all'
-            }`}
-            style={{ width: `${width}px` }}
-        >
+                var rect = containerRef.current?.getBoundingClientRect()!;
+
+                setWidth(rect.width - offset);
+                setOffset(0);
+            };
+
+            document.addEventListener('mouseup', handleMouseClick);
+
+            return () => {
+                document.removeEventListener('mouseup', handleMouseClick);
+            };
+        }, [isMouseDown, offset]);
+
+        return (
             <div
-                onMouseDown={handleMouseDown}
-                className={`absolute w-[4px] h-full top-0 cursor-w-resize hover:bg-[#0D6EFD] z-[999] ${clsx(
-                    {
-                        'transition-all': !isMouseDown,
-                        'bg-[#0D6EFD] before:absolute before:w-4 before:h-full before:top-0 before:-left-2 before:cursor-w-resize before:opacity-0':
-                            isMouseDown,
+                ref={containerRef}
+                className={`relative h-full ${className} ${
+                    !isMouseDown && 'transition-all'
+                }`}
+                style={{ width: `${width}px` }}
+                {...props}
+            >
+                <div
+                    onMouseDown={handleMouseDown}
+                    className={`absolute w-[4px] h-full top-0 cursor-w-resize hover:bg-[#0D6EFD] z-[999] ${clsx(
+                        {
+                            'transition-all': !isMouseDown,
+                            'bg-[#0D6EFD] before:absolute before:w-4 before:h-full before:top-0 before:-left-2 before:cursor-w-resize before:opacity-0':
+                                isMouseDown,
+                        }
+                    )}`}
+                    style={
+                        resizeDir === 'Left'
+                            ? { left: `${offset}px` }
+                            : { right: `${offset}px` }
                     }
-                )}`}
-                style={{ left: `${offset}px` }}
-            ></div>
-            {children}
-        </div>
-    );
-};
-
-export const ResizeContainerRight = ({
-    className = '',
-    children,
-    defaultWidth,
-    minWidth = 0,
-    maxWidth = 9999,
-}: Props) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    const [width, setWidth] = useState(defaultWidth);
-    const [offset, setOffset] = useState(0);
-    const [isMouseDown, setIsMouseDown] = useState(false);
-
-    const handleMouseDown: MouseEventHandler = useCallback((e) => {
-        if (e.button === 0) {
-            window?.getSelection()?.removeAllRanges();
-            setIsMouseDown(true);
-        }
-        setIsMouseDown(true);
-    }, []);
-
-    useEffect(() => {
-        setWidth((priv) =>
-            priv > maxWidth ? maxWidth : priv < minWidth ? minWidth : priv
+                ></div>
+                {children}
+            </div>
         );
-    }, [maxWidth, minWidth]);
-
-    useEffect(() => {
-        if (!ref.current) return;
-        if (!isMouseDown) return;
-
-        const handleMouseMove = (e: MouseEvent) => {
-            window?.getSelection()?.removeAllRanges();
-
-            var rect = ref.current?.getBoundingClientRect()!;
-
-            const offset = -(e.x - (rect.left + rect.width));
-            const maxOffset = rect.width - minWidth;
-            const minOffset = rect.width - maxWidth;
-            setOffset(
-                offset < minOffset
-                    ? minOffset
-                    : offset > maxOffset
-                    ? maxOffset
-                    : offset
-            );
-        };
-
-        document.addEventListener('mousemove', handleMouseMove);
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-        };
-    }, [isMouseDown, maxWidth, minWidth]);
-
-    useEffect(() => {
-        if (!isMouseDown) return;
-
-        const handleMouseUp = () => {
-            setIsMouseDown(false);
-
-            var rect = ref.current?.getBoundingClientRect()!;
-
-            console.log(rect.width - offset);
-            console.log(rect.width);
-            console.log(offset);
-            setWidth(rect.width - offset);
-            setOffset(0);
-        };
-
-        document.addEventListener('mouseup', handleMouseUp);
-
-        return () => {
-            document.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isMouseDown, offset]);
-
-    return (
-        <div
-            ref={ref}
-            className={`relative h-full ${className} ${
-                !isMouseDown && 'transition-all'
-            }`}
-            style={{ width: `${width}px` }}
-        >
-            <div
-                onMouseDown={handleMouseDown}
-                className={`absolute w-[4px] h-full top-0 cursor-w-resize hover:bg-[#0D6EFD] z-[999] ${clsx(
-                    {
-                        'transition-all': !isMouseDown,
-                        'bg-[#0D6EFD] before:absolute before:w-4 before:h-full before:top-0 before:-left-2 before:cursor-w-resize before:opacity-0':
-                            isMouseDown,
-                    }
-                )}`}
-                style={{ right: `${offset}px` }}
-            ></div>
-            {children}
-        </div>
-    );
-};
+    }
+);

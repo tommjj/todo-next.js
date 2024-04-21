@@ -1,12 +1,8 @@
 import Logo from '@/components/logo';
+import { Test } from '@/components/session-context';
 
 import Button from '@/components/ui/button';
-import {
-    DNDProvider,
-    DnDContainer,
-} from '@/components/ui/drag-a-drop/drag-a-drop';
 import Header from '@/components/ui/header';
-import TaskItem from '@/components/ui/task/task-list-item';
 import UserButton from '@/components/ui/user-button';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 

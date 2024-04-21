@@ -1,7 +1,7 @@
 'use client';
 
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { BsLayoutSidebarReverse } from 'react-icons/bs';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -19,13 +19,13 @@ function BottomBar({ task }: { task: Task }) {
     }, [board, push]);
 
     return (
-        <div className="h-14 flex items-center px-5 border-t justify-between font-light text-[#333] ">
+        <div className="sticky bottom-0 left-0 h-14 flex items-center px-5 border-t justify-between font-light text-[#333] ">
             <button
                 className="py-2"
                 onClick={handleClickOverlay}
                 aria-label="close detail"
             >
-                <ArrowRightIcon className="h-[19px]" strokeWidth={1} />
+                <BsLayoutSidebarReverse className="h-[19px]" />
             </button>
             <span className="text-sm">
                 Created at {task.createAt.toDateString()}

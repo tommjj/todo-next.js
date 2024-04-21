@@ -47,7 +47,6 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
 
     const handleShowDateInput = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
-            console.log(e.target.value);
             if (e.target.value === '') {
                 e.target.style.width = '20px';
             } else {
@@ -58,21 +57,21 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
     );
 
     return (
-        <div className="w-full border rounded-md shadow-sm shadow-[#00000040]">
+        <div className="w-full rounded-md border shadow-sm">
             <form className="" onSubmit={handleSubmit}>
                 <div className="flex items-center p-4">
                     <PlusIcon className="h-6 mr-4 text-[#0D6EFD]" />
                     <input
                         ref={titleInput}
-                        className="flex-grow outline-none font-light dark:bg-[#111]"
+                        className="flex-grow outline-none bg-inherit font-light dark:bg-[#111]"
                         name="title"
                         placeholder="add new task"
                         type="text"
-                        autoComplete="none"
-                        autoCapitalize="none"
+                        autoComplete="off"
+                        autoCapitalize="off"
                     />
                 </div>
-                <hr />
+
                 <div className="flex w-full px-4 py-1">
                     <div className="flex-grow ">
                         <input

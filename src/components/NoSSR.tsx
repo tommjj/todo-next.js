@@ -1,31 +1,33 @@
-'use server';
+'use client';
 
-import dynamic, {
-    DynamicOptionsLoadingProps,
-    LoaderComponent,
-} from 'next/dynamic';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
-export default async function NoSSR({
+const useEnhancedEffect =
+    typeof window !== 'undefined' && process.env.NODE_ENV !== 'test'
+        ? useLayoutEffect
+        : useEffect;
+
+const NoSSR = ({
     children,
-    fallback,
+    defer = false,
+    fallback = null,
 }: {
     children: React.ReactNode;
-    fallback?: (loadingProps: DynamicOptionsLoadingProps) => JSX.Element | null;
-}) {
-    const SSRC = dynamic(
-        (): LoaderComponent<{}> =>
-            new Promise((resolveOuter) => {
-                const Children = () => {
-                    return <>{children}</>;
-                };
+    defer?: boolean;
+    fallback?: React.ReactNode;
+}) => {
+    const [isMounted, setMountedState] = useState(false);
 
-                resolveOuter(Children);
-            }),
-        {
-            ssr: false,
-            loading: fallback || undefined,
-        }
-    );
+    useEnhancedEffect(() => {
+        if (!defer) setMountedState(true);
+    }, [defer]);
 
-    return <SSRC />;
-}
+    useEffect(() => {
+        if (defer) setMountedState(true);
+    }, [defer]);
+
+    return isMounted ? children : fallback;
+};
+
+export default NoSSR;

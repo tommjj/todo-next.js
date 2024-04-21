@@ -133,14 +133,13 @@ export const RemoveAnimation = ({
 const TaskItem = ({ task }: { task: Task }) => {
     const { push } = useRouter();
     const moveItemById = useStore((state) => state.moveItemById);
+    const listId = useStore((state) => state.list?.id);
 
     const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,
-        delay: 1000,
+        delay: 500,
     });
     const { getDraggingItem } = useDndMethods();
-
-    const listId = useStore((state) => state.list?.id);
 
     const timeStartClick = useRef(0);
     const [over, setOver] = useState({ dir: true, isOver: false });
@@ -148,8 +147,9 @@ const TaskItem = ({ task }: { task: Task }) => {
     const handleStartClick = useCallback(() => {
         timeStartClick.current = Date.now();
     }, []);
+
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
-        if (timeStartClick.current + 900 > Date.now())
+        if (timeStartClick.current + 200 > Date.now())
             push(`/tasks/${listId}/details/${task.id}`);
     }, [push, task.id, listId]);
 
@@ -209,7 +209,7 @@ const TaskItem = ({ task }: { task: Task }) => {
                     : {}
             }
             className={cn(
-                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm shadow-[#00000040] md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
+                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
                 {
                     'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50': isDrag,
                     'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[2px] before:z-40 z-20 before:left-0 ':

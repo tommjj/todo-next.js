@@ -54,7 +54,7 @@ async function Page({ params }: Props) {
     return (
         <>
             <ToolBar list={list} />
-            <div className="flex flex-col  w-full overflow-y-hidden flex-grow">
+            <div className="flex flex-col w-full overflow-y-hidden flex-grow">
                 <div className="px-3 lg:px-5 lg:pt-2">
                     <CreateTaskForm listId={list.id} />
                 </div>
