@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { twMerge, ClassNameValue } from 'tailwind-merge';
 
 import { Task, TaskUpdate } from './zod.schema';
 

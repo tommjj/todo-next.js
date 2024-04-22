@@ -3,7 +3,7 @@
 import { z } from 'zod';
 
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { getSessionUser } from './auth';
 import prisma from './databases/prisma.init';
 import { revalidatePath } from 'next/cache';
@@ -82,6 +82,10 @@ export async function signInAction(
         throw error;
     }
     return undefined;
+}
+
+export async function signOutAction() {
+    await signOut();
 }
 
 export async function createListAction(formData: FormData) {

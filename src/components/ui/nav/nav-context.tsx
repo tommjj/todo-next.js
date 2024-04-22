@@ -24,7 +24,7 @@ const NAV_STORAGE_KEY = 'nav';
 
 const defaultState: NavContextType = {
     isOpen: true,
-    width: 360,
+    width: 250,
 };
 
 const NavContext = createContext<

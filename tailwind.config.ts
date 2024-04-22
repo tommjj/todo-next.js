@@ -24,6 +24,13 @@ const config = {
         },
         extend: {
             colors: {
+                'nav-bg-color': '#FAFAFA',
+                'nav-bg-color-dark': '#262626',
+                'nav-active-color': '#E0E2E5',
+                'main-bg-color': '#FFFFFF',
+                'main-bg-color-dark': '#1E1E1E',
+                'nav-text-color': '#39485E',
+                'nav-text-color-dark': '#FFFFFF',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',

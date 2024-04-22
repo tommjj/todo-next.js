@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 const buttonVariant = {
-    ghost: 'hover:bg-[#09090920] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
+    ghost: 'hover:bg-[#09090912] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
     primary: 'bg-[#0D6EFD] text-[#FAFAFA] dark:bg-[#0058dc]',
     warning: 'bg-[#FFC107] text-[#FAFAFA]',
     success: 'bg-[#198754] text-[#FAFAFA]',
@@ -36,11 +36,11 @@ export default function Button({
     let Comp: any = props.href ? Link : 'button';
 
     const ClassName = cn(
-        'flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90',
+        'flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90 ',
         buttonVariant[variant],
         {
             'rounded-full px-5': roundedFull,
-            'rounded-md px-4': !roundedFull,
+            'rounded px-4': !roundedFull,
         },
         className
     );

@@ -33,9 +33,13 @@ import AlertDialog, {
 import Button from '../button';
 import { useNavContext } from './nav-context';
 import NoSSR from '@/components/NoSSR';
+import NavHeader from './nav-header';
+import { AddTaskButton } from './add-task-button';
+import { ResizeContainer } from '../resize-container';
 
 function Nav({ lists }: { lists: Lists }) {
-    const { isOpen, closeNav, openNav, toggleNav } = useNavContext();
+    const { isOpen, width, setWidth, closeNav, openNav, toggleNav } =
+        useNavContext();
     const [isSmS, setIsSmS] = useState(false);
 
     const { board } = useParams();
@@ -68,7 +72,7 @@ function Nav({ lists }: { lists: Lists }) {
 
     useEffect(() => {
         if (isSmS) {
-            closeNav();
+            //closeNav();
         } else {
             openNav();
         }
@@ -76,33 +80,48 @@ function Nav({ lists }: { lists: Lists }) {
 
     return (
         <NoSSR>
-            <nav
-                className={`flex w-full h-full absolute top-0 left-0 md:w-[240px] md:relative lg:w-[290px] border-r z-10 ${clsx(
-                    { hidden: !isOpen }
-                )}`}
-            >
-                <div className="w-[290px] md:w-ful inset-0 bg-white dark:bg-[#111]">
-                    <div className="h-14 flex items-center justify-between px-4 ">
-                        <button
-                            onClick={toggleNav}
-                            aria-label="toggle side nav"
-                        >
-                            <BsLayoutSidebarReverse className="h-6 cursor-pointer " />
-                        </button>
-                    </div>
-                    <NavLinks lists={lists} />
-                    <div className="h-12 px-4 flex items-center">
-                        <CreateListForm />
-                    </div>
-                </div>
+            <aside className="flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto">
+                <ResizeContainer
+                    className="max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-none z-10"
+                    defaultWidth={width}
+                    minWidth={220}
+                    maxWidth={416}
+                    resizeDir="Right"
+                    onSizeChanged={setWidth}
+                >
+                    <nav className={`flex w-full relative `}>
+                        <div className="w-full inset-0 ">
+                            <NavHeader />
+
+                            <AddTaskButton />
+                            <NavItems />
+                            {/* <NavLinks lists={lists} /> */}
+
+                            <div className="h-12 px-4 flex items-center">
+                                <CreateListForm />
+                            </div>
+                        </div>
+                    </nav>
+                </ResizeContainer>
+
                 <div
-                    className="flex-grow bg-[#00000050] md:hidden"
+                    className="flex-grow h-full bg-[#00000050] md:hidden z-50"
                     onClick={toggleNav}
                 ></div>
-            </nav>
+            </aside>
         </NoSSR>
     );
 }
+
+export const NavItems = () => {
+    return (
+        <ul className="w-full">
+            <li>
+                <Button></Button>
+            </li>
+        </ul>
+    );
+};
 
 export function NavLink({
     active,
@@ -198,11 +217,11 @@ export function NavLinks({ lists }: { lists: Lists }) {
 
     return (
         <ul className="flex flex-col">
-            {lists.map((item) => (
+            {/* {lists.map((item) => (
                 <li key={item.id}>
                     <NavLink active={`${item.id}` === board} list={item} />
                 </li>
-            ))}
+            ))} */}
         </ul>
     );
 }

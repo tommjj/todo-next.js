@@ -3,6 +3,7 @@
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import Button from './button';
 
 function SelectItem({
     label,
@@ -14,13 +15,14 @@ function SelectItem({
     onClick: React.MouseEventHandler;
 }) {
     return (
-        <button
-            className="flex w-full px-3 py-2 items-center hover:bg-gray-100 dark:hover:bg-[#111] dark:text-white"
+        <Button
+            variant="ghost"
+            className="flex justify-start w-full px-3 py-2 items-center"
             onClick={onClick}
         >
             <CheckIcon className={`h-5 mr-3 ${active || 'opacity-0'}`} />
             {label}
-        </button>
+        </Button>
     );
 }
 
@@ -35,7 +37,7 @@ function ThemeSelector() {
     }, [theme]);
 
     return (
-        <div className="w-44 text-[#333] font-light text-sm overflow-hidden rounded-md">
+        <div className="w-full text-[#333] font-light text-sm overflow-hidden rounded-md">
             <SelectItem
                 onClick={() => {
                     setTheme('system');

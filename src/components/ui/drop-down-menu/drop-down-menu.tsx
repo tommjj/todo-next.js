@@ -148,7 +148,7 @@ export function DropdownMenuContent({
 }) {
     return (
         <div
-            className={`hidden absolute z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className}`}
+            className={`hidden absolute z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto`}
             id="DropdownMenuContent"
         >
             {children}

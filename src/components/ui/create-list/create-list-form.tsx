@@ -30,12 +30,12 @@ function CreateListForm() {
             <input
                 value={inputValue}
                 onChange={handleChangeInput}
-                autoCapitalize="none"
-                autoComplete="none"
+                autoCapitalize="off"
+                autoComplete="off"
                 type="text"
                 name="listName"
                 placeholder="create new list"
-                className="flex-grow w-12 h-9 outline-none font-light dark:bg-[#111]"
+                className="flex-grow w-12 h-9 outline-none font-light bg-inherit"
             ></input>
         </form>
     );
