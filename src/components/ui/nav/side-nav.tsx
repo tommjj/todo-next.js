@@ -88,7 +88,7 @@ function Nav({ lists }: { lists: Lists }) {
             >
                 <ResizeContainer
                     className={cn(
-                        'max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-[416px] z-50 duration-500',
+                        'max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-[416px] z-50 ',
                         {
                             'max-w-[220px] md:max-w-[220px] -mr-[220px] -translate-x-[220px]':
                                 !isOpen,

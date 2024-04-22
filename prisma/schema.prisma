@@ -9,31 +9,34 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  name     String  @unique
-  password String
-  List     List[]
-  Share    Share[]
+  id            String  @id @default(uuid())
+  email         String  @unique
+  name          String  @unique
+  password      String
+  primaryListId String?
+  List          List[]  @relation("project")
+  Share         Share[]
+  primaryList   List?   @relation(fields: [primaryListId], references: [id])
 }
 
 model List {
   id         String  @id @default(uuid())
   name       String  @db.VarChar(30)
   userId     String
-  user       User    @relation(fields: [userId], references: [id])
   color      String?
   shareToken String?
-  tasks      Task[]
+  user       User    @relation("project", fields: [userId], references: [id])
   Share      Share[]
+  tasks      Task[]
+  User       User[]
 }
 
 model Share {
   id     String @id @default(uuid())
   listId String
   userId String
-  user   User   @relation(fields: [userId], references: [id])
   list   List   @relation(fields: [listId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Task {
@@ -45,26 +48,28 @@ model Task {
   dueDate        DateTime?      @db.Date
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?
-  note           String?        @db.VarChar(255)
-  miniTasks      MiniTask[]
-  level          Level?
   listId         String
-  list           List           @relation(fields: [listId], references: [id])
   order          Int
+  description    String?        @db.VarChar(255)
+  priority       Priority?
+  miniTasks      MiniTask[]
+  list           List           @relation(fields: [listId], references: [id])
 }
 
 model MiniTask {
-  id        String  @id @default(uuid())
-  title     String  @db.VarChar(255)
-  completed Boolean @default(false)
-  taskId    String
-  task      Task    @relation(fields: [taskId], references: [id])
+  id          String  @id @default(uuid())
+  title       String  @db.VarChar(255)
+  completed   Boolean @default(false)
+  taskId      String
+  description String? @db.VarChar(510)
+  task        Task    @relation(fields: [taskId], references: [id])
 }
 
-enum Level {
-  EASY
-  MEDIUM
-  DIFFICULT
+enum Priority {
+  PRIORITY1
+  PRIORITY2
+  PRIORITY3
+  PRIORITY4
 }
 
 enum RepeatInterval {

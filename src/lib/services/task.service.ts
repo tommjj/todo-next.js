@@ -13,9 +13,9 @@ const defaultTaskSelect = {
     dueDate: true,
     repeatInterval: true,
     repeatCount: true,
-    note: true,
+    description: true,
     miniTasks: true,
-    level: true,
+    priority: true,
     listId: true,
     order: true,
 } satisfies Prisma.TaskSelect;

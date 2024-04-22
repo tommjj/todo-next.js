@@ -8,7 +8,13 @@ export const RepeatInterval = z.enum([
     'YEARLY',
     'MONTHLY',
 ]);
-export const Level = z.enum(['EASY', 'MEDIUM', 'DIFFICULT']);
+
+export const Priority = z.enum([
+    'PRIORITY1',
+    'PRIORITY2',
+    'PRIORITY3',
+    'PRIORITY3',
+]);
 
 export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
     e === '' ? null : e
@@ -31,9 +37,9 @@ export const TaskSchema = z.object({
     dueDate: z.nullable(z.coerce.date()),
     repeatInterval: RepeatInterval,
     repeatCount: z.nullable(z.number()),
-    note: z.nullable(z.string()),
+    description: z.nullable(z.string()),
     miniTasks: z.array(MiniTaskSchema),
-    level: z.nullable(Level),
+    priority: z.nullable(Priority),
     listId: z.string(),
     order: z.coerce.number(),
     createAt: z.coerce.date(),
@@ -79,7 +85,7 @@ export const TaskUpdateSchema = z.object({
     repeatCount: z.nullable(z.number()).optional(),
     note: z.nullable(z.string()).optional(),
     miniTasks: z.array(MiniTaskUpdateSchema).optional(),
-    level: z.nullable(Level).optional(),
+    level: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.coerce.number().optional(),
     createAt: z.coerce.date().optional(),
@@ -95,7 +101,7 @@ export const CreateTaskSchema = z.object({
     repeatCount: z.nullable(z.number()).optional(),
     dueDate: EmptyStringToNull(z.nullable(z.coerce.date())).optional(),
     note: z.nullable(z.string()).optional(),
-    level: z.nullable(Level).optional(),
+    level: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.number().optional(),
     createAt: z.coerce.date().optional(),
