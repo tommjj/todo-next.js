@@ -6,11 +6,15 @@ import { getListById } from '@/lib/services/list.service';
 import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
+import { getTaskById } from '@/lib/services/task.service';
 
-type Props = { params: { board: string } };
+type Props = {
+    params: { board: string };
+    searchParams: { details?: string };
+};
 
 export async function generateMetadata(
-    { params }: Props,
+    { params, searchParams }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const user = await getSessionUser();
@@ -31,6 +35,19 @@ export async function generateMetadata(
         };
 
     let title = list.name;
+
+    if (searchParams?.details) {
+        const [task] = await getTaskById(
+            { taskId: searchParams.details, userId: user.id },
+            {
+                title: true,
+            }
+        );
+
+        if (task) {
+            title = `${task.title} - ${title}`;
+        }
+    }
 
     return {
         title,

@@ -6,7 +6,6 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { Lists } from '@/lib/definitions';
 import clsx from 'clsx';
-import { BsLayoutSidebarReverse } from 'react-icons/bs';
 import CreateListForm from '../create-list/create-list-form';
 import {
     ListBulletIcon,
@@ -34,7 +33,13 @@ import Button from '../button';
 import { useNavContext } from './nav-context';
 import NoSSR from '@/components/NoSSR';
 import NavHeader from './nav-header';
-import { AddTaskButton } from './add-task-button';
+import {
+    AddTaskButton,
+    SearchButton,
+    ImportantButton,
+    PlannedButton,
+    TodoButton,
+} from './nav-buttons';
 import { ResizeContainer } from '../resize-container';
 import { cn } from '@/lib/utils';
 
@@ -126,12 +131,21 @@ function Nav({ lists }: { lists: Lists }) {
         </NoSSR>
     );
 }
-
+//ImportantButton,PlannedButton, TodoButton
 export const NavItems = () => {
     return (
-        <ul className="w-full">
+        <ul className="w-full px-[10px]">
             <li>
-                <Button></Button>
+                <SearchButton />
+            </li>
+            <li>
+                <TodoButton />
+            </li>
+            <li>
+                <ImportantButton />
+            </li>
+            <li>
+                <PlannedButton />
             </li>
         </ul>
     );

@@ -5,6 +5,7 @@ import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
 import { sendOTP, verifyOTP } from '@/lib/services/otp.service';
+import prisma from '@/lib/databases/prisma.init';
 
 const app = new Hono().basePath('/api/v1');
 
@@ -40,6 +41,24 @@ app.get('/otp/:code', auth, async (c) => {
     const otp = c.req.param('code');
 
     return c.json({ mess: await verifyOTP('nndang.sc@gmail.com', otp) });
+});
+
+//! test
+app.get('/lists', auth, async (c) => {
+    const user = c.get('user');
+
+    const data = await prisma.user.findUnique({
+        select: {
+            primaryList: true,
+            List: true,
+        },
+
+        where: {
+            id: user.id,
+        },
+    });
+
+    return c.json(data);
 });
 
 const handler = handle(app);

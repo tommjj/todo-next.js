@@ -150,7 +150,7 @@ const TaskItem = ({ task }: { task: Task }) => {
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
         if (timeStartClick.current + 200 > Date.now())
-            push(`/tasks/${listId}/details/${task.id}`);
+            push(`/tasks/${listId}?details=${task.id}`);
     }, [push, task.id, listId]);
 
     const handleOver: DragEventHandler = useCallback(
