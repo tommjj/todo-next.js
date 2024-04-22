@@ -36,6 +36,7 @@ import NoSSR from '@/components/NoSSR';
 import NavHeader from './nav-header';
 import { AddTaskButton } from './add-task-button';
 import { ResizeContainer } from '../resize-container';
+import { cn } from '@/lib/utils';
 
 function Nav({ lists }: { lists: Lists }) {
     const { isOpen, width, setWidth, closeNav, openNav, toggleNav } =
@@ -80,9 +81,19 @@ function Nav({ lists }: { lists: Lists }) {
 
     return (
         <NoSSR>
-            <aside className="flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto">
+            <aside
+                className={cn(
+                    'flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto'
+                )}
+            >
                 <ResizeContainer
-                    className="max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-none z-10"
+                    className={cn(
+                        'max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-[416px] z-50 duration-500',
+                        {
+                            'max-w-[220px] md:max-w-[220px] -mr-[220px] -translate-x-[220px]':
+                                !isOpen,
+                        }
+                    )}
                     defaultWidth={width}
                     minWidth={220}
                     maxWidth={416}
@@ -105,7 +116,10 @@ function Nav({ lists }: { lists: Lists }) {
                 </ResizeContainer>
 
                 <div
-                    className="flex-grow h-full bg-[#00000050] md:hidden z-50"
+                    className={cn(
+                        'flex-grow h-full bg-[#00000050] md:hidden z-40',
+                        { hidden: !isOpen }
+                    )}
                     onClick={toggleNav}
                 ></div>
             </aside>

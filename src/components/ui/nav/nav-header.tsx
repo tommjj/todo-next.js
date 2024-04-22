@@ -20,6 +20,7 @@ import {
 import { signOut } from '@/auth';
 import { signOutAction } from '@/lib/action';
 import ThemeSelector from '../theme-selector';
+import { cn } from '@/lib/utils';
 
 const NavHeader = () => {
     const { isOpen, toggleNav } = useNavContext();
@@ -60,17 +61,26 @@ const NavHeader = () => {
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Button
-                    onClick={toggleNav}
-                    className="group p-[8px] "
-                    variant="ghost"
-                    aria-controls="toggle nav"
+                <div
+                    className={cn(
+                        'bg-nav-bg-color transition-all duration-500',
+                        {
+                            'translate-x-[3.4rem]': !isOpen,
+                        }
+                    )}
                 >
-                    <BsLayoutSidebar
-                        className="w-[17px] h-[17px] text-[#666] group-hover:text-[#333]"
-                        strokeWidth={0.005}
-                    />
-                </Button>
+                    <Button
+                        onClick={toggleNav}
+                        className="group p-[8px] "
+                        variant="ghost"
+                        aria-controls="toggle nav"
+                    >
+                        <BsLayoutSidebar
+                            className="w-[17px] h-[17px] text-[#666] group-hover:text-[#333]"
+                            strokeWidth={0.005}
+                        />
+                    </Button>
+                </div>
             </div>
         </header>
     );
