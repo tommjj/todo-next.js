@@ -56,7 +56,7 @@ export default function DetailsContainer({ id }: { id: string }) {
             {task && (
                 <aside
                     ref={ref}
-                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-20 lg:border-l "
+                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative lg:border-l z-50"
                 >
                     <div
                         onClick={handleClickOverlay}

@@ -6,6 +6,7 @@ import { handle } from 'hono/vercel';
 import router from '@/lib/routers/index.router';
 import { sendOTP, verifyOTP } from '@/lib/services/otp.service';
 import prisma from '@/lib/databases/prisma.init';
+import jwt from 'jsonwebtoken';
 
 const app = new Hono().basePath('/api/v1');
 
@@ -40,25 +41,37 @@ app.get('/email', auth, async (c) => {
 app.get('/otp/:code', auth, async (c) => {
     const otp = c.req.param('code');
 
-    return c.json({ mess: await verifyOTP('nndang.sc@gmail.com', otp) });
+    const isValid = await verifyOTP('nndang.sc@gmail.com', otp);
+
+    if (isValid) {
+        const jwtToken = jwt.sign(
+            {
+                email: 'nndang.sc@gmail.com',
+            },
+            process.env.AUTH_SECRET!,
+            { expiresIn: 60 * 60 }
+        );
+
+        return c.json({ token: jwtToken });
+    }
+    return c.json(undefined, { status: 406 });
 });
 
 //! test
-app.get('/lists', auth, async (c) => {
-    const user = c.get('user');
+app.get('/otp-token/:token', async (c) => {
+    const token = c.req.param('token');
+    try {
+        const decoded = jwt.verify(token, process.env.AUTH_SECRET!);
 
-    const data = await prisma.user.findUnique({
-        select: {
-            primaryList: true,
-            List: true,
-        },
+        return c.json({ tokenParse: decoded });
+    } catch (err) {
+        return c.json(undefined, { status: 406 });
+    }
+});
 
-        where: {
-            id: user.id,
-        },
-    });
-
-    return c.json(data);
+//! test
+app.get('/count/:listId/count', auth, async (c) => {
+    c.json({ mess: 'hello' });
 });
 
 const handler = handle(app);

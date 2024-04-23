@@ -1,4 +1,4 @@
-import { ResizeContainer } from '@/components/ui/resize-container';
+import { MainLoadingOverlay } from '@/components/ui/loading/loading';
 
 function Layout({
     children,
@@ -11,6 +11,7 @@ function Layout({
 }) {
     return (
         <>
+            <MainLoadingOverlay />
             <main className="w-full h-full flex flex-col">{children}</main>
             {details}
             {search}

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 const buttonVariant = {
-    ghost: 'hover:bg-[#09090912] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
+    ghost: 'md:hover:bg-[#09090912] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
     primary: 'bg-[#0D6EFD] text-[#FAFAFA] dark:bg-[#0058dc]',
     warning: 'bg-[#FFC107] text-[#FAFAFA]',
     success: 'bg-[#198754] text-[#FAFAFA]',
@@ -18,7 +18,7 @@ const buttonVariant = {
 
 export type Variant = keyof typeof buttonVariant;
 
-interface Button extends React.ButtonHTMLAttributes<{}> {
+export interface Button extends React.ButtonHTMLAttributes<{}> {
     variant?: Variant;
     href?: string;
     roundedFull?: boolean;
@@ -36,7 +36,7 @@ export default function Button({
     let Comp: any = props.href ? Link : 'button';
 
     const ClassName = cn(
-        'flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90 ',
+        'flex items-center justify-center py-1 cursor-pointer disabled:cursor-default hover:opacity-90 overflow-hidden',
         buttonVariant[variant],
         {
             'rounded-full px-5': roundedFull,

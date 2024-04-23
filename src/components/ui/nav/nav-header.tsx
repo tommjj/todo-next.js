@@ -14,10 +14,8 @@ import { useNavContext } from './nav-context';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/drop-down-menu/drop-down-menu';
-import { signOut } from '@/auth';
 import { signOutAction } from '@/lib/action';
 import ThemeSelector from '../theme-selector';
 import { cn } from '@/lib/utils';
@@ -63,7 +61,7 @@ const NavHeader = () => {
 
                 <div
                     className={cn(
-                        'bg-nav-bg-color dark:bg-nav-bg-color-dark transition-all duration-500',
+                        'bg-nav-bg-color dark:bg-nav-bg-color-dark transition-all duration-300',
                         {
                             'translate-x-[3.4rem] bg-main-bg-color dark:bg-main-bg-color-dark':
                                 !isOpen,
@@ -77,7 +75,7 @@ const NavHeader = () => {
                         aria-controls="toggle nav"
                     >
                         <BsLayoutSidebar
-                            className="w-[17px] h-[17px] text-[#666] group-hover:text-[#333]"
+                            className="w-[17px] h-[17px] text-[#666] group-hover:text-[#333] dark:text-nav-text-color-dark group-hover:dark:text-nav-text-color-dark"
                             strokeWidth={0.005}
                         />
                     </Button>

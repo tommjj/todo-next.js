@@ -57,13 +57,13 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
     );
 
     return (
-        <div className="w-full rounded-md border shadow-sm">
+        <div className="w-full rounded-md border dark:border-nav-text-color-dark">
             <form className="" onSubmit={handleSubmit}>
                 <div className="flex items-center p-4">
                     <PlusIcon className="h-6 mr-4 text-[#0D6EFD]" />
                     <input
                         ref={titleInput}
-                        className="flex-grow outline-none bg-inherit font-light dark:bg-[#111]"
+                        className="flex-grow outline-none bg-inherit font-light"
                         name="title"
                         placeholder="add new task"
                         type="text"
@@ -78,7 +78,7 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
                             ref={dueDateInput}
                             onChange={handleShowDateInput}
                             name="dueDate"
-                            className="outline-none w-5 font-light bg-white dark:bg-[#111]"
+                            className="outline-none w-5 font-light bg-inherit"
                             id="createTaskDate"
                             type="date"
                         ></input>

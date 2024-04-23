@@ -22,11 +22,12 @@ function CreateListForm() {
 
     return (
         <form
-            className="flex items-center w-full"
+            className="group flex items-center w-full px-[10px] py-[2px] "
             action={createListAction}
             onSubmit={handleSubmit}
         >
-            <PlusIcon className="h-6 text-[#0D6EFD] mr-4" />
+            <PlusIcon className="h-6 w-6 p-[2px] mr-2 rounded-full text-[#444] dark:text-inherit" />
+
             <input
                 value={inputValue}
                 onChange={handleChangeInput}
@@ -35,7 +36,7 @@ function CreateListForm() {
                 type="text"
                 name="listName"
                 placeholder="create new list"
-                className="flex-grow w-12 h-9 outline-none font-light bg-inherit"
+                className="flex-grow w-12 h-8 outline-none font-light bg-inherit"
             ></input>
         </form>
     );

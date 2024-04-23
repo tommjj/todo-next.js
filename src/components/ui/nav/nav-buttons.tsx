@@ -9,7 +9,7 @@ export const AddTaskButton = () => {
     return (
         <div className="w-full px-[10px] my-2">
             <Button
-                className="px-[6px] py-[3px] justify-start w-full grow text-nav-text-color dark:text-nav-text-color text-sm font-normal active:scale-[98%]"
+                className="px-[6px] py-[3px] justify-start w-full grow text-nav-text-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
                 variant="ghost"
             >
                 <IoIosAddCircle className="w-7 h-7 mr-[6px]" />
@@ -25,8 +25,11 @@ export const SearchButton = () => {
             className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal "
             variant="ghost"
         >
-            <IoIosSearch className="w-6 h-6 mr-[8px] text-[#444]" />
-            Search
+            <div>
+                <IoIosSearch className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" />
+            </div>
+
+            <div className="text-left line-clamp-1">Search</div>
         </Button>
     );
 };
@@ -35,11 +38,14 @@ export const TodoButton = () => {
     return (
         <Button
             href="/tasks/todo"
-            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal "
+            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal"
             variant="ghost"
         >
-            <GoInbox className="w-6 h-6 p-[2px] mr-[8px] text-[#444]" />
-            Todo
+            <div>
+                <GoInbox className="w-6 h-6 p-[2px] mr-[8px] text-[#444] dark:text-inherit" />
+            </div>
+
+            <div className="text-left line-clamp-1">Todo</div>
         </Button>
     );
 };
@@ -48,11 +54,13 @@ export const ImportantButton = () => {
     return (
         <Button
             href="/tasks/important"
-            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal "
+            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal"
             variant="ghost"
         >
-            <CiStar className="w-6 h-6 mr-[8px] text-[#444]" />
-            Important
+            <div>
+                <CiStar className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" />
+            </div>
+            <div className="text-left line-clamp-1">Important</div>
         </Button>
     );
 };
@@ -61,11 +69,14 @@ export const PlannedButton = () => {
     return (
         <Button
             href="/tasks/planned"
-            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal "
+            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal"
             variant="ghost"
         >
-            <CiCalendar className="w-6 h-6 mr-[8px] text-[#444]" />
-            Planned
+            <div>
+                <CiCalendar className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" />
+            </div>
+
+            <div className="text-left line-clamp-1">Planned</div>
         </Button>
     );
 };

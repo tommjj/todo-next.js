@@ -117,17 +117,17 @@ export const ResizeContainer = forwardRef<HTMLDivElement, Props>(
             <div
                 ref={containerRef}
                 className={`relative h-full ${className} ${
-                    !isMouseDown && 'transition-all duration-500'
+                    !isMouseDown && 'transition-all duration-300'
                 }`}
                 style={{ width: `${width}px` }}
                 {...props}
             >
                 <div
                     onMouseDown={handleMouseDown}
-                    className={`absolute w-[4px] h-full top-0 cursor-w-resize hover:bg-[#0D6EFD] z-[999] ${clsx(
+                    className={`absolute w-[4px] h-full top-0 cursor-w-resize hover:bg-nav-active-color z-[900] ${clsx(
                         {
-                            'transition-all duration-500': !isMouseDown,
-                            'bg-[#0D6EFD] before:absolute before:w-4 before:h-full before:top-0 before:-left-2 before:cursor-w-resize before:opacity-0':
+                            'transition-all duration-300': !isMouseDown,
+                            'bg-nav-active-color before:absolute before:w-4 before:h-full before:top-0 before:-left-2 before:cursor-w-resize before:opacity-0':
                                 isMouseDown,
                         }
                     )}`}

@@ -42,6 +42,7 @@ import {
 } from './nav-buttons';
 import { ResizeContainer } from '../resize-container';
 import { cn } from '@/lib/utils';
+import { NavLinks } from './nav-list';
 
 function Nav({ lists }: { lists: Lists }) {
     const { isOpen, width, setWidth, closeNav, openNav, toggleNav } =
@@ -93,7 +94,7 @@ function Nav({ lists }: { lists: Lists }) {
             >
                 <ResizeContainer
                     className={cn(
-                        'max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-[416px] z-50 ',
+                        'max-w-[300px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full md:max-w-[416px] z-50',
                         {
                             'max-w-[220px] md:max-w-[220px] -mr-[220px] -translate-x-[220px]':
                                 !isOpen,
@@ -111,11 +112,7 @@ function Nav({ lists }: { lists: Lists }) {
 
                             <AddTaskButton />
                             <NavItems />
-                            {/* <NavLinks lists={lists} /> */}
-
-                            <div className="h-12 px-4 flex items-center">
-                                <CreateListForm />
-                            </div>
+                            <NavLinks lists={lists} />
                         </div>
                     </nav>
                 </ResizeContainer>
@@ -237,20 +234,6 @@ export function NavLink({
                 </div>
             )}
         </div>
-    );
-}
-
-export function NavLinks({ lists }: { lists: Lists }) {
-    const { board } = useParams();
-
-    return (
-        <ul className="flex flex-col">
-            {/* {lists.map((item) => (
-                <li key={item.id}>
-                    <NavLink active={`${item.id}` === board} list={item} />
-                </li>
-            ))} */}
-        </ul>
     );
 }
 
