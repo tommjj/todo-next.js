@@ -43,11 +43,13 @@ function CompletedTskList() {
             </div>
             <div>
                 {isOpen &&
-                    tasks.map((task) =>
-                        !task.completed || bin.has(task.id) ? null : (
-                            <TaskItem key={task.id} task={task} />
-                        )
-                    )}
+                    tasks.map((task) => (
+                        <RemoveAnimation key={`todo::${task.id}`}>
+                            {!task.completed || bin.has(task.id) ? null : (
+                                <TaskItem task={task} />
+                            )}
+                        </RemoveAnimation>
+                    ))}
             </div>
         </>
     );
@@ -61,7 +63,7 @@ const TodoList = () => {
         <>
             {list &&
                 list.tasks?.map((task) => (
-                    <RemoveAnimation key={task.id}>
+                    <RemoveAnimation key={`todo::${task.id}`}>
                         {task.completed || bin.has(task.id) ? null : (
                             <TaskItem task={task} />
                         )}

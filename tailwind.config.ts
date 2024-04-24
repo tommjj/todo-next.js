@@ -89,13 +89,13 @@ const config = {
                     '0%': { transform: 'scale(0.6)' },
                 },
                 expand: {
-                    '0%': { height: '0', opacity: '0' },
+                    from: { height: '0', opacity: '0' },
                 },
                 expandX: {
                     '0%': { transform: 'translateX(100%)', opacity: '0' },
                 },
                 remove: {
-                    '100%': { height: '0', opacity: '0' },
+                    to: { height: '0', opacity: '0' },
                 },
                 'accordion-down': {
                     from: { height: '0' },
@@ -119,7 +119,7 @@ const config = {
             },
         },
     },
-    plugins: [require('tailwindcss-animate')],
+    plugins: [require('tailwindcss-animate'), require('autoprefixer')],
 } satisfies Config;
 
 export default config;

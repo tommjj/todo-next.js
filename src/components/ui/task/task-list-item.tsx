@@ -209,7 +209,7 @@ const TaskItem = ({ task }: { task: Task }) => {
                     : {}
             }
             className={cn(
-                'overflow-auto animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] px-2 border-b shadow-sm cursor-pointer transition-all',
+                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] px-2 border-b cursor-pointer',
                 {
                     'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50': isDrag,
                     'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
