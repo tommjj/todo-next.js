@@ -63,7 +63,7 @@ function Nav({ lists }: { lists: Lists }) {
         const handleResize = (e: Event) => {
             const target = e.target as Window;
 
-            if (target.innerWidth < 768) {
+            if (target.innerWidth <= 768) {
                 if (!isSmS) {
                     closeNav();
                 }
@@ -93,9 +93,9 @@ function Nav({ lists }: { lists: Lists }) {
         <NoSSR>
             <aside
                 className={cn(
-                    'flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto',
+                    'flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto ',
                     {
-                        'w-0': !isOpen,
+                        'w-0 delay-300 transition-all duration-0': !isOpen,
                     }
                 )}
             >
@@ -126,8 +126,8 @@ function Nav({ lists }: { lists: Lists }) {
 
                 <div
                     className={cn(
-                        'flex-grow h-full bg-[#00000050] md:hidden z-40',
-                        { hidden: !isOpen }
+                        'flex-grow h-full bg-[#00000050] md:hidden z-40 opacity-100 transition-all duration-300',
+                        { 'opacity-0': !isOpen }
                     )}
                     onClick={toggleNav}
                 ></div>

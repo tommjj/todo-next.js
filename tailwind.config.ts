@@ -30,6 +30,7 @@ const config = {
                 'main-bg-color': '#FFFFFF',
                 'main-bg-color-dark': '#24262a', //202225
                 'nav-text-color': '#39485E',
+                'primary-color': '#39485E',
                 'nav-text-color-dark': '#cbcccd',
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',

@@ -13,7 +13,7 @@ export const AddTaskButton = () => {
     return (
         <div className="w-full px-[10px] my-1">
             <Button
-                className="px-[6px] py-[3px] justify-start w-full grow text-nav-text-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
+                className="px-[6px] py-[3px] justify-start w-full grow text-primary-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
                 variant="ghost"
             >
                 <IoIosAddCircle className="w-7 h-7 mr-[6px]" />
@@ -25,12 +25,12 @@ export const AddTaskButton = () => {
 
 export const buttonProps: ButtonProps = {
     className:
-        'px-[8px] py-[5px] justify-start w-full grow text-sm font-normal',
+        'px-[8px] py-[5px] justify-start w-full grow text-sm font-normal font-light',
     variant: 'ghost',
 };
 
 export const activeClassName =
-    'bg-nav-active-color text-nav-text-color dark:bg-main-bg-color-dark dark:text-inherit md:hover:bg-nav-active-color dark:hover:bg-main-bg-color-dark hover:opacity-100';
+    'bg-nav-active-color text-nav-text-color font-normal dark:bg-main-bg-color-dark dark:text-inherit md:hover:bg-nav-active-color dark:hover:bg-main-bg-color-dark hover:opacity-100';
 
 export const getButtonClassName = (isActive: boolean) => {
     return cn(buttonProps.className, { [activeClassName]: isActive });

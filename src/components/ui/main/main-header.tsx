@@ -38,10 +38,7 @@ export const MainHeader = ({
                         variant="ghost"
                         className={cn(buttonProps.className, 'p-1 select-none')}
                     >
-                        <EllipsisHorizontalIcon
-                            className="h-6 w-6"
-                            strokeWidth={1}
-                        />
+                        <EllipsisHorizontalIcon className="h-6 w-6" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="transition-all duration-75">

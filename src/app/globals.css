@@ -84,10 +84,12 @@
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
     }
-    .custom-scrollbar::-webkit-scrollba {
+    .custom-scrollbar::-webkit-scrollbar {
         width: 3px;
     }
+
     .custom-scrollbar {
+        scrollbar-color: #00000020 #00000000;
         scrollbar-width: thin;
     }
 }

@@ -70,10 +70,10 @@ async function Page({ params }: Props) {
     if (error) notFound();
 
     return (
-        <>
+        <main className="w-full h-full overflow-y-auto custom-scrollbar">
             <MainHeader list={list} />
             <div className="flex flex-col items-center w-full">
-                <main className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
+                <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <ToolBar list={list} />
                     <div className="flex flex-col w-full flex-grow">
                         <div className="">
@@ -83,9 +83,9 @@ async function Page({ params }: Props) {
                         <FetchList id={list.id} />
                         <TaskList />
                     </div>
-                </main>
+                </div>
             </div>
-        </>
+        </main>
     );
 }
 
