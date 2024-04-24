@@ -1,12 +1,12 @@
 import { StateCreator } from 'zustand';
 import { ListSlice } from './list.store';
-import { CountSlice } from './count.store';
+import { AppSlice } from './app.store';
 
-export interface AppSlice {}
+export interface CountSlice {}
 
-export const createAppSlice: StateCreator<
+export const createCountSlice: StateCreator<
     AppSlice & ListSlice & CountSlice,
     [],
     [],
-    AppSlice
+    CountSlice
 > = (set) => ({});

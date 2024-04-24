@@ -5,6 +5,7 @@ import { DeleteWithCancel, Sync } from './type.store';
 import { AppSlice } from './app.store';
 import { arrayMove, setTaskById } from '../utils';
 import { deleteTaskById, updateTaskById } from '../http';
+import { CountSlice } from './count.store';
 
 export interface ListSlice {
     list: List | null;
@@ -24,7 +25,7 @@ export interface ListSlice {
 }
 
 export const createListSlice: StateCreator<
-    AppSlice & ListSlice,
+    AppSlice & ListSlice & CountSlice,
     [],
     [],
     ListSlice

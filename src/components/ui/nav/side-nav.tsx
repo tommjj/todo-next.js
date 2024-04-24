@@ -89,7 +89,10 @@ function Nav({ lists }: { lists: Lists }) {
         <NoSSR>
             <aside
                 className={cn(
-                    'flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto'
+                    'flex absolute top-0 left-0 w-full h-full md:relative  md:w-auto',
+                    {
+                        'w-0': !isOpen,
+                    }
                 )}
             >
                 <ResizeContainer

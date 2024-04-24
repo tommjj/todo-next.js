@@ -209,13 +209,13 @@ const TaskItem = ({ task }: { task: Task }) => {
                     : {}
             }
             className={cn(
-                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] mb-[6px] px-2 border rounded-md shadow-sm md:hover:bg-[#DCEAFF] cursor-pointer transition-all',
+                'overflow-auto animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] px-2 border-b shadow-sm cursor-pointer transition-all',
                 {
                     'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50': isDrag,
-                    'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[2px] before:z-40 z-20 before:left-0 ':
+                    'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
                         over.isOver,
-                    'before:top-[-5px] ': over.dir,
-                    'before:bottom-[-5px]': !over.dir,
+                    'before:top-[-1px]': over.dir,
+                    'before:bottom-[0px]': !over.dir,
                 }
             )}
         >

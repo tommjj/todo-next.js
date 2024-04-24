@@ -11,7 +11,6 @@ function Layout({
 }) {
     return (
         <>
-            <MainLoadingOverlay />
             <main className="w-full h-full flex flex-col">{children}</main>
             {details}
             {search}

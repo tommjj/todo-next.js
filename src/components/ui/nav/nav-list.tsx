@@ -7,13 +7,11 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
 import CreateListForm from '../create-list/create-list-form';
+import { getButtonClassName } from './nav-buttons';
 
 export const NavLink = () => {
     return (
-        <Button
-            className="px-[8px] py-[5px] justify-start w-full grow text-sm font-normal "
-            variant="ghost"
-        >
+        <Button variant="ghost" className={getButtonClassName(false)}>
             <div>
                 <GoHash className="w-6 h-6 p-[0.20rem] mr-[8px] text-[#444] dark:text-inherit" />
             </div>

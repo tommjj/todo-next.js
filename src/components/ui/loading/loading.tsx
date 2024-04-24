@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineLoading } from 'react-icons/ai';
 
 // * just delay
@@ -9,7 +9,7 @@ export const MainLoadingOverlay = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        setIsLoading(false);
+        setTimeout(() => setIsLoading(false), 700);
     }, []);
 
     return isLoading ? (

@@ -18,7 +18,7 @@ const buttonVariant = {
 
 export type Variant = keyof typeof buttonVariant;
 
-export interface Button extends React.ButtonHTMLAttributes<{}> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<{}> {
     variant?: Variant;
     href?: string;
     roundedFull?: boolean;
@@ -32,7 +32,7 @@ export default function Button({
     roundedFull = false,
     variant = 'dark',
     ...props
-}: Button) {
+}: ButtonProps) {
     let Comp: any = props.href ? Link : 'button';
 
     const ClassName = cn(
