@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
 import { getTaskById } from '@/lib/services/task.service';
+import { MainHeader } from '@/components/ui/main/main-header';
 
 type Props = {
     params: { board: string };
@@ -70,14 +71,19 @@ async function Page({ params }: Props) {
 
     return (
         <>
-            <ToolBar list={list} />
-            <div className="flex flex-col w-full flex-grow">
-                <div className="px-3 lg:px-5 lg:pt-2">
-                    <CreateTaskForm listId={list.id} />
-                </div>
+            <MainHeader list={list} />
+            <div className="flex flex-col items-center w-full">
+                <main className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
+                    <ToolBar list={list} />
+                    <div className="flex flex-col w-full flex-grow">
+                        <div className="">
+                            <CreateTaskForm listId={list.id} />
+                        </div>
 
-                <FetchList id={list.id} />
-                <TaskList />
+                        <FetchList id={list.id} />
+                        <TaskList />
+                    </div>
+                </main>
             </div>
         </>
     );

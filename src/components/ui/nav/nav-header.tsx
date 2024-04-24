@@ -31,6 +31,7 @@ const NavHeader = () => {
                     <DropdownMenuTrigger>
                         <Button className="px-[6px] py-[3px]" variant="ghost">
                             <Image
+                                priority
                                 className="w-[26px] mr-2 rounded-full"
                                 src="/images/TODO_LOGO.png"
                                 alt="logo"
@@ -63,7 +64,7 @@ const NavHeader = () => {
                     className={cn(
                         'bg-nav-bg-color dark:bg-nav-bg-color-dark transition-all duration-300',
                         {
-                            'translate-x-[3.4rem] bg-main-bg-color dark:bg-main-bg-color-dark':
+                            'translate-x-[3rem] md:translate-x-[3.4rem] bg-main-bg-color dark:bg-main-bg-color-dark':
                                 !isOpen,
                         }
                     )}

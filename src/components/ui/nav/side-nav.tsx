@@ -64,8 +64,14 @@ function Nav({ lists }: { lists: Lists }) {
             const target = e.target as Window;
 
             if (target.innerWidth < 768) {
+                if (!isSmS) {
+                    closeNav();
+                }
                 setIsSmS(true);
             } else {
+                if (isSmS) {
+                    openNav();
+                }
                 setIsSmS(false);
             }
         };
@@ -75,15 +81,13 @@ function Nav({ lists }: { lists: Lists }) {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [isSmS, closeNav, openNav]);
 
     useEffect(() => {
         if (isSmS) {
-            //closeNav();
-        } else {
-            openNav();
+            closeNav();
         }
-    }, [isSmS, board, closeNav, openNav]);
+    }, [isSmS, board, closeNav]);
 
     return (
         <NoSSR>

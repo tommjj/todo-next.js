@@ -11,7 +11,7 @@ export const AddTaskButton = () => {
     const { board } = useParams();
 
     return (
-        <div className="w-full px-[10px] my-2">
+        <div className="w-full px-[10px] my-1">
             <Button
                 className="px-[6px] py-[3px] justify-start w-full grow text-nav-text-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
                 variant="ghost"

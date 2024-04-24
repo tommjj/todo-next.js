@@ -17,6 +17,7 @@ export const MainLoadingOverlay = () => {
             <div>
                 <div>
                     <Image
+                        priority
                         className="h-[72px] w-[72px]"
                         src={'/images/TODO_LOGO.png'}
                         alt="LOGO"
