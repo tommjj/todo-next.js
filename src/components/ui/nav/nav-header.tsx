@@ -64,7 +64,7 @@ const NavHeader = () => {
                     className={cn(
                         'bg-nav-bg-color dark:bg-nav-bg-color-dark transition-all duration-300',
                         {
-                            'translate-x-[3rem] md:translate-x-[3.4rem] bg-main-bg-color dark:bg-main-bg-color-dark':
+                            'translate-x-[3.5rem] bg-main-bg-color dark:bg-main-bg-color-dark':
                                 !isOpen,
                         }
                     )}

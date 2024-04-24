@@ -44,7 +44,7 @@ export function CheckBox({
     );
 
     return (
-        <span className="flex justify-center px-2 text-[#0D6EFD]">
+        <span className="flex justify-center text-[#0D6EFD] mr-[10px]">
             <button
                 onClick={handleClick}
                 className={`flex justify-center items-center w-4 h-4 border border-[#0D6EFD] rounded-full group ${clsx(
@@ -83,7 +83,7 @@ export function Important({
     );
 
     return (
-        <span className="flex justify-center px-2 text-[#0D6EFD]">
+        <span className="flex justify-center text-[#0D6EFD]">
             <button
                 onClick={handleClick}
                 className={`flex justify-center items-center w-5 h-5 `}
@@ -209,10 +209,10 @@ const TaskItem = ({ task }: { task: Task }) => {
                     : {}
             }
             className={cn(
-                'animate-expand relative bg-white dark:bg-[#111] flex items-center w-full h-[52px] px-2 border-b cursor-pointer',
+                'animate-expand relative bg-inherit flex items-center w-full h-[52px] px-2 border-b cursor-pointer',
                 {
-                    'shadow-lg touch-none bg-[#DCEAFF] opacity-50 z-50': isDrag,
-                    'before:absolute before:bg-[#0D6EFD] before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
+                    'shadow-lg touch-none bg-[#DCEAFF] opacity-70 z-50': isDrag,
+                    'before:absolute before:bg-primary-color before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
                         over.isOver,
                     'before:top-[-1px]': over.dir,
                     'before:bottom-[0px]': !over.dir,
@@ -221,7 +221,9 @@ const TaskItem = ({ task }: { task: Task }) => {
         >
             <CheckBox completed={task.completed} taskId={task.id} />
 
-            <div className={cn('px-2 text-[#444] flex-grow touch')}>
+            <div
+                className={cn('text-[#444] dark:text-inherit flex-grow touch')}
+            >
                 <p className="text-sm">{task.title}</p>
                 <p className="text-xs font-light">
                     {task.dueDate?.toDateString()}

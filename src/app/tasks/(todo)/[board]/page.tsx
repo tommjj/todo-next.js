@@ -1,6 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import TaskList from '@/components/ui/task/task-list';
-import CreateTaskForm from '@/components/ui/task/create-task';
+import { ListViewCreateTask } from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';
 import { getListById } from '@/lib/services/list.service';
 import { notFound } from 'next/navigation';
@@ -77,7 +77,7 @@ async function Page({ params }: Props) {
                     <ToolBar list={list} />
                     <div className="flex flex-col w-full flex-grow">
                         <div className="">
-                            <CreateTaskForm listId={list.id} />
+                            <ListViewCreateTask listId={list.id} />
                         </div>
 
                         <FetchList id={list.id} />

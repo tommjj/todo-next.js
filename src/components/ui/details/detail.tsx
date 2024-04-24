@@ -56,14 +56,14 @@ export default function DetailsContainer({ id }: { id: string }) {
             {task && (
                 <aside
                     ref={ref}
-                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative lg:border-l z-50"
+                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-50 "
                 >
                     <div
                         onClick={handleClickOverlay}
                         className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"
                     ></div>
                     <ResizeContainer
-                        className="bg-white dark:bg-[#111]  flex flex-col relative"
+                        className="bg-nav-bg-color dark:bg-nav-bg-color-dark  flex flex-col relative"
                         defaultWidth={Number(
                             localStorage.getItem(StorageKey) || 360
                         )}

@@ -29,7 +29,7 @@ function CompletedTskList() {
                 className="w-full h-[52px] mb-1 px-2 flex items-center border-b text-[#333] dark:text-white cursor-pointer"
                 onClick={handleClick}
             >
-                <samp className="px-2">
+                <samp className="pr-2">
                     <ChevronRightIcon
                         className={`h-4 transition-transform ${clsx({
                             'rotate-90': isOpen,
@@ -75,7 +75,7 @@ const TodoList = () => {
 
 function TaskList() {
     return (
-        <div className="w-full flex-grow  overflow-y-auto relative">
+        <div className="w-full flex-grow relative">
             <DNDProvider>
                 <DnDContainer>
                     <TodoList />

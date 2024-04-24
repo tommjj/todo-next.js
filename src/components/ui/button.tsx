@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 const buttonVariant = {
     ghost: 'md:hover:bg-[#09090912] dark:hover:bg-[#ffffff26] text-[#18181B] dark:text-[#FAFAFA]',
-    primary: 'bg-[#0D6EFD] text-[#FAFAFA] dark:bg-[#0058dc]',
+    primary: 'bg-primary-color text-[#FAFAFA] dark:bg-primary-color',
     warning: 'bg-[#FFC107] text-[#FAFAFA]',
     success: 'bg-[#198754] text-[#FAFAFA]',
     secondary:
         'bg-[#F4F4F5] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA]',
     destructive: 'bg-[#DC2626] text-[#FAFAFA]',
-    outline: '',
+    outline: 'border opacity-95',
     dark: 'bg-[#18181B] dark:bg-[#FAFAFA] dark:text-[#18181B] text-[#FAFAFA]',
     link: 'text-[#0D6EFD] underline',
 };

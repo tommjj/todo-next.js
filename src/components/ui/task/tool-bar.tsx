@@ -7,7 +7,7 @@ function ToolBarTitle({ list }: { list: { name: string; id: string } }) {
 
     return (
         <div className=" flex-grow">
-            <div className="h-12 flex items-center px-[10px]">
+            <div className="h-12 flex items-center px-2">
                 <h1 className="font-semibold text-2xl tracking-tight mr-2 ">
                     {list.name}
                 </h1>

@@ -1,5 +1,6 @@
 'use client';
 
+import { CiFlag1, CiStar, CiCalendar } from 'react-icons/ci';
 import { fetcher } from '@/lib/http';
 import { CreateTask, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
@@ -7,6 +8,8 @@ import { IoAddOutline } from 'react-icons/io5';
 import { Task } from '@prisma/client';
 import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
+import { cn } from '@/lib/utils';
+import Button from '../button';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -96,7 +99,106 @@ import { IoIosAddCircle } from 'react-icons/io';
 //     );
 // }
 
-export default function CreateTaskForm({ listId }: { listId: string }) {
+export const ImportantButton = () => {
+    return (
+        <Button
+            variant="ghost"
+            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
+        >
+            <CiStar className="w-4 h-4 mr-1 opacity-80" />
+            Important
+        </Button>
+    );
+};
+
+export const PriorityPicker = () => {
+    return (
+        <Button
+            variant="ghost"
+            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
+        >
+            <CiFlag1 className="w-4 h-4 mr-1 opacity-80" />
+            Priority
+        </Button>
+    );
+};
+
+export const DueDatePicker = () => {
+    return (
+        <Button
+            variant="ghost"
+            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
+        >
+            <CiCalendar className="w-4 h-4 mr-1 opacity-80" />
+            Due date
+        </Button>
+    );
+};
+
+export const CreateTaskForm = ({
+    className = '',
+    onCancel,
+}: {
+    className?: string;
+    onCancel?: () => void;
+}) => {
+    return (
+        <form
+            className={cn(
+                'w-full border dark:border-[#FAFAFA] rounded-md',
+                className
+            )}
+        >
+            <div className="w-full px-[10px] pt-[10px]">
+                <input
+                    className="w-full outline-none placeholder:font-medium text-[0.95rem] bg-inherit"
+                    placeholder="Task name"
+                    name="name"
+                    type="text"
+                    autoComplete="off"
+                    autoCapitalize="off"
+                ></input>
+                <textarea
+                    onInput={(ev) => {
+                        const el = ev.target as HTMLTextAreaElement;
+
+                        el.style.height = '5px';
+                        el.style.height = el.scrollHeight + 'px';
+                    }}
+                    className="w-full overflow-hidden h-max text-[0.8rem] outline-none font-light placeholder:font-light resize-none bg-inherit "
+                    placeholder="Description"
+                    name="description"
+                    autoComplete="off"
+                    autoCapitalize="off"
+                    rows={1}
+                ></textarea>
+                <div className="flex gap-[0.35rem] py-2">
+                    <DueDatePicker />
+                    <PriorityPicker />
+                    <ImportantButton />
+                </div>
+            </div>
+            <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">
+                <Button
+                    className="text-[0.9rem]"
+                    variant="outline"
+                    onClick={onCancel}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    className="text-[0.9rem]"
+                    variant="primary"
+                    onClick={onCancel}
+                >
+                    Add task
+                </Button>
+            </div>
+        </form>
+    );
+};
+
+export const ListViewCreateTask = ({ listId }: { listId: string }) => {
     const [isActive, seIsActive] = useState(false);
 
     const showForm = useCallback(() => seIsActive(true), []);
@@ -105,7 +207,7 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
     return !isActive ? (
         <button
             onClick={showForm}
-            className="group flex px-[10px] items-center justify-start w-full h-11 text-[#777] hover:text-primary-color font-light"
+            className="group flex px-2 items-center justify-start w-full h-11 text-[#777] hover:text-primary-color font-light"
         >
             <div className="group-hover:bg-primary-color group-hover:text-main-bg-color mr-[6px] rounded-full">
                 <IoAddOutline className="w-5 h-5" />
@@ -113,6 +215,8 @@ export default function CreateTaskForm({ listId }: { listId: string }) {
             Add task
         </button>
     ) : (
-        <div onClick={closeForm}>a</div>
+        <div className="px-2">
+            <CreateTaskForm onCancel={closeForm} />
+        </div>
     );
-}
+};
