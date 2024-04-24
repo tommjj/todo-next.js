@@ -9,14 +9,15 @@ datasource db {
 }
 
 model User {
-  id            String  @id @default(uuid())
-  email         String  @unique
-  name          String  @unique
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String    @unique
   password      String
   primaryListId String?
-  List          List[]  @relation("project")
+  List          List[]    @relation("project")
   Share         Share[]
-  primaryList   List?   @relation(fields: [primaryListId], references: [id])
+  primaryList   List?     @relation(fields: [primaryListId], references: [id])
+  Comment       Comment[]
 }
 
 model List {
@@ -56,8 +57,9 @@ model Task {
   priority       Priority?
   miniTasks      MiniTask[]
   list           List           @relation(fields: [listId], references: [id])
+  Comment        Comment[]
 
-  @@index([listId])
+  @@index([id, listId])
 }
 
 model MiniTask {
@@ -67,6 +69,20 @@ model MiniTask {
   taskId      String
   description String? @db.VarChar(510)
   task        Task    @relation(fields: [taskId], references: [id])
+
+  @@index([id, taskId])
+}
+
+model Comment {
+  id       String   @id @default(uuid())
+  createAt DateTime @default(now())
+  text     String   @db.VarChar(255)
+  taskId   String
+  userId   String
+  User     User     @relation(fields: [userId], references: [id])
+  Task     Task     @relation(fields: [taskId], references: [id])
+
+  @@index([id, taskId])
 }
 
 enum Priority {
