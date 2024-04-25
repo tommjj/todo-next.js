@@ -72,7 +72,6 @@ export default function DetailsContainer({ id }: { id: string }) {
                         resizeDir="Left"
                         onSizeChanged={handleSizeChanged}
                     >
-                        <Test></Test>
                         <div
                             className="w-full flex-grow  p-2"
                             onClick={() => {

@@ -3,7 +3,11 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-function useDropdownMenu() {
+function useDropdownMenu({
+    priorityDir = 'Left',
+}: {
+    priorityDir?: 'Left' | 'Right';
+}) {
     const ref = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -26,27 +30,66 @@ function useDropdownMenu() {
         const contentElement = ref.current.querySelector(
             '#DropdownMenuContent'
         ) as HTMLElement;
+        const triggerElement = ref.current?.querySelector(
+            '#DropdownMenuTrigger'
+        ) as HTMLElement;
 
-        if (!contentElement) return;
+        if (!contentElement && !triggerElement) return;
 
         contentElement.style.cssText =
             'display: block; opacity: 0; left: 50%; transform: translateX(-50%); ';
 
-        const boundingRect = contentElement.getBoundingClientRect();
+        const contentBoundingRect = contentElement.getBoundingClientRect();
+        const triggerBoundingRect = triggerElement.getBoundingClientRect();
 
-        const isOnTop =
-            boundingRect.y + boundingRect.height > window.innerHeight;
-        const isLeft = boundingRect.x < 25;
-        const isRight =
-            boundingRect.x + boundingRect.width > window.innerWidth - 25;
+        const isOnBottom =
+            triggerBoundingRect.bottom + contentBoundingRect.height <
+            window.innerHeight;
+
+        const isOnTop = isOnBottom
+            ? false
+            : triggerBoundingRect.top - contentBoundingRect.height > 0;
+
+        const isOverOverflow = !(isOnTop || isOnBottom);
+
+        const isOverLeft = isOverOverflow
+            ? triggerBoundingRect.x - contentBoundingRect.width < 20
+            : triggerBoundingRect.x -
+                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 <
+              20;
+
+        const isOverRight = isOverOverflow
+            ? triggerBoundingRect.right + contentBoundingRect.width >
+              window.innerWidth
+            : triggerBoundingRect.right +
+                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 >
+              window.innerWidth;
 
         contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
-            'bottom: 100%;': isOnTop,
-            'top: 100%;': !isOnTop,
-            'left: 0;': isLeft,
-            'right: 0;': isRight,
-            'left: 50%; transform: translateX(-50%);': !(isLeft || isRight),
-        })}
+            [`bottom: ${window.innerHeight - triggerBoundingRect.top}px;`]:
+                isOnTop,
+            [`top: ${triggerBoundingRect.bottom}px;`]: isOnBottom,
+            'top: 10px;': isOverOverflow,
+            [`left: ${
+                isOverOverflow
+                    ? triggerBoundingRect.right
+                    : triggerBoundingRect.left
+            }px;`]:
+                isOverLeft ||
+                (!isOverRight && isOverOverflow && priorityDir === 'Right'),
+            [`right: ${
+                isOverOverflow
+                    ? window.innerWidth - triggerBoundingRect.left
+                    : window.innerWidth - triggerBoundingRect.right
+            }px`]:
+                isOverRight ||
+                (!isOverLeft && isOverOverflow && priorityDir === 'Left'),
+            [`left: ${
+                triggerBoundingRect.x + triggerBoundingRect.width / 2
+            }px; transform: translateX(-50%);`]: isOverOverflow
+                ? isOverLeft && isOverRight
+                : !(isOverLeft || isOverRight),
+        })} 
         `;
 
         contentElement.onclick = () => {
@@ -62,7 +105,7 @@ function useDropdownMenu() {
             document.body.style.cssText = '';
             contentElement.onclick = null;
         };
-    }, [isOpen, handleClose]);
+    }, [isOpen, handleClose, priorityDir]);
 
     useEffect(() => {
         function preventScroll(e: any) {
@@ -100,8 +143,14 @@ function useDropdownMenu() {
     };
 }
 
-export function DropdownMenu({ children }: { children: React.ReactNode }) {
-    const { ref, handleToggle } = useDropdownMenu();
+export function DropdownMenu({
+    children,
+    priorityDir = 'Left',
+}: {
+    children: React.ReactNode;
+    priorityDir?: 'Left' | 'Right';
+}) {
+    const { ref, handleToggle } = useDropdownMenu({ priorityDir });
 
     useEffect(() => {
         const triggerElement = ref.current?.querySelector(
@@ -148,7 +197,7 @@ export function DropdownMenuContent({
 }) {
     return (
         <div
-            className={`hidden absolute z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
+            className={`hidden fixed z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
             id="DropdownMenuContent"
         >
             {children}

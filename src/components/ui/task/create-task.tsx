@@ -10,6 +10,11 @@ import { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '../drop-down-menu/drop-down-menu';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -113,13 +118,23 @@ export const ImportantButton = () => {
 
 export const PriorityPicker = () => {
     return (
-        <Button
-            variant="ghost"
-            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-        >
-            <CiFlag1 className="w-4 h-4 mr-1 opacity-80" />
-            Priority
-        </Button>
+        <DropdownMenu>
+            <DropdownMenuTrigger>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
+                >
+                    <CiFlag1 className="w-4 h-4 mr-1 opacity-80" />
+                    Priority
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <div className="w-36 h-[600px]">
+                    <div> adwdhkjh</div>
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
 
@@ -153,7 +168,7 @@ export const CreateTaskForm = ({
                 <input
                     className="w-full outline-none placeholder:font-medium text-[0.95rem] bg-inherit"
                     placeholder="Task name"
-                    name="name"
+                    name="task name"
                     type="text"
                     autoComplete="off"
                     autoCapitalize="off"
