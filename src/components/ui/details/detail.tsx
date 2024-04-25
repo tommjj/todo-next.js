@@ -12,22 +12,21 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
+import { cn } from '@/lib/utils';
 
 const StorageKey = 'detailWidth';
 
-export default function DetailsContainer({ id }: { id: string }) {
+export default function DetailsContainer({ id }: { id?: string }) {
     const [maxWidth, setMaxWidth] = useState(900);
     const { board } = useParams();
     const list = useStore((state) => state.list);
     const ref = useRef<HTMLDivElement>(null);
 
-    const moveItem = useStore((state) => state.moveItem);
-
     const { push } = useRouter();
 
     const task = list && list.tasks?.find((e) => e.id === id);
 
-    const handleClickOverlay = useCallback(() => {
+    const handleClose = useCallback(() => {
         push(`/tasks/${board}`);
     }, [board, push]);
 
@@ -56,15 +55,49 @@ export default function DetailsContainer({ id }: { id: string }) {
     const handleSizeChanged = useCallback((w: number) => {
         localStorage.setItem(StorageKey, w.toString());
     }, []);
+
     return (
         <>
-            {task && (
+            <aside
+                className={cn(
+                    'flex absolute right-0 top-0 w-full h-full md:relative md:w-auto z-50',
+                    {
+                        'w-0 delay-300 transition-all duration-0': !task,
+                    }
+                )}
+            >
+                <div
+                    className={cn(
+                        'flex-grow h-full bg-[#00000050] md:hidden z-40 opacity-100 transition-all duration-300',
+                        { 'opacity-0': !task }
+                    )}
+                    onClick={handleClose}
+                ></div>
+                <ResizeContainer
+                    className={cn(
+                        ' bg-nav-bg-color dark:bg-nav-bg-color-dark h-full z-50',
+                        {
+                            'max-w-[360px] md:max-w-[360px] -ml-[360px] translate-x-[360px]':
+                                !task,
+                        }
+                    )}
+                    defaultWidth={360}
+                    minWidth={360}
+                    maxWidth={maxWidth}
+                    resizeDir="Left"
+                >
+                    <div className="w-full h-full">
+                        <Button onClick={handleClose}>click</Button>
+                    </div>
+                </ResizeContainer>
+            </aside>
+            {/* {task && (
                 <aside
                     ref={ref}
-                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-50 "
+                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-50"
                 >
                     <div
-                        onClick={handleClickOverlay}
+                        onClick={handleClose}
                         className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"
                     ></div>
                     <ResizeContainer
@@ -104,7 +137,7 @@ export default function DetailsContainer({ id }: { id: string }) {
                         <BottomBar task={task} />
                     </ResizeContainer>
                 </aside>
-            )}
+            )} */}
         </>
     );
 }

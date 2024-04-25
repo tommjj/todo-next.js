@@ -15,8 +15,8 @@ function BottomBar({ task }: { task: Task }) {
     const deleteTask = useStore((state) => state.deleteTask);
 
     const handleClickOverlay = useCallback(() => {
-        push(`/tasks/${board}`);
-    }, [board, push]);
+        push(`?`);
+    }, [push]);
 
     return (
         <div className="sticky bottom-0 left-0 h-14 flex items-center px-5 border-t justify-between font-light text-[#333] ">

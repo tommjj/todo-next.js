@@ -380,7 +380,7 @@ export const ListViewCreateTask = ({ listId }: { listId: string }) => {
     return !isActive ? (
         <button
             onClick={showForm}
-            className="group flex px-2 items-center justify-start w-full h-11 text-[#777] hover:text-primary-color font-light"
+            className="group flex items-center justify-start w-full h-11 text-[#777] hover:text-primary-color font-light"
         >
             <div className="group-hover:bg-primary-color group-hover:text-main-bg-color mr-[6px] rounded-full">
                 <IoAddOutline className="w-5 h-5" />

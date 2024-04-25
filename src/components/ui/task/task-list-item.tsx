@@ -150,8 +150,10 @@ const TaskItem = ({ task }: { task: Task }) => {
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
         if (timeStartClick.current + 200 > Date.now())
-            push(`/tasks/${listId}?details=${task.id}`);
-    }, [push, task.id, listId]);
+            push(`?details=${task.id}`, {
+                shallow: true,
+            });
+    }, [push, task.id]);
 
     const handleOver: DragEventHandler = useCallback(
         (e) => {
@@ -211,7 +213,8 @@ const TaskItem = ({ task }: { task: Task }) => {
             className={cn(
                 'animate-expand relative bg-inherit flex items-center w-full h-[52px] border-b cursor-pointer',
                 {
-                    'shadow-lg touch-none bg-[#DCEAFF] opacity-70 z-50': isDrag,
+                    'shadow-lg touch-none bg-[#DCEAFF] opacity-70 z-50 px-2':
+                        isDrag,
                     'before:absolute before:bg-primary-color before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
                         over.isOver,
                     'before:top-[-1px]': over.dir,

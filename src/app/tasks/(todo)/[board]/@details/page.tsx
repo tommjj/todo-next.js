@@ -5,9 +5,7 @@ function DetailsPage({
 }: {
     searchParams?: { details?: string };
 }) {
-    if (!searchParams?.details) return null;
-
-    return <DetailsContainer id={searchParams.details} />;
+    return <DetailsContainer id={searchParams?.details} />;
 }
 
 export default DetailsPage;
