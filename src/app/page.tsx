@@ -99,23 +99,7 @@ export default function Home() {
             </Header>
             <main className="no-scrollbar snap-mandatory snap-y scroll-smooth min-h-screen max-h-screen overflow-y-auto w-full bg-gradient-to-br from-white to-90% to-[#e9eaf0] -mt-16 dark:from-[#09001B] dark:to-[#040130]">
                 <Introduce />
-                <section className="snap-always snap-center w-full h-screen pt-[600px]">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-                            >
-                                <CiFlag1 className="w-4 h-4 mr-1 opacity-80" />
-                                Priority
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <div className="w-36 h-[600px]"></div>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </section>
+                <section className="snap-always snap-center w-full h-screen pt-[600px]"></section>
             </main>
         </>
     );

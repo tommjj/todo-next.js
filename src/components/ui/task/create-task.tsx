@@ -1,6 +1,16 @@
 'use client';
 
 import { CiFlag1, CiStar, CiCalendar } from 'react-icons/ci';
+import {
+    BsCalendar3,
+    BsCalendar3Event,
+    BsCalendar,
+    BsCalendar3Week,
+    BsFlag,
+    BsFlagFill,
+} from 'react-icons/bs';
+import { BiStar, BiSolidStar } from 'react-icons/bi';
+
 import { fetcher } from '@/lib/http';
 import { CreateTask, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
@@ -15,6 +25,8 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
+import { Calendar } from '@/components/ui-lib/ui/calendar';
+import { buttonProps } from '../nav/nav-buttons';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -104,13 +116,32 @@ import {
 //     );
 // }
 
-export const ImportantButton = () => {
+export const ImportantButton = ({
+    defaultState = false,
+    onChange = () => {},
+}: {
+    onChange?: (state: boolean) => void;
+    defaultState?: boolean;
+}) => {
+    const [important, setImportant] = useState(defaultState);
+
+    const handleClick = useCallback(() => {
+        setImportant(!important);
+        onChange(important);
+    }, [important, onChange]);
+
     return (
         <Button
+            onClick={handleClick}
+            type="button"
             variant="ghost"
             className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
         >
-            <CiStar className="w-4 h-4 mr-1 opacity-80" />
+            {important ? (
+                <BiSolidStar className="w-4 h-4 mr-1 opacity-80 text-primary-color" />
+            ) : (
+                <BiStar className="w-4 h-4 mr-1 opacity-50" />
+            )}
             Important
         </Button>
     );
@@ -130,8 +161,57 @@ export const PriorityPicker = () => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <div className="w-36 h-[600px]">
-                    <div> adwdhkjh</div>
+                <div className="w-32 px-1 py-2">
+                    <ul>
+                        <li>
+                            <Button
+                                {...buttonProps}
+                                className={cn(
+                                    buttonProps.className,
+                                    'text-[0.8rem] font-normal opacity-80'
+                                )}
+                            >
+                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-red-600" />
+                                Priority 1
+                            </Button>
+                        </li>
+                        <li>
+                            <Button
+                                {...buttonProps}
+                                className={cn(
+                                    buttonProps.className,
+                                    'text-[0.8rem] font-normal opacity-80'
+                                )}
+                            >
+                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
+                                Priority 2
+                            </Button>
+                        </li>
+                        <li>
+                            <Button
+                                {...buttonProps}
+                                className={cn(
+                                    buttonProps.className,
+                                    'text-[0.8rem] font-normal opacity-80'
+                                )}
+                            >
+                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
+                                Priority 3
+                            </Button>
+                        </li>
+                        <li>
+                            <Button
+                                {...buttonProps}
+                                className={cn(
+                                    buttonProps.className,
+                                    'text-[0.8rem] font-normal opacity-80'
+                                )}
+                            >
+                                <BsFlag className="w-5 h-5 p-[1px] mr-2" />
+                                Priority 4
+                            </Button>
+                        </li>
+                    </ul>
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -139,14 +219,92 @@ export const PriorityPicker = () => {
 };
 
 export const DueDatePicker = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+
     return (
-        <Button
-            variant="ghost"
-            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-        >
-            <CiCalendar className="w-4 h-4 mr-1 opacity-80" />
-            Due date
-        </Button>
+        <DropdownMenu>
+            <DropdownMenuTrigger>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
+                >
+                    <CiCalendar className="w-4 h-4 mr-1 opacity-80" />
+                    Due date
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+                <div
+                    className="w-[242px] bg-main-bg-color dark:bg-main-bg-color-dark"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="border-b p-2">
+                        <input
+                            className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
+                            placeholder="Task name"
+                            name="task name"
+                            type="text"
+                            autoComplete="off"
+                            autoCapitalize="off"
+                        />
+                    </div>
+                    <div className="px-1 py-[6px] border-b ">
+                        <Button
+                            {...buttonProps}
+                            className={cn(
+                                buttonProps.className,
+                                'text-[0.8rem] font-normal opacity-80'
+                            )}
+                        >
+                            <BsCalendar className="w-5 h-5 p-[1px] mr-2 text-green-600" />
+                            Today
+                        </Button>
+                        <Button
+                            {...buttonProps}
+                            className={cn(
+                                buttonProps.className,
+                                'text-[0.8rem] font-normal opacity-80'
+                            )}
+                        >
+                            <BsCalendar3Event className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
+                            Tomorrow
+                        </Button>
+                        <Button
+                            {...buttonProps}
+                            className={cn(
+                                buttonProps.className,
+                                'text-[0.8rem] font-normal opacity-80'
+                            )}
+                        >
+                            <BsCalendar3Week className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
+                            This week
+                        </Button>
+                        <Button
+                            {...buttonProps}
+                            className={cn(
+                                buttonProps.className,
+                                'text-[0.8rem] font-normal opacity-80'
+                            )}
+                        >
+                            <BsCalendar3 className="w-5 h-5 p-[1px] mr-2 text-indigo-600" />
+                            This month
+                        </Button>
+                    </div>
+                    <div className="flex justify-center w-full p-2">
+                        <Calendar
+                            fromMonth={date}
+                            disabled={(day) => day < date}
+                            mode="single"
+                            onSelect={(e) => {
+                                console.log(e);
+                            }}
+                            className=""
+                        />
+                    </div>
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
 
@@ -195,14 +353,14 @@ export const CreateTaskForm = ({
             </div>
             <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">
                 <Button
-                    className="text-[0.9rem]"
+                    className="text-[0.8rem] py-[0.35rem]"
                     variant="outline"
                     onClick={onCancel}
                 >
                     Cancel
                 </Button>
                 <Button
-                    className="text-[0.9rem]"
+                    className="text-[0.8rem] py-[0.35rem]"
                     variant="primary"
                     onClick={onCancel}
                 >
@@ -230,7 +388,7 @@ export const ListViewCreateTask = ({ listId }: { listId: string }) => {
             Add task
         </button>
     ) : (
-        <div className="px-2">
+        <div>
             <CreateTaskForm onCancel={closeForm} />
         </div>
     );

@@ -3,11 +3,11 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-function useDropdownMenu({
+const useDropdownMenu = ({
     priorityDir = 'Left',
 }: {
     priorityDir?: 'Left' | 'Right';
-}) {
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -23,7 +23,6 @@ function useDropdownMenu({
         setIsOpen((privState) => !privState);
     }, []);
 
-    //su ly dieu chich vi chi cua menu
     useEffect(() => {
         if (!ref.current || !isOpen) return;
 
@@ -36,8 +35,7 @@ function useDropdownMenu({
 
         if (!contentElement && !triggerElement) return;
 
-        contentElement.style.cssText =
-            'display: block; opacity: 0; left: 50%; transform: translateX(-50%); ';
+        contentElement.style.cssText = 'display: block; opacity: 0;';
 
         const contentBoundingRect = contentElement.getBoundingClientRect();
         const triggerBoundingRect = triggerElement.getBoundingClientRect();
@@ -92,22 +90,17 @@ function useDropdownMenu({
         })} 
         `;
 
-        contentElement.onclick = () => {
-            setTimeout(() => {
-                handleClose();
-            });
-        };
-
         document.body.style.cssText = `pointer-events: none; touch-action: none;`;
 
         return () => {
             contentElement.style.cssText = '';
             document.body.style.cssText = '';
-            contentElement.onclick = null;
         };
-    }, [isOpen, handleClose, priorityDir]);
+    }, [isOpen, priorityDir]);
 
     useEffect(() => {
+        if (!isOpen) return;
+
         function preventScroll(e: any) {
             e.preventDefault();
             e.stopPropagation();
@@ -120,16 +113,12 @@ function useDropdownMenu({
         };
 
         window.addEventListener('click', handleClick);
-
-        if (!isOpen)
-            return () => {
-                window.removeEventListener('click', handleClick);
-            };
         window.addEventListener('wheel', preventScroll, {
             passive: false,
         });
 
         return () => {
+            window.removeEventListener('click', handleClick);
             window.removeEventListener('wheel', preventScroll);
         };
     }, [isOpen, handleClose]);
@@ -141,7 +130,7 @@ function useDropdownMenu({
         handleToggle,
         ref,
     };
-}
+};
 
 export function DropdownMenu({
     children,

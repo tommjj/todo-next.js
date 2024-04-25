@@ -7,6 +7,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import BottomBar from './bottom-bar';
 import Button from '../button';
 import { Test } from '@/components/session-context';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '../drop-down-menu/drop-down-menu';
 
 const StorageKey = 'detailWidth';
 
@@ -72,13 +77,29 @@ export default function DetailsContainer({ id }: { id: string }) {
                         resizeDir="Left"
                         onSizeChanged={handleSizeChanged}
                     >
-                        <div
-                            className="w-full flex-grow  p-2"
-                            onClick={() => {
-                                moveItem(0, 2);
-                            }}
-                        >
-                            <Button variant="dark">Click me!</Button>
+                        <div className="w-full flex-grow  p-2">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Button variant="dark">Click me!</Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <div
+                                        className="w-36 h-[600px]"
+                                        onClick={(e) => {
+                                            console.log('click');
+                                        }}
+                                    >
+                                        <Button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                e.nativeEvent.stopImmediatePropagation();
+                                            }}
+                                        >
+                                            cc
+                                        </Button>
+                                    </div>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                         <BottomBar task={task} />
                     </ResizeContainer>
