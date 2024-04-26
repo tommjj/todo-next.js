@@ -13,7 +13,7 @@ function FetchList(props: { id: string }) {
         getListById(props.id).then(([list]) => {
             if (list) setList(list);
         });
-    }, [props, setList]);
+    }, [props.id, setList]);
 
     useEffect(
         () => () => {

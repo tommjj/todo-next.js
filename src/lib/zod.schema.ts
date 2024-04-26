@@ -13,7 +13,7 @@ export const Priority = z.enum([
     'PRIORITY1',
     'PRIORITY2',
     'PRIORITY3',
-    'PRIORITY3',
+    'PRIORITY4',
 ]);
 
 export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
@@ -85,7 +85,7 @@ export const TaskUpdateSchema = z.object({
     repeatCount: z.nullable(z.number()).optional(),
     note: z.nullable(z.string()).optional(),
     miniTasks: z.array(MiniTaskUpdateSchema).optional(),
-    level: z.nullable(Priority).optional(),
+    priority: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.coerce.number().optional(),
     createAt: z.coerce.date().optional(),
@@ -100,8 +100,8 @@ export const CreateTaskSchema = z.object({
     repeatInterval: RepeatInterval.optional(),
     repeatCount: z.nullable(z.number()).optional(),
     dueDate: EmptyStringToNull(z.nullable(z.coerce.date())).optional(),
-    note: z.nullable(z.string()).optional(),
-    level: z.nullable(Priority).optional(),
+    description: z.nullable(z.string()).optional(),
+    priority: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.number().optional(),
     createAt: z.coerce.date().optional(),

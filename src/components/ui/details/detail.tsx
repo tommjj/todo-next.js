@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
 import { cn } from '@/lib/utils';
+import { DetailHeader } from './detail-header';
 
 const StorageKey = 'detailWidth';
 
@@ -99,57 +100,10 @@ export default function DetailsContainer({ id }: { id?: string }) {
                     onSizeChanged={handleSizeChanged}
                 >
                     <div className="w-full h-full">
-                        <Button onClick={handleClose}>click</Button>
+                        <DetailHeader />
                     </div>
                 </ResizeContainer>
             </aside>
-            {/* {task && (
-                <aside
-                    ref={ref}
-                    className="absolute left-0 top-0 flex h-full w-full lg:w-auto lg:relative z-50"
-                >
-                    <div
-                        onClick={handleClose}
-                        className="h-full flex-grow bg-[#00000040] min-w-[50px] lg:hidden"
-                    ></div>
-                    <ResizeContainer
-                        className="bg-nav-bg-color dark:bg-nav-bg-color-dark  flex flex-col relative"
-                        defaultWidth={Number(
-                            localStorage.getItem(StorageKey) || 360
-                        )}
-                        minWidth={360}
-                        maxWidth={maxWidth}
-                        resizeDir="Left"
-                        onSizeChanged={handleSizeChanged}
-                    >
-                        <div className="w-full flex-grow  p-2">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <Button variant="dark">Click me!</Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <div
-                                        className="w-36 h-[600px]"
-                                        onClick={(e) => {
-                                            console.log('click');
-                                        }}
-                                    >
-                                        <Button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                e.nativeEvent.stopImmediatePropagation();
-                                            }}
-                                        >
-                                            cc
-                                        </Button>
-                                    </div>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                        <BottomBar task={task} />
-                    </ResizeContainer>
-                </aside>
-            )} */}
         </>
     );
 }

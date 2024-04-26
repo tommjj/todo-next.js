@@ -25,7 +25,7 @@ type RepeatPickerDataType = {
     icon: React.ReactElement;
 };
 
-type RepeatStateType = {
+export type RepeatStateType = {
     repeat: $Enums.RepeatInterval;
     repeatCount: number;
 };

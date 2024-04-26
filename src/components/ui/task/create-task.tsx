@@ -4,7 +4,7 @@ import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
 
 import { fetcher } from '@/lib/http';
-import { CreateTask, TaskSchema } from '@/lib/zod.schema';
+import { CreateTask, CreateTaskSchema, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
 import { IoAddOutline } from 'react-icons/io5';
 import { $Enums, Task } from '@prisma/client';
@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import Button from '../button';
 
 import { PriorityPicker } from '../picker/priority-picker';
-import { RepeatPicker } from '../picker/reapeat-picker';
+import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
 import { DueDatePicker } from '../picker/due-date-picker';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
@@ -33,21 +33,6 @@ import { DueDatePicker } from '../picker/due-date-picker';
 //         async (e) => {
 //             e.preventDefault();
 //             if (!(titleInput.current && dueDateInput.current && listID)) return;
-
-//             const [res] = await fetcher.post.json(`/api/lists/${listID}`, {
-//                 title: titleInput.current.value,
-//                 dueDate: dueDateInput.current.value,
-//             } satisfies CreateTask);
-
-//             if (res && res.ok) {
-//                 const task = (await res.json()) as Task;
-
-//                 const parse = TaskSchema.safeParse({ ...task, miniTasks: [] });
-
-//                 if (parse.success) {
-//                     addTask(parse.data);
-//                 }
-//             }
 
 //             setTimeout(() => {
 //                 if (titleInput.current && dueDateInput.current) {
@@ -142,29 +127,101 @@ export const ImportantButton = ({
 };
 
 type FormStateType = {
-    name: string;
+    title: string;
     description: string;
-    dueDate: null | Date;
-    repeatCount: null | number;
-    repeat: null | $Enums.RepeatInterval;
+    dueDate: undefined | Date;
+    repeatCount: undefined | number;
+    repeatInterval: undefined | $Enums.RepeatInterval;
     priority: $Enums.Priority;
+    important: boolean;
 };
 
 export const CreateTaskForm = ({
     className = '',
     onCancel,
+    ListId,
 }: {
+    ListId: string;
     className?: string;
     onCancel?: () => void;
 }) => {
     const [formState, setFormState] = useState<FormStateType>({
-        name: '',
+        title: '',
         description: '',
-        dueDate: null,
-        repeatCount: null,
-        repeat: null,
+        dueDate: undefined,
+        repeatCount: undefined,
+        repeatInterval: undefined,
         priority: 'PRIORITY4',
+        important: false,
     });
+
+    const listID = useStore((s) => s.list?.id);
+    const addTask = useStore((s) => s.addTask);
+
+    const handleTaskNameChange: React.ChangeEventHandler<HTMLInputElement> =
+        useCallback((e) => {
+            setFormState((priv) => ({ ...priv, title: e.target.value }));
+        }, []);
+
+    const handleDescriptionChange: React.ChangeEventHandler<HTMLTextAreaElement> =
+        useCallback((e) => {
+            setFormState((priv) => ({ ...priv, description: e.target.value }));
+        }, []);
+
+    const handleDueDayChange = useCallback((date: Date | undefined) => {
+        setFormState((priv) => ({ ...priv, dueDate: date }));
+    }, []);
+
+    const handlePriorityChange = useCallback((priority: $Enums.Priority) => {
+        setFormState((priv) => ({ ...priv, priority: priority }));
+    }, []);
+
+    const handleRepeatChange = useCallback(
+        ({ repeat, repeatCount }: RepeatStateType) => {
+            setFormState((priv) => ({
+                ...priv,
+                repeatInterval: repeat,
+                repeatCount: repeatCount,
+            }));
+        },
+        []
+    );
+
+    const handleImportantChange = useCallback((important: boolean) => {
+        setFormState((priv) => ({ ...priv, important: important }));
+    }, []);
+
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
+        async (e) => {
+            e.preventDefault();
+
+            if (formState.title.trim() === '') return;
+
+            const parse = CreateTaskSchema.safeParse(formState);
+            if (parse.success) {
+                const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
+                    ...parse.data,
+                } satisfies CreateTask);
+
+                if (res && res.ok) {
+                    const task = (await res.json()) as Task;
+
+                    const parse = TaskSchema.safeParse({
+                        ...task,
+                        miniTasks: [],
+                    });
+
+                    if (parse.success) {
+                        addTask(parse.data);
+                        onCancel && onCancel();
+                    }
+                }
+            } else {
+                console.log(parse.error);
+            }
+        },
+        [ListId, addTask, formState, onCancel]
+    );
 
     return (
         <form
@@ -172,6 +229,7 @@ export const CreateTaskForm = ({
                 'w-full border dark:border-[#FAFAFA] rounded-md',
                 className
             )}
+            onSubmit={handleSubmit}
         >
             <div className="w-full px-[10px] pt-[10px]">
                 <input
@@ -181,6 +239,8 @@ export const CreateTaskForm = ({
                     type="text"
                     autoComplete="off"
                     autoCapitalize="off"
+                    value={formState.title}
+                    onChange={handleTaskNameChange}
                 ></input>
                 <textarea
                     onInput={(ev) => {
@@ -195,20 +255,19 @@ export const CreateTaskForm = ({
                     autoComplete="off"
                     autoCapitalize="off"
                     rows={1}
+                    value={formState.description}
+                    onChange={handleDescriptionChange}
                 ></textarea>
                 <div className="flex gap-[0.35rem] py-2">
-                    <DueDatePicker
-                        onChanged={(d) => {
-                            console.log(d);
-                        }}
-                    />
-                    <PriorityPicker onChanged={(p) => console.log(p)} />
-                    <RepeatPicker onChanged={(r) => console.log(r)} />
-                    <ImportantButton onChange={(i) => console.log(i)} />
+                    <DueDatePicker onChanged={handleDueDayChange} />
+                    <PriorityPicker onChanged={handlePriorityChange} />
+                    <RepeatPicker onChanged={handleRepeatChange} />
+                    <ImportantButton onChange={handleImportantChange} />
                 </div>
             </div>
             <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">
                 <Button
+                    type="button"
                     className="text-[0.8rem] py-[0.35rem]"
                     variant="outline"
                     onClick={onCancel}
@@ -218,7 +277,7 @@ export const CreateTaskForm = ({
                 <Button
                     className="text-[0.8rem] py-[0.35rem] aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
                     variant="primary"
-                    aria-disabled={formState.name.trim() === ''}
+                    aria-disabled={formState.title.trim() === ''}
                 >
                     Add task
                 </Button>
@@ -245,7 +304,7 @@ export const ListViewCreateTask = ({ listId }: { listId: string }) => {
         </button>
     ) : (
         <div>
-            <CreateTaskForm onCancel={closeForm} />
+            <CreateTaskForm ListId={listId} onCancel={closeForm} />
         </div>
     );
 };
