@@ -44,11 +44,11 @@ export function CheckBox({
     );
 
     return (
-        <span className="flex justify-center text-[#0D6EFD] mr-[10px]">
+        <span className="flex justify-center text-primary-color dark:text-primary-color-dark mr-[10px]">
             <button
                 onClick={handleClick}
-                className={`flex justify-center items-center w-4 h-4 border border-[#0D6EFD] rounded-full group ${clsx(
-                    { 'bg-[#0D6EFD]': completed }
+                className={`flex justify-center items-center w-4 h-4 border border-primary-color dark:border-primary-color-dark rounded-full group ${clsx(
+                    { 'bg-primary-color dark:bg-primary-color-dark': completed }
                 )}`}
             >
                 <CheckIcon
@@ -83,7 +83,7 @@ export function Important({
     );
 
     return (
-        <span className="flex justify-center text-[#0D6EFD]">
+        <span className="flex justify-center text-primary-color dark:text-primary-color-dark">
             <button
                 onClick={handleClick}
                 className={`flex justify-center items-center w-5 h-5 `}

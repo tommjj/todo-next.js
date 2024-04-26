@@ -1,3 +1,4 @@
+import NoSSR from '@/components/NoSSR';
 import DetailsContainer from '@/components/ui/details/detail';
 
 function DetailsPage({
@@ -5,7 +6,11 @@ function DetailsPage({
 }: {
     searchParams?: { details?: string };
 }) {
-    return <DetailsContainer id={searchParams?.details} />;
+    return (
+        <NoSSR>
+            <DetailsContainer id={searchParams?.details} />
+        </NoSSR>
+    );
 }
 
 export default DetailsPage;

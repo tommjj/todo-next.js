@@ -35,7 +35,7 @@ function CreateListForm() {
                 autoComplete="off"
                 type="text"
                 name="listName"
-                placeholder="create new list"
+                placeholder="Create new list"
                 className="flex-grow w-12 h-8 outline-none font-light bg-inherit"
             ></input>
         </form>

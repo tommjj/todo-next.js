@@ -16,7 +16,18 @@ import { cn } from '@/lib/utils';
 
 const StorageKey = 'detailWidth';
 
+const getStateFromStorage = (): number | undefined => {
+    try {
+        const state = localStorage?.getItem(StorageKey);
+        if (!state) return undefined;
+        return Number(state);
+    } catch (err) {
+        return undefined;
+    }
+};
+
 export default function DetailsContainer({ id }: { id?: string }) {
+    const [width] = useState(getStateFromStorage() || 360);
     const [maxWidth, setMaxWidth] = useState(900);
     const { board } = useParams();
     const list = useStore((state) => state.list);
@@ -81,10 +92,11 @@ export default function DetailsContainer({ id }: { id?: string }) {
                                 !task,
                         }
                     )}
-                    defaultWidth={360}
+                    defaultWidth={width}
                     minWidth={360}
                     maxWidth={maxWidth}
                     resizeDir="Left"
+                    onSizeChanged={handleSizeChanged}
                 >
                     <div className="w-full h-full">
                         <Button onClick={handleClose}>click</Button>

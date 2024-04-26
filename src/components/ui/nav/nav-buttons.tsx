@@ -29,11 +29,11 @@ export const buttonProps: ButtonProps = {
     variant: 'ghost',
 };
 
-export const activeClassName =
+export const buttonActiveClassName =
     'bg-nav-active-color text-nav-text-color font-normal dark:bg-main-bg-color-dark dark:text-inherit md:hover:bg-nav-active-color dark:hover:bg-main-bg-color-dark hover:opacity-100';
 
 export const getButtonClassName = (isActive: boolean) => {
-    return cn(buttonProps.className, { [activeClassName]: isActive });
+    return cn(buttonProps.className, { [buttonActiveClassName]: isActive });
 };
 
 export const SearchButton = () => {

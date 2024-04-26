@@ -57,7 +57,7 @@ model Task {
   priority       Priority?
   miniTasks      MiniTask[]
   list           List           @relation(fields: [listId], references: [id])
-  Comment        Comment[]
+  Comments       Comment[]
 
   @@index([id, listId])
 }

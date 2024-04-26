@@ -8,15 +8,23 @@ import {
     BsCalendar3Week,
     BsFlag,
     BsFlagFill,
+    BsArrowRepeat,
 } from 'react-icons/bs';
-import { BiStar, BiSolidStar } from 'react-icons/bi';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
 
 import { fetcher } from '@/lib/http';
 import { CreateTask, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
 import { IoAddOutline } from 'react-icons/io5';
-import { Task } from '@prisma/client';
-import { ChangeEvent, useCallback, useRef, useState } from 'react';
+import { $Enums, Task } from '@prisma/client';
+import {
+    ChangeEvent,
+    useCallback,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
@@ -26,7 +34,12 @@ import {
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
 import { Calendar } from '@/components/ui-lib/ui/calendar';
-import { buttonProps } from '../nav/nav-buttons';
+import {
+    buttonActiveClassName,
+    buttonProps,
+    getButtonClassName,
+} from '../nav/nav-buttons';
+import { PriorityPicker } from '../picker/priority-picker';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -138,16 +151,15 @@ export const ImportantButton = ({
             className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
         >
             {important ? (
-                <BiSolidStar className="w-4 h-4 mr-1 opacity-80 text-primary-color" />
+                <StarIconSolid className="w-4 h-4 opacity-80 text-primary-color" />
             ) : (
-                <BiStar className="w-4 h-4 mr-1 opacity-50" />
+                <StarIconOutline className="w-4 h-4 opacity-50" />
             )}
-            Important
         </Button>
     );
 };
-
-export const PriorityPicker = () => {
+// TODO:
+export const RepeatPicker = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
@@ -156,59 +168,77 @@ export const PriorityPicker = () => {
                     variant="ghost"
                     className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
                 >
-                    <CiFlag1 className="w-4 h-4 mr-1 opacity-80" />
-                    Priority
+                    <BsArrowRepeat className="w-4 h-4 mr-1 opacity-80" />
+                    Repeat
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <div className="w-32 px-1 py-2">
-                    <ul>
+                <div className="w-[200px] bg-main-bg-color dark:bg-main-bg-color-dark">
+                    <div className="border-b p-2">
+                        <input
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
+                            placeholder="Type repeat count"
+                            name="task name"
+                            type="number"
+                            autoComplete="off"
+                            autoCapitalize="off"
+                        />
+                    </div>
+                    <ul className="py-2 px-1">
                         <li>
                             <Button
                                 {...buttonProps}
+                                type="button"
                                 className={cn(
                                     buttonProps.className,
                                     'text-[0.8rem] font-normal opacity-80'
                                 )}
                             >
-                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-red-600" />
-                                Priority 1
+                                <BsCalendar3Event className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
+                                Every day
                             </Button>
                         </li>
                         <li>
                             <Button
                                 {...buttonProps}
+                                type="button"
                                 className={cn(
                                     buttonProps.className,
                                     'text-[0.8rem] font-normal opacity-80'
                                 )}
                             >
-                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
-                                Priority 2
+                                <BsCalendar3Week className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
+                                Every weak
                             </Button>
                         </li>
                         <li>
                             <Button
                                 {...buttonProps}
+                                type="button"
                                 className={cn(
                                     buttonProps.className,
                                     'text-[0.8rem] font-normal opacity-80'
                                 )}
                             >
-                                <BsFlagFill className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
-                                Priority 3
+                                <BsCalendar3 className="w-5 h-5 p-[1px] mr-2 text-indigo-600" />
+                                Every month
                             </Button>
                         </li>
                         <li>
                             <Button
                                 {...buttonProps}
+                                type="button"
                                 className={cn(
                                     buttonProps.className,
                                     'text-[0.8rem] font-normal opacity-80'
                                 )}
                             >
-                                <BsFlag className="w-5 h-5 p-[1px] mr-2" />
-                                Priority 4
+                                <div className="w-5 h-5 mr-2 relative text-indigo-600">
+                                    <BsCalendar className=" w-4 h-4 pl-[2px] pb-[2px] absolute top-[1px] right-[1px]" />
+                                    <BsCalendar className=" w-4 h-4 pr-[2px] pt-[2px] absolute left-[1px] bottom-[1px]" />
+                                </div>
+                                Every year
                             </Button>
                         </li>
                     </ul>
@@ -242,7 +272,7 @@ export const DueDatePicker = () => {
                     <div className="border-b p-2">
                         <input
                             className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
-                            placeholder="Task name"
+                            placeholder="Type a due day"
                             name="task name"
                             type="text"
                             autoComplete="off"
@@ -252,6 +282,7 @@ export const DueDatePicker = () => {
                     <div className="px-1 py-[6px] border-b ">
                         <Button
                             {...buttonProps}
+                            type="button"
                             className={cn(
                                 buttonProps.className,
                                 'text-[0.8rem] font-normal opacity-80'
@@ -262,6 +293,7 @@ export const DueDatePicker = () => {
                         </Button>
                         <Button
                             {...buttonProps}
+                            type="button"
                             className={cn(
                                 buttonProps.className,
                                 'text-[0.8rem] font-normal opacity-80'
@@ -272,6 +304,7 @@ export const DueDatePicker = () => {
                         </Button>
                         <Button
                             {...buttonProps}
+                            type="button"
                             className={cn(
                                 buttonProps.className,
                                 'text-[0.8rem] font-normal opacity-80'
@@ -282,6 +315,7 @@ export const DueDatePicker = () => {
                         </Button>
                         <Button
                             {...buttonProps}
+                            type="button"
                             className={cn(
                                 buttonProps.className,
                                 'text-[0.8rem] font-normal opacity-80'
@@ -347,7 +381,8 @@ export const CreateTaskForm = ({
                 ></textarea>
                 <div className="flex gap-[0.35rem] py-2">
                     <DueDatePicker />
-                    <PriorityPicker />
+                    <PriorityPicker onChanged={(p) => console.log(p)} />
+                    <RepeatPicker />
                     <ImportantButton />
                 </div>
             </div>
@@ -362,7 +397,6 @@ export const CreateTaskForm = ({
                 <Button
                     className="text-[0.8rem] py-[0.35rem]"
                     variant="primary"
-                    onClick={onCancel}
                 >
                     Add task
                 </Button>
