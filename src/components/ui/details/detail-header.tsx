@@ -19,9 +19,15 @@ import { cn } from '@/lib/utils';
 import Button from '../button';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+import { buttonProps } from '../nav/nav-buttons';
+import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
+import useStore from '@/lib/stores/index.store';
+import { Task } from '@/lib/zod.schema';
+import { toast } from '../sonner/sonner';
 
-export const DetailHeader = () => {
+export const DetailHeader = ({ task }: { task?: Task | null }) => {
     const { push } = useRouter();
+    const deleteTask = useStore((state) => state.deleteTask);
 
     const handleClose = useCallback(() => {
         push(`?`);
@@ -42,6 +48,57 @@ export const DetailHeader = () => {
                         <BsLayoutSidebarReverse className="w-[17px] h-[17px] text-[#666] group-hover:text-[#333] dark:text-nav-text-color-dark group-hover:dark:text-nav-text-color-dark" />
                     </Button>
                 </div>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                'p-1 select-none'
+                            )}
+                        >
+                            <EllipsisHorizontalIcon className="h-6 w-6" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="transition-all duration-75">
+                        <DropdownMenuItem>
+                            <Button
+                                onClick={() => {
+                                    if (!task) return;
+
+                                    const { sync, cancel } = deleteTask(
+                                        task.id
+                                    );
+
+                                    toast({
+                                        title: 'deleted',
+                                        description: `deleted ${task.title}`,
+                                        callBack: async () => {
+                                            await sync();
+                                        },
+                                        action: {
+                                            label: 'cancel',
+                                            onClick: () => {
+                                                cancel();
+                                            },
+                                        },
+                                    });
+
+                                    setTimeout(handleClose);
+                                }}
+                                variant="ghost"
+                                className={cn(
+                                    buttonProps.className,
+                                    'w-36 px-3 py-1 text-red-600 flex justify-start items-center font-light'
+                                )}
+                            >
+                                <TrashIcon className="h-4 mr-2 " />
+                                Delete
+                            </Button>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </header>
     );

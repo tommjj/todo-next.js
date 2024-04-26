@@ -45,10 +45,16 @@ export const MainHeader = ({
                     <DropdownMenuItem>
                         <AlertDialog>
                             <AlertDialogTrigger>
-                                <button className="w-36 px-3 py-1 text-red-600 flex justify-center items-center">
+                                <Button
+                                    variant="ghost"
+                                    className={cn(
+                                        buttonProps.className,
+                                        ' w-36 px-3 py-1 text-red-600 flex justify-start items-center font-light'
+                                    )}
+                                >
                                     <TrashIcon className="h-4 mr-2" />
-                                    delete list
-                                </button>
+                                    Delete list
+                                </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>

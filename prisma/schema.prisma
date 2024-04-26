@@ -52,7 +52,7 @@ model Task {
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?
   listId         String
-  order          Int
+  order          Int            @default(autoincrement())
   description    String?        @db.VarChar(255)
   priority       Priority?
   miniTasks      MiniTask[]

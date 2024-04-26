@@ -72,3 +72,14 @@ export function arrayMove(arr: any[], fromIndex: number, toIndex: number) {
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);
 }
+
+export const convertTime = (date: Date | null | undefined) => {
+    if (!date) return date;
+
+    const utcDate = new Date(date);
+    const utcOffset = utcDate.getTimezoneOffset() * 60 * 1000;
+    const ictOffset = 7 * 60 * 60 * 1000;
+    const ictTimeInMs = utcDate.getTime() + ictOffset - utcOffset;
+    const ictDate = new Date(ictTimeInMs);
+    return ictDate;
+};

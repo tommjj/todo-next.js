@@ -4,14 +4,7 @@ import useStore from '@/lib/stores/index.store';
 import { ResizeContainer } from '../resize-container';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import BottomBar from './bottom-bar';
-import Button from '../button';
-import { Test } from '@/components/session-context';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '../drop-down-menu/drop-down-menu';
+
 import { cn } from '@/lib/utils';
 import { DetailHeader } from './detail-header';
 
@@ -100,7 +93,7 @@ export default function DetailsContainer({ id }: { id?: string }) {
                     onSizeChanged={handleSizeChanged}
                 >
                     <div className="w-full h-full">
-                        <DetailHeader />
+                        <DetailHeader task={task} />
                     </div>
                 </ResizeContainer>
             </aside>

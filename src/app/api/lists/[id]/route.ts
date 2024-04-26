@@ -2,6 +2,7 @@ import prisma from '@/lib/databases/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 import { getSessionUser } from '@/lib/auth';
 import { getListById } from '@/lib/services/list.service';
+import { convertTime } from '@/lib/utils';
 
 export async function GET(
     req: Request,
@@ -35,7 +36,6 @@ export async function POST(
             },
             {
                 id: true,
-                _count: { select: { tasks: true } },
             }
         );
 
@@ -49,8 +49,8 @@ export async function POST(
         const task = await prisma.task.create({
             data: {
                 ...bodyParse.data,
+                dueDate: convertTime(bodyParse.data.dueDate),
                 listId: params.id,
-                order: list._count.tasks,
             },
         });
 
