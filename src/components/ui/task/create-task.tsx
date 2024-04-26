@@ -1,15 +1,5 @@
 'use client';
 
-import { CiFlag1, CiStar, CiCalendar } from 'react-icons/ci';
-import {
-    BsCalendar3,
-    BsCalendar3Event,
-    BsCalendar,
-    BsCalendar3Week,
-    BsFlag,
-    BsFlagFill,
-    BsArrowRepeat,
-} from 'react-icons/bs';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
 
@@ -28,19 +18,10 @@ import {
 import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '../drop-down-menu/drop-down-menu';
-import { Calendar } from '@/components/ui-lib/ui/calendar';
-import {
-    buttonActiveClassName,
-    buttonProps,
-    getButtonClassName,
-} from '../nav/nav-buttons';
+
 import { PriorityPicker } from '../picker/priority-picker';
 import { RepeatPicker } from '../picker/reapeat-picker';
+import { DueDatePicker } from '../picker/due-date-picker';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -141,7 +122,7 @@ export const ImportantButton = ({
 
     const handleClick = useCallback(() => {
         setImportant(!important);
-        onChange(important);
+        onChange(!important);
     }, [important, onChange]);
 
     return (
@@ -157,100 +138,6 @@ export const ImportantButton = ({
                 <StarIconOutline className="w-4 h-4 opacity-50" />
             )}
         </Button>
-    );
-};
-
-export const DueDatePicker = () => {
-    const date = new Date();
-    date.setDate(date.getDate() - 1);
-
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-                >
-                    <CiCalendar className="w-4 h-4 mr-1 opacity-80" />
-                    Due date
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <div
-                    className="w-[242px] rounded overflow-hidden bg-main-bg-color dark:bg-main-bg-color-dark"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <div className="border-b p-2">
-                        <input
-                            className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
-                            placeholder="Type a due day"
-                            name="task name"
-                            type="text"
-                            autoComplete="off"
-                            autoCapitalize="off"
-                        />
-                    </div>
-                    <div className="px-1 py-[6px] border-b ">
-                        <Button
-                            {...buttonProps}
-                            type="button"
-                            className={cn(
-                                buttonProps.className,
-                                'text-[0.8rem] font-normal opacity-80'
-                            )}
-                        >
-                            <BsCalendar className="w-5 h-5 p-[1px] mr-2 text-green-600" />
-                            Today
-                        </Button>
-                        <Button
-                            {...buttonProps}
-                            type="button"
-                            className={cn(
-                                buttonProps.className,
-                                'text-[0.8rem] font-normal opacity-80'
-                            )}
-                        >
-                            <BsCalendar3Event className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
-                            Tomorrow
-                        </Button>
-                        <Button
-                            {...buttonProps}
-                            type="button"
-                            className={cn(
-                                buttonProps.className,
-                                'text-[0.8rem] font-normal opacity-80'
-                            )}
-                        >
-                            <BsCalendar3Week className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
-                            This week
-                        </Button>
-                        <Button
-                            {...buttonProps}
-                            type="button"
-                            className={cn(
-                                buttonProps.className,
-                                'text-[0.8rem] font-normal opacity-80'
-                            )}
-                        >
-                            <BsCalendar3 className="w-5 h-5 p-[1px] mr-2 text-indigo-600" />
-                            This month
-                        </Button>
-                    </div>
-                    <div className="flex justify-center w-full p-2">
-                        <Calendar
-                            fromMonth={date}
-                            disabled={(day) => day < date}
-                            mode="single"
-                            onSelect={(e) => {
-                                console.log(e);
-                            }}
-                            className=""
-                        />
-                    </div>
-                </div>
-            </DropdownMenuContent>
-        </DropdownMenu>
     );
 };
 
@@ -310,10 +197,14 @@ export const CreateTaskForm = ({
                     rows={1}
                 ></textarea>
                 <div className="flex gap-[0.35rem] py-2">
-                    <DueDatePicker />
+                    <DueDatePicker
+                        onChanged={(d) => {
+                            console.log(d);
+                        }}
+                    />
                     <PriorityPicker onChanged={(p) => console.log(p)} />
                     <RepeatPicker onChanged={(r) => console.log(r)} />
-                    <ImportantButton />
+                    <ImportantButton onChange={(i) => console.log(i)} />
                 </div>
             </div>
             <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">

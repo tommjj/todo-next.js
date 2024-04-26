@@ -9,6 +9,8 @@ import React, {
     useEffect,
     useRef,
     useState,
+    forwardRef,
+    useImperativeHandle,
 } from 'react';
 
 const DDMContext = createContext<
@@ -30,161 +32,26 @@ const useDDMContext = () => {
     return context;
 };
 
-const useDropdownMenu = ({
-    priorityDir = 'Left',
-}: {
-    priorityDir?: 'Left' | 'Right';
-}) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleOpen = useCallback(() => {
-        setIsOpen(true);
-    }, []);
-
-    const handleClose = useCallback(() => {
-        setIsOpen(false);
-    }, []);
-
-    const handleToggle = useCallback(() => {
-        setIsOpen((privState) => !privState);
-    }, []);
-
-    useEffect(() => {
-        if (!ref.current || !isOpen) return;
-
-        const contentElement = ref.current.querySelector(
-            '#DropdownMenuContent'
-        ) as HTMLElement;
-        const triggerElement = ref.current?.querySelector(
-            '#DropdownMenuTrigger'
-        ) as HTMLElement;
-
-        if (!contentElement && !triggerElement) return;
-
-        contentElement.style.cssText = 'display: block; opacity: 0;';
-
-        const contentBoundingRect = contentElement.getBoundingClientRect();
-        const triggerBoundingRect = triggerElement.getBoundingClientRect();
-
-        const isOnBottom =
-            triggerBoundingRect.bottom + contentBoundingRect.height <
-            window.innerHeight;
-
-        const isOnTop = isOnBottom
-            ? false
-            : triggerBoundingRect.top - contentBoundingRect.height > 0;
-
-        const isOverOverflow = !(isOnTop || isOnBottom);
-
-        const isOverLeft = isOverOverflow
-            ? triggerBoundingRect.x - contentBoundingRect.width < 20
-            : triggerBoundingRect.x -
-                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 <
-              20;
-
-        const isOverRight = isOverOverflow
-            ? triggerBoundingRect.right + contentBoundingRect.width >
-              window.innerWidth
-            : triggerBoundingRect.right +
-                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 >
-              window.innerWidth;
-
-        contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
-            [`bottom: ${window.innerHeight - triggerBoundingRect.top}px;`]:
-                isOnTop,
-            [`top: ${triggerBoundingRect.bottom}px;`]: isOnBottom,
-            'top: 10px;': isOverOverflow,
-            [`left: ${
-                isOverOverflow
-                    ? triggerBoundingRect.right
-                    : triggerBoundingRect.left
-            }px;`]:
-                isOverLeft ||
-                (!isOverRight && isOverOverflow && priorityDir === 'Right'),
-            [`right: ${
-                isOverOverflow
-                    ? window.innerWidth - triggerBoundingRect.left
-                    : window.innerWidth - triggerBoundingRect.right
-            }px`]:
-                isOverRight ||
-                (!isOverLeft && isOverOverflow && priorityDir === 'Left'),
-            [`left: ${
-                triggerBoundingRect.x + triggerBoundingRect.width / 2
-            }px; transform: translateX(-50%);`]: isOverOverflow
-                ? isOverLeft && isOverRight
-                : !(isOverLeft || isOverRight),
-        })} 
-        `;
-
-        document.body.style.cssText = `pointer-events: none; touch-action: none;`;
-
-        return () => {
-            contentElement.style.cssText = '';
-            document.body.style.cssText = '';
-        };
-    }, [isOpen, priorityDir]);
-
-    useEffect(() => {
-        if (!isOpen) return;
-
-        function preventScroll(e: any) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-
-        const handleClick = (e: MouseEvent) => {
-            document.body.style.cssText = '';
-            handleClose();
-        };
-
-        window.addEventListener('click', handleClick);
-        window.addEventListener('wheel', preventScroll, {
-            passive: false,
-        });
-
-        return () => {
-            window.removeEventListener('click', handleClick);
-            window.removeEventListener('wheel', preventScroll);
-        };
-    }, [isOpen, handleClose]);
-
-    useEffect(() => {
-        const triggerElement = ref.current?.querySelector(
-            '#DropdownMenuTrigger'
-        ) as HTMLElement;
-
-        if (!triggerElement) return;
-
-        triggerElement.onclick = (e) => {
-            e.stopPropagation();
-
-            handleToggle();
-            return false;
-        };
-    }, [ref, handleToggle]);
-
-    return {
-        isOpen,
-        handleClose,
-        handleOpen,
-        handleToggle,
-        ref,
-    };
-};
-
-export function DropdownMenu({
-    children,
-    priorityDir = 'Left',
-    onOpen = () => {},
-    onClose = () => {},
-}: {
+export type DropdownMenuProps = {
     children: React.ReactNode;
     priorityDir?: 'Left' | 'Right';
     onOpen?: () => void;
     onClose?: () => void;
-}) {
+};
+
+export type DropdownMenuRef = {
+    isOpen: boolean;
+    handleOpen: () => void;
+    handleClose: () => void;
+};
+
+export const DropdownMenu = forwardRef<
+    DropdownMenuRef | undefined,
+    DropdownMenuProps
+>(function DropdownMenu(
+    { children, priorityDir = 'Left', onOpen = () => {}, onClose = () => {} },
+    ref
+) {
     const triggerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -198,6 +65,16 @@ export function DropdownMenu({
         setIsOpen(false);
         onClose();
     }, [onClose]);
+
+    useImperativeHandle(
+        ref,
+        () => ({
+            isOpen: isOpen,
+            handleOpen,
+            handleClose,
+        }),
+        [handleClose, handleOpen, isOpen]
+    );
 
     useEffect(() => {
         if (!isOpen) return;
@@ -309,7 +186,7 @@ export function DropdownMenu({
             {children}
         </DDMContext.Provider>
     );
-}
+});
 
 export function DropdownMenuTrigger({
     children,

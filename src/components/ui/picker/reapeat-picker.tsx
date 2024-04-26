@@ -108,6 +108,12 @@ export const RepeatPicker = ({
                     inputRef.current?.focus();
                 });
             }}
+            onClose={() => {
+                setRepeatState({
+                    ...repeatState,
+                    repeatCount: Number(inputRef.current?.value || 0),
+                });
+            }}
         >
             <DropdownMenuTrigger>
                 <Button
@@ -118,7 +124,7 @@ export const RepeatPicker = ({
                         className
                     )}
                 >
-                    <div className="w-4 h-4 mr-1">
+                    <div className="w-4 h-4 mr-1 opacity-80">
                         {RepeatPickerData[repeatState.repeat].icon}
                     </div>
                     {RepeatPickerData[repeatState.repeat].triggerLabel}
@@ -144,7 +150,7 @@ export const RepeatPicker = ({
                                 if (e.key === 'Enter') e.preventDefault();
                             }}
                             ref={inputRef}
-                            className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
+                            className="w-full outline-none placeholder:font-light text-[0.9rem] bg-inherit font-light"
                             placeholder="Type repeat count"
                             name="task name"
                             type="number"
