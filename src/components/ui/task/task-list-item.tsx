@@ -54,7 +54,7 @@ export function CheckBox({
                 <CheckIcon
                     className={`h-2  ${clsx({
                         'hidden md:group-hover:block': !completed,
-                        'text-white': completed,
+                        'text-white dark:text-main-bg-color-dark': completed,
                     })}`}
                     strokeWidth={3}
                 />

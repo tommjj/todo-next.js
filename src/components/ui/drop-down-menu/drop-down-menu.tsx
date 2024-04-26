@@ -18,7 +18,6 @@ const DDMContext = createContext<
           isOpen: boolean;
           close: () => void;
           open: () => void;
-          toggle: () => void;
       }
     | undefined
 >(undefined);
@@ -178,9 +177,13 @@ const useDropdownMenu = ({
 export function DropdownMenu({
     children,
     priorityDir = 'Left',
+    onOpen = () => {},
+    onClose = () => {},
 }: {
     children: React.ReactNode;
     priorityDir?: 'Left' | 'Right';
+    onOpen?: () => void;
+    onClose?: () => void;
 }) {
     const triggerRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -188,15 +191,13 @@ export function DropdownMenu({
 
     const handleOpen = useCallback(() => {
         setIsOpen(true);
-    }, []);
+        onOpen();
+    }, [onOpen]);
 
     const handleClose = useCallback(() => {
         setIsOpen(false);
-    }, []);
-
-    const handleToggle = useCallback(() => {
-        setIsOpen((privState) => !privState);
-    }, []);
+        onClose();
+    }, [onClose]);
 
     useEffect(() => {
         if (!isOpen) return;
@@ -303,7 +304,6 @@ export function DropdownMenu({
                 isOpen,
                 close: handleClose,
                 open: handleOpen,
-                toggle: handleToggle,
             }}
         >
             {children}

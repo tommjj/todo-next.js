@@ -40,6 +40,7 @@ import {
     getButtonClassName,
 } from '../nav/nav-buttons';
 import { PriorityPicker } from '../picker/priority-picker';
+import { RepeatPicker } from '../picker/reapeat-picker';
 
 // export default function CreateTaskForm({ listId }: { listId: string }) {
 //     const titleInput = useRef<HTMLInputElement>(null);
@@ -158,95 +159,6 @@ export const ImportantButton = ({
         </Button>
     );
 };
-// TODO:
-export const RepeatPicker = () => {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-                >
-                    <BsArrowRepeat className="w-4 h-4 mr-1 opacity-80" />
-                    Repeat
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <div className="w-[200px] bg-main-bg-color dark:bg-main-bg-color-dark">
-                    <div className="border-b p-2">
-                        <input
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full outline-none placeholder:font-light text-[0.95rem] bg-inherit"
-                            placeholder="Type repeat count"
-                            name="task name"
-                            type="number"
-                            autoComplete="off"
-                            autoCapitalize="off"
-                        />
-                    </div>
-                    <ul className="py-2 px-1">
-                        <li>
-                            <Button
-                                {...buttonProps}
-                                type="button"
-                                className={cn(
-                                    buttonProps.className,
-                                    'text-[0.8rem] font-normal opacity-80'
-                                )}
-                            >
-                                <BsCalendar3Event className="w-5 h-5 p-[1px] mr-2 text-amber-600" />
-                                Every day
-                            </Button>
-                        </li>
-                        <li>
-                            <Button
-                                {...buttonProps}
-                                type="button"
-                                className={cn(
-                                    buttonProps.className,
-                                    'text-[0.8rem] font-normal opacity-80'
-                                )}
-                            >
-                                <BsCalendar3Week className="w-5 h-5 p-[1px] mr-2 text-blue-600" />
-                                Every weak
-                            </Button>
-                        </li>
-                        <li>
-                            <Button
-                                {...buttonProps}
-                                type="button"
-                                className={cn(
-                                    buttonProps.className,
-                                    'text-[0.8rem] font-normal opacity-80'
-                                )}
-                            >
-                                <BsCalendar3 className="w-5 h-5 p-[1px] mr-2 text-indigo-600" />
-                                Every month
-                            </Button>
-                        </li>
-                        <li>
-                            <Button
-                                {...buttonProps}
-                                type="button"
-                                className={cn(
-                                    buttonProps.className,
-                                    'text-[0.8rem] font-normal opacity-80'
-                                )}
-                            >
-                                <div className="w-5 h-5 mr-2 relative text-indigo-600">
-                                    <BsCalendar className=" w-4 h-4 pl-[2px] pb-[2px] absolute top-[1px] right-[1px]" />
-                                    <BsCalendar className=" w-4 h-4 pr-[2px] pt-[2px] absolute left-[1px] bottom-[1px]" />
-                                </div>
-                                Every year
-                            </Button>
-                        </li>
-                    </ul>
-                </div>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-};
 
 export const DueDatePicker = () => {
     const date = new Date();
@@ -266,7 +178,7 @@ export const DueDatePicker = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <div
-                    className="w-[242px] bg-main-bg-color dark:bg-main-bg-color-dark"
+                    className="w-[242px] rounded overflow-hidden bg-main-bg-color dark:bg-main-bg-color-dark"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="border-b p-2">
@@ -342,6 +254,15 @@ export const DueDatePicker = () => {
     );
 };
 
+type FormStateType = {
+    name: string;
+    description: string;
+    dueDate: null | Date;
+    repeatCount: null | number;
+    repeat: null | $Enums.RepeatInterval;
+    priority: $Enums.Priority;
+};
+
 export const CreateTaskForm = ({
     className = '',
     onCancel,
@@ -349,6 +270,15 @@ export const CreateTaskForm = ({
     className?: string;
     onCancel?: () => void;
 }) => {
+    const [formState, setFormState] = useState<FormStateType>({
+        name: '',
+        description: '',
+        dueDate: null,
+        repeatCount: null,
+        repeat: null,
+        priority: 'PRIORITY4',
+    });
+
     return (
         <form
             className={cn(
@@ -382,7 +312,7 @@ export const CreateTaskForm = ({
                 <div className="flex gap-[0.35rem] py-2">
                     <DueDatePicker />
                     <PriorityPicker onChanged={(p) => console.log(p)} />
-                    <RepeatPicker />
+                    <RepeatPicker onChanged={(r) => console.log(r)} />
                     <ImportantButton />
                 </div>
             </div>
@@ -395,8 +325,9 @@ export const CreateTaskForm = ({
                     Cancel
                 </Button>
                 <Button
-                    className="text-[0.8rem] py-[0.35rem]"
+                    className="text-[0.8rem] py-[0.35rem] aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
                     variant="primary"
+                    aria-disabled={formState.name.trim() === ''}
                 >
                     Add task
                 </Button>

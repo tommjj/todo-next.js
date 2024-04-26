@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
 import Button from '../button';
-import { CiFlag1 } from 'react-icons/ci';
+import { LiaTimesSolid } from 'react-icons/lia';
 import { buttonActiveClassName, buttonProps } from '../nav/nav-buttons';
 import { cn } from '@/lib/utils';
 import { BsFlag, BsFlagFill } from 'react-icons/bs';
@@ -42,14 +42,18 @@ const PriorityPickerData: { [K in $Enums.Priority]: PriorityPickerDataType } = {
     },
 };
 
+const defaultState: $Enums.Priority = 'PRIORITY4';
+
 export const PriorityPicker = ({
-    defaultState = 'PRIORITY4',
+    defaultValue = defaultState,
     onChanged = () => {},
+    className,
 }: {
-    defaultState?: $Enums.Priority;
+    className?: string;
+    defaultValue?: $Enums.Priority;
     onChanged?: (priority: $Enums.Priority) => void;
 }) => {
-    const [priority, setPriority] = useState(defaultState);
+    const [priority, setPriority] = useState(defaultValue);
 
     const handleSetPriority = useCallback(
         (priority: $Enums.Priority) => {
@@ -59,21 +63,38 @@ export const PriorityPicker = ({
         [onChanged]
     );
 
+    const handReset: React.MouseEventHandler<HTMLDivElement> = useCallback(
+        (e) => {
+            e.stopPropagation();
+            handleSetPriority(defaultState);
+        },
+        [handleSetPriority]
+    );
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <Button
                     type="button"
                     variant="ghost"
-                    className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-                    onClick={(e) => {
-                        console.log('2');
-                    }}
+                    className={cn(
+                        'text-[0.8rem] leading-4 px-2 py-[5px] font-light border',
+                        className
+                    )}
                 >
-                    <div className="w-4 h-4 pt-[2px] mr-1">
+                    <div className="w-4 h-4 pt-[2px] mr-1 opacity-80">
                         {PriorityPickerData[priority].icon}
                     </div>
                     {PriorityPickerData[priority].triggerLabel}
+
+                    {priority !== defaultState ? (
+                        <div
+                            onClick={handReset}
+                            className="w-4 h-4 p-[1px] ml-1 hover:bg-[#00000020] rounded-sm"
+                        >
+                            <LiaTimesSolid />
+                        </div>
+                    ) : null}
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
