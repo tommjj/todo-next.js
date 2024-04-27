@@ -93,7 +93,7 @@ export default function DetailsContainer({ id }: { id?: string }) {
                     resizeDir="Left"
                     onSizeChanged={handleSizeChanged}
                 >
-                    <div className="w-full h-full">
+                    <div className="flex flex-col w-full h-full">
                         <DetailHeader task={task} />
                         <DetailTaskView taskId={task?.id} />
                     </div>

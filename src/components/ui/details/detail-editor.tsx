@@ -1,0 +1,162 @@
+import { Task, TaskUpdateSchema } from '@/lib/zod.schema';
+import {
+    CreateTaskForm,
+    DescriptionInput,
+    TaskNameInput,
+} from '../task/create-task';
+import {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react';
+import { $Enums } from '@prisma/client';
+import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
+import { CheckBox } from '../task/task-list-item';
+import { DueDatePicker } from '../picker/due-date-picker';
+import { PriorityPicker } from '../picker/priority-picker';
+import { ImportantPicker } from '../picker/Important-picker';
+import useStore from '@/lib/stores/index.store';
+
+type FormStateType = {
+    completed: boolean;
+    title: string;
+    description: string;
+    dueDate: Date | null;
+    repeatCount: number;
+    repeatInterval: $Enums.RepeatInterval;
+    priority: $Enums.Priority;
+    important: boolean;
+};
+
+export const DetailEditorTask = ({ task }: { task: Task }) => {
+    const ref = useRef<FormStateType | undefined>(undefined);
+    const updateTask = useStore((s) => s.updateTask);
+    const [formState, setFormState] = useState<FormStateType>({
+        completed: task.completed,
+        title: task.title,
+        description: task.description || '',
+        dueDate: task.dueDate || null,
+        repeatCount: task.repeatCount || 0,
+        repeatInterval: task.repeatInterval || 'NONE',
+        priority: task.priority || 'PRIORITY4',
+        important: task.important,
+    });
+
+    useEffect(() => {
+        if (ref.current && ref.current !== formState) {
+            const parse = TaskUpdateSchema.safeParse({ ...task, ...formState });
+
+            if (parse.success) {
+                console.log(parse.data);
+                const sync = updateTask(task.id, parse.data);
+                sync.sync();
+            }
+        }
+        ref.current = formState;
+    }, [formState, task, updateTask]);
+
+    useEffect(() => {
+        const test = function (e: any) {
+            console.log(formState);
+
+            // e.preventDefault();
+        };
+
+        window.addEventListener('beforeunload', test);
+        return () => window.removeEventListener('beforeunload', test);
+    }, [formState, updateTask]);
+
+    const handleTaskNameChange: React.ChangeEventHandler<HTMLTextAreaElement> =
+        useCallback(
+            (e) => {
+                if (formState.title !== e.target.value)
+                    setFormState((priv) => ({
+                        ...priv,
+                        title: e.target.value,
+                    }));
+            },
+            [formState.title]
+        );
+
+    const handleDescriptionChange: React.ChangeEventHandler<HTMLTextAreaElement> =
+        useCallback(
+            (e) => {
+                if (formState.description !== e.target.value)
+                    setFormState((priv) => ({
+                        ...priv,
+                        description: e.target.value,
+                    }));
+            },
+            [formState.description]
+        );
+
+    const handleDueDayChange = useCallback((date: Date | null) => {
+        setFormState((priv) => ({ ...priv, dueDate: date }));
+    }, []);
+
+    const handlePriorityChange = useCallback((priority: $Enums.Priority) => {
+        setFormState((priv) => ({ ...priv, priority: priority }));
+    }, []);
+
+    const handleRepeatChange = useCallback(
+        ({ repeat, repeatCount }: RepeatStateType) => {
+            setFormState((priv) => ({
+                ...priv,
+                repeatInterval: repeat,
+                repeatCount: repeatCount,
+            }));
+        },
+        []
+    );
+
+    const handleImportantChange = useCallback((important: boolean) => {
+        setFormState((priv) => ({ ...priv, important: important }));
+    }, []);
+
+    return (
+        <div className="w-full px-1">
+            <div className="flex pt-2 min-h-[60px]">
+                <div className="flex pl-1 pt-[2px] items-center justify-center">
+                    <CheckBox completed={task.completed} taskId={task.id} />
+                </div>
+                <div className="flex items-center justify-center flex-grow ">
+                    <TaskNameInput
+                        className="text-lg font-medium"
+                        onBlur={handleTaskNameChange}
+                        defaultValue={formState.title}
+                    />
+                </div>
+            </div>
+            <div className="min-h-[50px]">
+                <DescriptionInput
+                    className="text-[0.9rem] mt-2 pl-1"
+                    onBlur={handleDescriptionChange}
+                    defaultValue={formState.description}
+                />
+            </div>
+            <div className="flex gap-[0.35rem] flex-wrap py-2">
+                <DueDatePicker
+                    onChanged={handleDueDayChange}
+                    defaultValue={formState.dueDate || undefined}
+                />
+                <PriorityPicker
+                    onChanged={handlePriorityChange}
+                    defaultValue={formState.priority}
+                />
+                <RepeatPicker
+                    onChanged={handleRepeatChange}
+                    defaultValue={{
+                        repeat: formState.repeatInterval,
+                        repeatCount: formState.repeatCount,
+                    }}
+                />
+                <ImportantPicker
+                    onChange={handleImportantChange}
+                    defaultValue={formState.important}
+                />
+            </div>
+        </div>
+    );
+};

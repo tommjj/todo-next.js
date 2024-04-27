@@ -107,7 +107,7 @@ export const DueDatePicker = ({
 }: {
     className?: string;
     defaultValue?: Date;
-    onChanged?: (date: Date | undefined) => void;
+    onChanged?: (date: Date | null) => void;
 }) => {
     const dropDownMenuRef = useRef<DropdownMenuRef>(null);
     const [selectedDay, setSelectedDay] = useState(defaultValue);
@@ -115,7 +115,7 @@ export const DueDatePicker = ({
     const handleSelectDay = useCallback(
         (d: Date | undefined) => {
             setSelectedDay(d);
-            onChanged(d);
+            onChanged(d || null);
             dropDownMenuRef.current?.handleClose();
         },
         [onChanged]

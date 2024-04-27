@@ -1,20 +1,11 @@
 'use client';
 
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
-import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
-
 import { fetcher } from '@/lib/http';
 import { CreateTask, CreateTaskSchema, TaskSchema } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
 import { IoAddOutline } from 'react-icons/io5';
 import { $Enums, Task } from '@prisma/client';
-import {
-    ChangeEvent,
-    useCallback,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from 'react';
+import { useCallback, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
@@ -22,45 +13,83 @@ import Button from '../button';
 import { PriorityPicker } from '../picker/priority-picker';
 import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
 import { DueDatePicker } from '../picker/due-date-picker';
-
-export const ImportantButton = ({
-    defaultState = false,
-    onChange = () => {},
-}: {
-    onChange?: (state: boolean) => void;
-    defaultState?: boolean;
-}) => {
-    const [important, setImportant] = useState(defaultState);
-
-    const handleClick = useCallback(() => {
-        setImportant(!important);
-        onChange(!important);
-    }, [important, onChange]);
-
-    return (
-        <Button
-            onClick={handleClick}
-            type="button"
-            variant="ghost"
-            className="text-[0.8rem] leading-4 px-2 py-[5px] font-light border"
-        >
-            {important ? (
-                <StarIconSolid className="w-4 h-4 opacity-80 text-primary-color" />
-            ) : (
-                <StarIconOutline className="w-4 h-4 opacity-50" />
-            )}
-        </Button>
-    );
-};
+import { ImportantPicker } from '../picker/Important-picker';
 
 type FormStateType = {
     title: string;
     description: string;
-    dueDate: undefined | Date;
+    dueDate: null | Date;
     repeatCount: undefined | number;
     repeatInterval: undefined | $Enums.RepeatInterval;
     priority: $Enums.Priority;
     important: boolean;
+};
+
+export const TaskNameInput = ({
+    className,
+    ...props
+}: React.DetailedHTMLProps<
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+> & { submit?: () => void }) => {
+    return (
+        <textarea
+            onInput={(ev) => {
+                const el = ev.target as HTMLTextAreaElement;
+
+                el.style.height = '5px';
+                el.style.height = el.scrollHeight + 'px';
+            }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+
+                    if (props.submit) {
+                        props.submit();
+                    }
+                }
+            }}
+            className={cn(
+                'w-full overflow-hidden h-max resize-none outline-none placeholder:font-medium text-[0.95rem] bg-inherit',
+                className
+            )}
+            placeholder="Task name"
+            name="task name"
+            autoComplete="off"
+            autoCapitalize="off"
+            rows={1}
+            {...props}
+        />
+    );
+};
+
+export const DescriptionInput = ({
+    className,
+    ...props
+}: React.DetailedHTMLProps<
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+>) => {
+    return (
+        <textarea
+            onInput={(ev) => {
+                const el = ev.target as HTMLTextAreaElement;
+
+                el.style.height = '5px';
+                el.style.height = el.scrollHeight + 'px';
+            }}
+            className={cn(
+                'w-full overflow-hidden h-max text-[0.8rem] outline-none font-light placeholder:font-light resize-none bg-inherit',
+                className
+            )}
+            placeholder="Description"
+            name="description"
+            autoComplete="off"
+            autoCapitalize="off"
+            rows={1}
+            {...props}
+        />
+    );
 };
 
 export const CreateTaskForm = ({
@@ -75,7 +104,7 @@ export const CreateTaskForm = ({
     const [formState, setFormState] = useState<FormStateType>({
         title: '',
         description: '',
-        dueDate: undefined,
+        dueDate: null,
         repeatCount: undefined,
         repeatInterval: undefined,
         priority: 'PRIORITY4',
@@ -96,7 +125,7 @@ export const CreateTaskForm = ({
             setFormState((priv) => ({ ...priv, description: e.target.value }));
         }, []);
 
-    const handleDueDayChange = useCallback((date: Date | undefined) => {
+    const handleDueDayChange = useCallback((date: Date | null) => {
         setFormState((priv) => ({ ...priv, dueDate: date }));
     }, []);
 
@@ -164,49 +193,20 @@ export const CreateTaskForm = ({
             onSubmit={handleSubmit}
         >
             <div className="w-full px-[10px] pt-[10px]">
-                <textarea
-                    onInput={(ev) => {
-                        const el = ev.target as HTMLTextAreaElement;
-
-                        el.style.height = '5px';
-                        el.style.height = el.scrollHeight + 'px';
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            submit();
-                        }
-                    }}
-                    className="w-full overflow-hidden h-max resize-none outline-none placeholder:font-medium text-[0.95rem] bg-inherit"
-                    placeholder="Task name"
-                    name="task name"
-                    autoComplete="off"
-                    autoCapitalize="off"
-                    rows={1}
+                <TaskNameInput
+                    onSubmit={submit}
                     value={formState.title}
                     onChange={handleTaskNameChange}
-                ></textarea>
-                <textarea
-                    onInput={(ev) => {
-                        const el = ev.target as HTMLTextAreaElement;
-
-                        el.style.height = '5px';
-                        el.style.height = el.scrollHeight + 'px';
-                    }}
-                    className="w-full overflow-hidden h-max text-[0.8rem] outline-none font-light placeholder:font-light resize-none bg-inherit "
-                    placeholder="Description"
-                    name="description"
-                    autoComplete="off"
-                    autoCapitalize="off"
-                    rows={1}
+                />
+                <DescriptionInput
                     value={formState.description}
                     onChange={handleDescriptionChange}
-                ></textarea>
-                <div className="flex gap-[0.35rem] py-2">
+                />
+                <div className="flex gap-[0.35rem] flex-wrap py-2">
                     <DueDatePicker onChanged={handleDueDayChange} />
                     <PriorityPicker onChanged={handlePriorityChange} />
                     <RepeatPicker onChanged={handleRepeatChange} />
-                    <ImportantButton onChange={handleImportantChange} />
+                    <ImportantPicker onChange={handleImportantChange} />
                 </div>
             </div>
             <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">

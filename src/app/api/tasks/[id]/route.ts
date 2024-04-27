@@ -3,6 +3,7 @@ import { getSessionUser } from '@/lib/auth';
 import { deleteTask, getTaskById } from '@/lib/services/task.service';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
+import { convertTime } from '@/lib/utils';
 
 export async function PATCH(
     req: Request,
@@ -15,7 +16,7 @@ export async function PATCH(
     const dataParse = TaskUpdateSchema.safeParse(data);
 
     if (dataParse.success) {
-        const miniTasks = dataParse.data.subTasks;
+        const subTasks = dataParse.data.subTasks;
         delete dataParse.data.subTasks;
 
         const updateData = dataParse.data as Prisma.XOR<
@@ -26,6 +27,7 @@ export async function PATCH(
         await prisma.task.update({
             data: {
                 ...updateData,
+                dueDate: convertTime(dataParse.data.dueDate),
             },
             where: {
                 id: params.id,

@@ -70,6 +70,7 @@ export type User = z.infer<typeof UserSchema>;
 export const SubTaskUpdateSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
+    description: z.string().optional(),
     completed: z.boolean().optional(),
     taskId: z.string().optional(),
 });
@@ -83,7 +84,7 @@ export const TaskUpdateSchema = z.object({
     dueDate: z.nullable(z.coerce.date()).optional(),
     repeatInterval: RepeatInterval.optional(),
     repeatCount: z.nullable(z.number()).optional(),
-    note: z.nullable(z.string()).optional(),
+    description: z.nullable(z.string()).optional(),
     subTasks: z.array(SubTaskUpdateSchema).optional(),
     priority: z.nullable(Priority).optional(),
     listId: z.string().optional(),

@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import { List, Task } from '@/lib/zod.schema';
+import { List, Task, TaskUpdate } from '@/lib/zod.schema';
 import { DeleteWithCancel, Sync } from './type.store';
 import { AppSlice } from './app.store';
 import { arrayMove, setTaskById } from '../utils';
@@ -14,6 +14,7 @@ export interface ListSlice {
     setList: (list: List | null) => void;
     handleToggleCompleteTask: (listId: string) => Sync;
     handleToggleImportantTask: (listId: string) => Sync;
+    updateTask: (id: string, task: TaskUpdate) => Sync;
     deleteTask: (taskId: string) => DeleteWithCancel;
     moveItem: (fromIndex: number, toIndex: number) => void;
     moveItemById: (
@@ -33,6 +34,23 @@ export const createListSlice: StateCreator<
     list: null,
     bin: new Set<string>(),
     setList: (list) => set(() => ({ list: list })),
+    updateTask: (id, task) => {
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
+
+            if (!tasks) return {};
+            const [newTasks, newTask] = setTaskById(tasks, id, (state) => ({
+                ...({ ...state, ...task } as any),
+            }));
+
+            return { list: { ...list, tasks: newTasks } };
+        });
+
+        return {
+            sync: () => updateTaskById(id, { ...task }),
+        };
+    },
     handleToggleCompleteTask: (listId) => {
         let complete = false;
 
