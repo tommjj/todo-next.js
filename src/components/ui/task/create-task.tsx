@@ -23,79 +23,6 @@ import { PriorityPicker } from '../picker/priority-picker';
 import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
 import { DueDatePicker } from '../picker/due-date-picker';
 
-// export default function CreateTaskForm({ listId }: { listId: string }) {
-//     const titleInput = useRef<HTMLInputElement>(null);
-//     const dueDateInput = useRef<HTMLInputElement>(null);
-//     const listID = useStore((s) => s.list?.id);
-//     const addTask = useStore((s) => s.addTask);
-
-//     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
-//         async (e) => {
-//             e.preventDefault();
-//             if (!(titleInput.current && dueDateInput.current && listID)) return;
-
-//             setTimeout(() => {
-//                 if (titleInput.current && dueDateInput.current) {
-//                     titleInput.current.value = '';
-
-//                     dueDateInput.current.value = '';
-//                     dueDateInput.current.style.width = '20px';
-//                 }
-//             });
-//         },
-//         [listID, addTask]
-//     );
-
-//     const handleShowDateInput = useCallback(
-//         (e: ChangeEvent<HTMLInputElement>) => {
-//             if (e.target.value === '') {
-//                 e.target.style.width = '20px';
-//             } else {
-//                 e.target.style.width = '120px';
-//             }
-//         },
-//         []
-//     );
-
-//     return (
-//         <div className="w-full rounded-md border dark:border-nav-text-color-dark">
-//             <form className="" onSubmit={handleSubmit}>
-//                 <div className="flex items-center p-4">
-//                     <PlusIcon className="h-6 mr-4 text-[#0D6EFD]" />
-//                     <input
-//                         ref={titleInput}
-//                         className="flex-grow outline-none bg-inherit font-light"
-//                         name="title"
-//                         placeholder="add new task"
-//                         type="text"
-//                         autoComplete="off"
-//                         autoCapitalize="off"
-//                     />
-//                 </div>
-
-//                 <div className="flex w-full px-4 py-1">
-//                     <div className="flex-grow ">
-//                         <input
-//                             ref={dueDateInput}
-//                             onChange={handleShowDateInput}
-//                             name="dueDate"
-//                             className="outline-none w-5 font-light bg-inherit"
-//                             id="createTaskDate"
-//                             type="date"
-//                         ></input>
-//                     </div>
-//                     <button
-//                         type="submit"
-//                         className="px-1 font-light text-[#0D6EFD]"
-//                     >
-//                         add
-//                     </button>
-//                 </div>
-//             </form>
-//         </div>
-//     );
-// }
-
 export const ImportantButton = ({
     defaultState = false,
     onChange = () => {},
@@ -155,10 +82,10 @@ export const CreateTaskForm = ({
         important: false,
     });
 
-    const listID = useStore((s) => s.list?.id);
+    const listID = useStore((s) => s.list?.id); // !
     const addTask = useStore((s) => s.addTask);
 
-    const handleTaskNameChange: React.ChangeEventHandler<HTMLInputElement> =
+    const handleTaskNameChange: React.ChangeEventHandler<HTMLTextAreaElement> =
         useCallback((e) => {
             setFormState((priv) => ({ ...priv, title: e.target.value }));
         }, []);
@@ -191,36 +118,40 @@ export const CreateTaskForm = ({
         setFormState((priv) => ({ ...priv, important: important }));
     }, []);
 
+    const submit = useCallback(async () => {
+        if (formState.title.trim() === '') return;
+
+        const parse = CreateTaskSchema.safeParse(formState);
+        if (parse.success) {
+            const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
+                ...parse.data,
+            } satisfies CreateTask);
+
+            if (res && res.ok) {
+                const task = (await res.json()) as Task;
+
+                const parse = TaskSchema.safeParse({
+                    ...task,
+                    miniTasks: [],
+                });
+
+                if (parse.success) {
+                    addTask(parse.data);
+                    onCancel && onCancel();
+                }
+            }
+        } else {
+            console.log(parse.error);
+        }
+    }, [ListId, addTask, formState, onCancel]);
+
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {
             e.preventDefault();
 
-            if (formState.title.trim() === '') return;
-
-            const parse = CreateTaskSchema.safeParse(formState);
-            if (parse.success) {
-                const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
-                    ...parse.data,
-                } satisfies CreateTask);
-
-                if (res && res.ok) {
-                    const task = (await res.json()) as Task;
-
-                    const parse = TaskSchema.safeParse({
-                        ...task,
-                        miniTasks: [],
-                    });
-
-                    if (parse.success) {
-                        addTask(parse.data);
-                        onCancel && onCancel();
-                    }
-                }
-            } else {
-                console.log(parse.error);
-            }
+            submit();
         },
-        [ListId, addTask, formState, onCancel]
+        [submit]
     );
 
     return (
@@ -232,16 +163,28 @@ export const CreateTaskForm = ({
             onSubmit={handleSubmit}
         >
             <div className="w-full px-[10px] pt-[10px]">
-                <input
-                    className="w-full outline-none placeholder:font-medium text-[0.95rem] bg-inherit"
+                <textarea
+                    onInput={(ev) => {
+                        const el = ev.target as HTMLTextAreaElement;
+
+                        el.style.height = '5px';
+                        el.style.height = el.scrollHeight + 'px';
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            submit();
+                        }
+                    }}
+                    className="w-full overflow-hidden h-max resize-none outline-none placeholder:font-medium text-[0.95rem] bg-inherit"
                     placeholder="Task name"
                     name="task name"
-                    type="text"
                     autoComplete="off"
                     autoCapitalize="off"
+                    rows={1}
                     value={formState.title}
                     onChange={handleTaskNameChange}
-                ></input>
+                ></textarea>
                 <textarea
                     onInput={(ev) => {
                         const el = ev.target as HTMLTextAreaElement;

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
 import { DetailHeader } from './detail-header';
+import { DetailTaskView } from './detail-task-view';
 
 const StorageKey = 'detailWidth';
 
@@ -94,6 +95,7 @@ export default function DetailsContainer({ id }: { id?: string }) {
                 >
                     <div className="w-full h-full">
                         <DetailHeader task={task} />
+                        <DetailTaskView taskId={task?.id} />
                     </div>
                 </ResizeContainer>
             </aside>
