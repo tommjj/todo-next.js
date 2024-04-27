@@ -3,6 +3,7 @@ import Button from '../button';
 import { useCallback, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { cn } from '@/lib/utils';
+import { AddSubtaskButton } from '../sub-task/subtask-create';
 
 export const SubtaskView = ({ task }: { task: Task }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -33,12 +34,28 @@ export const SubtaskView = ({ task }: { task: Task }) => {
                         )}
                     />
                 </div>
-                Sub tasks{' '}
+                Sub-tasks{' '}
                 <span className="ml-1 px-1 rounded font-light text-[0.8rem]">
                     {subTaskCompletedCount}/{subtasks.length}
                 </span>
             </Button>
-            <ul className="ml-5 pr-1 border-t"></ul>
+            <ul
+                className={cn(
+                    'ml-5 pr-1 border-t overflow-hidden transition-all h-auto'
+                )}
+                style={{
+                    maxHeight: `${
+                        isOpen ? 60 * (1 + subtasks.length) + 100 : 0
+                    }px`,
+                }}
+            >
+                {subtasks.map((item) => (
+                    <li key={`subtask::${item.id}`}>{item.title}</li>
+                ))}
+                <li>
+                    <AddSubtaskButton taskId={task.id} />
+                </li>
+            </ul>
         </div>
     );
 };

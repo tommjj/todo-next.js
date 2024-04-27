@@ -25,6 +25,7 @@ export const SubTaskSchema = z.object({
     id: z.string(),
     title: z.string(),
     completed: z.boolean(),
+    description: z.string().optional(),
     taskId: z.string(),
 });
 export type SubTask = z.infer<typeof SubTaskSchema>;

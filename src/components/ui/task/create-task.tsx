@@ -86,26 +86,24 @@ export const CreateTaskForm = ({
         if (formState.title.trim() === '') return;
 
         const parse = CreateTaskSchema.safeParse(formState);
-        if (parse.success) {
-            const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
-                ...parse.data,
-            } satisfies CreateTask);
+        if (!parse.success) return;
 
-            if (res && res.ok) {
-                const task = (await res.json()) as Task;
+        const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
+            ...parse.data,
+        } satisfies CreateTask);
 
-                const parse = TaskSchema.safeParse({
-                    ...task,
-                    miniTasks: [],
-                });
+        if (res && res.ok) {
+            const task = (await res.json()) as Task;
 
-                if (parse.success) {
-                    addTask(parse.data);
-                    onCancel && onCancel();
-                }
+            const parse = TaskSchema.safeParse({
+                ...task,
+                subTasks: [],
+            });
+
+            if (parse.success) {
+                addTask(parse.data);
+                onCancel && onCancel();
             }
-        } else {
-            console.log(parse.error);
         }
     }, [ListId, addTask, formState, onCancel]);
 

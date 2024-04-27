@@ -53,7 +53,7 @@ model Task {
   repeatCount    Int?
   listId         String
   order          Int            @default(autoincrement())
-  description    String?        @db.VarChar(255)
+  description    String?        @db.VarChar(512)
   priority       Priority?
   subTasks       SubTask[]
   list           List           @relation(fields: [listId], references: [id])
@@ -63,11 +63,11 @@ model Task {
 }
 
 model SubTask {
-  id          String  @id @default(uuid())
-  title       String  @db.VarChar(255)
+  id          String  @id @default(cuid())
+  title       String  @db.VarChar(125)
   completed   Boolean @default(false)
   taskId      String
-  description String? @db.VarChar(510)
+  description String? @db.VarChar(255)
   task        Task    @relation(fields: [taskId], references: [id])
 
   @@index([id, taskId])
