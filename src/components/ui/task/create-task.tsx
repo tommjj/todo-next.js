@@ -68,7 +68,7 @@ export const CreateTaskForm = ({
     onCancel,
     ListId,
 }: {
-    ListId: string;
+    ListId?: string;
     className?: string;
     onCancel?: () => void;
 }) => {
@@ -82,8 +82,9 @@ export const CreateTaskForm = ({
         important: false,
     });
 
-    const listID = useStore((s) => s.list?.id); // !
+    const listId = useStore((s) => s.list?.id); // !
     const addTask = useStore((s) => s.addTask);
+    ListId = ListId || listId;
 
     const handleTaskNameChange: React.ChangeEventHandler<HTMLTextAreaElement> =
         useCallback((e) => {

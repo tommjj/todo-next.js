@@ -21,13 +21,13 @@ export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
 );
 //*----====SCHEMA====----\\
 
-export const MiniTaskSchema = z.object({
+export const SubTaskSchema = z.object({
     id: z.string(),
     title: z.string(),
     completed: z.boolean(),
     taskId: z.string(),
 });
-export type MiniTask = z.infer<typeof MiniTaskSchema>;
+export type SubTask = z.infer<typeof SubTaskSchema>;
 
 export const TaskSchema = z.object({
     id: z.string(),
@@ -38,7 +38,7 @@ export const TaskSchema = z.object({
     repeatInterval: RepeatInterval,
     repeatCount: z.nullable(z.number()),
     description: z.nullable(z.string()),
-    miniTasks: z.array(MiniTaskSchema),
+    subTasks: z.array(SubTaskSchema),
     priority: z.nullable(Priority),
     listId: z.string(),
     order: z.coerce.number(),
@@ -67,13 +67,13 @@ export type User = z.infer<typeof UserSchema>;
  * ----==== UPDATE SCHEMA ====----
  */
 
-export const MiniTaskUpdateSchema = z.object({
+export const SubTaskUpdateSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
     completed: z.boolean().optional(),
     taskId: z.string().optional(),
 });
-export type MiniTaskUpdate = z.infer<typeof MiniTaskUpdateSchema>;
+export type SubTaskUpdate = z.infer<typeof SubTaskUpdateSchema>;
 
 export const TaskUpdateSchema = z.object({
     id: z.string().optional(),
@@ -84,7 +84,7 @@ export const TaskUpdateSchema = z.object({
     repeatInterval: RepeatInterval.optional(),
     repeatCount: z.nullable(z.number()).optional(),
     note: z.nullable(z.string()).optional(),
-    miniTasks: z.array(MiniTaskUpdateSchema).optional(),
+    subTasks: z.array(SubTaskUpdateSchema).optional(),
     priority: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.coerce.number().optional(),

@@ -13,15 +13,17 @@ import { createPortal } from 'react-dom';
 import Button, { Variant } from '../button';
 import { cn } from '@/lib/utils';
 
+export type DialogRef = {
+    isOpen: boolean;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 const Context = createContext<
     [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
 >(undefined);
 
 const AlertDialog = forwardRef<
-    {
-        isOpen: boolean;
-        setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    },
+    DialogRef,
     { children: React.ReactNode; defaultValue?: boolean }
 >(function AlertDialog(props, ref) {
     const [isOpen, setIsOpen] = useState(props.defaultValue ? true : false);
@@ -44,7 +46,7 @@ export function AlertDialogTrigger({
 
     return (
         <div
-            className="w-fit"
+            className=""
             onClick={(e) => {
                 setIsOpen((prevState) => !prevState);
             }}

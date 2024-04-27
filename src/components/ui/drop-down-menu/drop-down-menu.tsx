@@ -45,148 +45,154 @@ export type DropdownMenuRef = {
     handleClose: () => void;
 };
 
-export const DropdownMenu = forwardRef<
-    DropdownMenuRef | undefined,
-    DropdownMenuProps
->(function DropdownMenu(
-    { children, priorityDir = 'Left', onOpen = () => {}, onClose = () => {} },
-    ref
-) {
-    const triggerRef = useRef<HTMLDivElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
+export const DropdownMenu = forwardRef<DropdownMenuRef, DropdownMenuProps>(
+    function DropdownMenu(
+        {
+            children,
+            priorityDir = 'Left',
+            onOpen = () => {},
+            onClose = () => {},
+        },
+        ref
+    ) {
+        const triggerRef = useRef<HTMLDivElement>(null);
+        const contentRef = useRef<HTMLDivElement>(null);
+        const [isOpen, setIsOpen] = useState(false);
 
-    const handleOpen = useCallback(() => {
-        setIsOpen(true);
-        onOpen();
-    }, [onOpen]);
+        const handleOpen = useCallback(() => {
+            setIsOpen(true);
+            onOpen();
+        }, [onOpen]);
 
-    const handleClose = useCallback(() => {
-        setIsOpen(false);
-        onClose();
-    }, [onClose]);
+        const handleClose = useCallback(() => {
+            setIsOpen(false);
+            onClose();
+        }, [onClose]);
 
-    useImperativeHandle(
-        ref,
-        () => ({
-            isOpen: isOpen,
-            handleOpen,
-            handleClose,
-        }),
-        [handleClose, handleOpen, isOpen]
-    );
+        useImperativeHandle(
+            ref,
+            () => ({
+                isOpen: isOpen,
+                handleOpen,
+                handleClose,
+            }),
+            [handleClose, handleOpen, isOpen]
+        );
 
-    useEffect(() => {
-        if (!isOpen) return;
+        useEffect(() => {
+            if (!isOpen) return;
 
-        const contentElement = contentRef.current;
+            const contentElement = contentRef.current;
 
-        const triggerElement = triggerRef.current;
+            const triggerElement = triggerRef.current;
 
-        if (!contentElement || !triggerElement) return;
+            if (!contentElement || !triggerElement) return;
 
-        contentElement.style.cssText = 'display: block; opacity: 0;';
+            contentElement.style.cssText = 'display: block; opacity: 0;';
 
-        const contentBoundingRect = contentElement.getBoundingClientRect();
-        const triggerBoundingRect = triggerElement.getBoundingClientRect();
+            const contentBoundingRect = contentElement.getBoundingClientRect();
+            const triggerBoundingRect = triggerElement.getBoundingClientRect();
 
-        const isOnBottom =
-            triggerBoundingRect.bottom + contentBoundingRect.height <
-            window.innerHeight;
+            const isOnBottom =
+                triggerBoundingRect.bottom + contentBoundingRect.height <
+                window.innerHeight;
 
-        const isOnTop = isOnBottom
-            ? false
-            : triggerBoundingRect.top - contentBoundingRect.height > 0;
+            const isOnTop = isOnBottom
+                ? false
+                : triggerBoundingRect.top - contentBoundingRect.height > 0;
 
-        const isOverOverflow = !(isOnTop || isOnBottom);
+            const isOverOverflow = !(isOnTop || isOnBottom);
 
-        const isOverLeft = isOverOverflow
-            ? triggerBoundingRect.x - contentBoundingRect.width < 20
-            : triggerBoundingRect.x -
-                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 <
-              20;
+            const isOverLeft = isOverOverflow
+                ? triggerBoundingRect.x - contentBoundingRect.width < 20
+                : triggerBoundingRect.x -
+                      (contentBoundingRect.width - triggerBoundingRect.width) /
+                          2 <
+                  20;
 
-        const isOverRight = isOverOverflow
-            ? triggerBoundingRect.right + contentBoundingRect.width >
-              window.innerWidth
-            : triggerBoundingRect.right +
-                  (contentBoundingRect.width - triggerBoundingRect.width) / 2 >
-              window.innerWidth;
+            const isOverRight = isOverOverflow
+                ? triggerBoundingRect.right + contentBoundingRect.width >
+                  window.innerWidth
+                : triggerBoundingRect.right +
+                      (contentBoundingRect.width - triggerBoundingRect.width) /
+                          2 >
+                  window.innerWidth;
 
-        contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
-            [`bottom: ${window.innerHeight - triggerBoundingRect.top}px;`]:
-                isOnTop,
-            [`top: ${triggerBoundingRect.bottom}px;`]: isOnBottom,
-            'top: 10px;': isOverOverflow,
-            [`left: ${
-                isOverOverflow
-                    ? triggerBoundingRect.right
-                    : triggerBoundingRect.left
-            }px;`]:
-                isOverLeft ||
-                (!isOverRight && isOverOverflow && priorityDir === 'Right'),
-            [`right: ${
-                isOverOverflow
-                    ? window.innerWidth - triggerBoundingRect.left
-                    : window.innerWidth - triggerBoundingRect.right
-            }px`]:
-                isOverRight ||
-                (!isOverLeft && isOverOverflow && priorityDir === 'Left'),
-            [`left: ${
-                triggerBoundingRect.x + triggerBoundingRect.width / 2
-            }px; transform: translateX(-50%);`]: isOverOverflow
-                ? isOverLeft && isOverRight
-                : !(isOverLeft || isOverRight),
-        })} 
+            contentElement.style.cssText = `display: block; opacity: 1; ${clsx({
+                [`bottom: ${window.innerHeight - triggerBoundingRect.top}px;`]:
+                    isOnTop,
+                [`top: ${triggerBoundingRect.bottom}px;`]: isOnBottom,
+                'top: 10px;': isOverOverflow,
+                [`left: ${
+                    isOverOverflow
+                        ? triggerBoundingRect.right
+                        : triggerBoundingRect.left
+                }px;`]:
+                    isOverLeft ||
+                    (!isOverRight && isOverOverflow && priorityDir === 'Right'),
+                [`right: ${
+                    isOverOverflow
+                        ? window.innerWidth - triggerBoundingRect.left
+                        : window.innerWidth - triggerBoundingRect.right
+                }px`]:
+                    isOverRight ||
+                    (!isOverLeft && isOverOverflow && priorityDir === 'Left'),
+                [`left: ${
+                    triggerBoundingRect.x + triggerBoundingRect.width / 2
+                }px; transform: translateX(-50%);`]: isOverOverflow
+                    ? isOverLeft && isOverRight
+                    : !(isOverLeft || isOverRight),
+            })} 
         `;
 
-        document.body.style.cssText = `pointer-events: none; touch-action: none;`;
+            document.body.style.cssText = `pointer-events: none; touch-action: none;`;
 
-        return () => {
-            contentElement.style.cssText = '';
-            document.body.style.cssText = '';
-        };
-    }, [isOpen, priorityDir]);
+            return () => {
+                contentElement.style.cssText = '';
+                document.body.style.cssText = '';
+            };
+        }, [isOpen, priorityDir]);
 
-    useEffect(() => {
-        if (!isOpen) return;
+        useEffect(() => {
+            if (!isOpen) return;
 
-        function preventScroll(e: any) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
+            function preventScroll(e: any) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
 
-        const handleClick = (e: MouseEvent) => {
-            document.body.style.cssText = '';
-            handleClose();
-        };
+            const handleClick = (e: MouseEvent) => {
+                document.body.style.cssText = '';
+                handleClose();
+            };
 
-        window.addEventListener('click', handleClick);
-        window.addEventListener('wheel', preventScroll, {
-            passive: false,
-        });
+            window.addEventListener('click', handleClick);
+            window.addEventListener('wheel', preventScroll, {
+                passive: false,
+            });
 
-        return () => {
-            window.removeEventListener('click', handleClick);
-            window.removeEventListener('wheel', preventScroll);
-        };
-    }, [isOpen, handleClose]);
+            return () => {
+                window.removeEventListener('click', handleClick);
+                window.removeEventListener('wheel', preventScroll);
+            };
+        }, [isOpen, handleClose]);
 
-    return (
-        <DDMContext.Provider
-            value={{
-                triggerRef,
-                contentRef,
-                isOpen,
-                close: handleClose,
-                open: handleOpen,
-            }}
-        >
-            {children}
-        </DDMContext.Provider>
-    );
-});
+        return (
+            <DDMContext.Provider
+                value={{
+                    triggerRef,
+                    contentRef,
+                    isOpen,
+                    close: handleClose,
+                    open: handleOpen,
+                }}
+            >
+                {children}
+            </DDMContext.Provider>
+        );
+    }
+);
 
 export function DropdownMenuTrigger({
     children,

@@ -20,7 +20,7 @@ export const defaultListSelect = {
             repeatInterval: true,
             repeatCount: true,
             priority: true,
-            miniTasks: true,
+            subTasks: true,
             description: true,
             listId: true,
             order: true,
@@ -71,7 +71,7 @@ export async function getAllListsBySession(): Promise<
 
 export async function deleteList(listId: string) {
     try {
-        await prisma.miniTask.deleteMany({
+        await prisma.subTask.deleteMany({
             where: {
                 task: {
                     listId: listId,

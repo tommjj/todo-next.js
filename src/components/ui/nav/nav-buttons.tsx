@@ -6,19 +6,38 @@ import { CiCalendar } from 'react-icons/ci';
 import { CiStar } from 'react-icons/ci';
 import { useParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import AlertDialog, {
+    AlertDialogContent,
+    AlertDialogTrigger,
+    DialogRef,
+} from '../alert-dialog/alert-dialog';
+import { CreateTaskForm } from '../task/create-task';
+import { useRef } from 'react';
 
 export const AddTaskButton = () => {
+    const ref = useRef<DialogRef>(null);
     const { board } = useParams();
 
     return (
         <div className="w-full px-[10px] my-1">
-            <Button
-                className="px-[6px] py-[3px] justify-start w-full grow text-primary-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
-                variant="ghost"
-            >
-                <IoIosAddCircle className="w-7 h-7 mr-[6px]" />
-                Add task
-            </Button>
+            <AlertDialog ref={ref}>
+                <AlertDialogTrigger>
+                    <Button
+                        className="px-[6px] py-[3px] justify-start w-full grow text-primary-color dark:text-nav-text-color-dark text-sm font-normal active:scale-[98%]"
+                        variant="ghost"
+                    >
+                        <IoIosAddCircle className="w-7 h-7 mr-[6px]" />
+                        Add task
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent ContentClassName="p-0  md:w-[540px] lg:w-[600px] mb-[220px]">
+                    <CreateTaskForm
+                        onCancel={() => {
+                            ref.current?.setIsOpen(false);
+                        }}
+                    />
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

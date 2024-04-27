@@ -15,8 +15,8 @@ export async function PATCH(
     const dataParse = TaskUpdateSchema.safeParse(data);
 
     if (dataParse.success) {
-        const miniTasks = dataParse.data.miniTasks;
-        delete dataParse.data.miniTasks;
+        const miniTasks = dataParse.data.subTasks;
+        delete dataParse.data.subTasks;
 
         const updateData = dataParse.data as Prisma.XOR<
             Prisma.TaskUpdateInput,

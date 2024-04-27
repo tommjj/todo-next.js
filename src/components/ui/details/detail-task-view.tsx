@@ -3,6 +3,10 @@
 import useStore from '@/lib/stores/index.store';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 
+export const NotFound = () => {
+    return <div className="w-full h-full">404</div>;
+};
+
 export const DetailTaskView = (props: { taskId?: string }) => {
     const [taskId, setTaskId] = useState(props.taskId);
     const list = useStore((state) => state.list);
@@ -16,7 +20,7 @@ export const DetailTaskView = (props: { taskId?: string }) => {
     }, [props.taskId]);
 
     return !task ? (
-        <div className="w-full h-full">404</div>
+        <NotFound />
     ) : (
         <div className="w-full h-full">{task.title}</div>
     );

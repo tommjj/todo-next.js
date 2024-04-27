@@ -55,14 +55,14 @@ model Task {
   order          Int            @default(autoincrement())
   description    String?        @db.VarChar(255)
   priority       Priority?
-  miniTasks      MiniTask[]
+  subTasks       SubTask[]
   list           List           @relation(fields: [listId], references: [id])
   Comments       Comment[]
 
   @@index([id, listId])
 }
 
-model MiniTask {
+model SubTask {
   id          String  @id @default(uuid())
   title       String  @db.VarChar(255)
   completed   Boolean @default(false)
