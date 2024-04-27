@@ -3,6 +3,7 @@
 import useStore from '@/lib/stores/index.store';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DetailEditorTask } from './detail-editor';
+import { SubtaskView } from './detail-subtask';
 
 export const NotFound = () => {
     return <div className="w-full h-full">404</div>;
@@ -28,6 +29,7 @@ export const DetailTaskView = (props: { taskId?: string }) => {
         <div className="w-full flex-grow overflow-y-auto custom-scrollbar px-[6px] pb-[6px]">
             <div className="bg-main-bg-color dark:bg-main-bg-color-dark rounded-md min-h-full">
                 <DetailEditorTask task={task} key={taskId} />
+                <SubtaskView task={task} key={`sub::${taskId}`} />
             </div>
         </div>
     );

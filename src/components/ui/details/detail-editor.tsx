@@ -1,23 +1,13 @@
 import { Task, TaskUpdateSchema } from '@/lib/zod.schema';
-import {
-    CreateTaskForm,
-    DescriptionInput,
-    TaskNameInput,
-} from '../task/create-task';
-import {
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { $Enums } from '@prisma/client';
-import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
+import { RepeatPicker, RepeatStateType } from '../inputs/repeat-picker';
 import { CheckBox } from '../task/task-list-item';
-import { DueDatePicker } from '../picker/due-date-picker';
-import { PriorityPicker } from '../picker/priority-picker';
-import { ImportantPicker } from '../picker/Important-picker';
+import { DueDatePicker } from '../inputs/due-date-picker';
+import { PriorityPicker } from '../inputs/priority-picker';
+import { ImportantPicker } from '../inputs/Important-picker';
 import useStore from '@/lib/stores/index.store';
+import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 
 type FormStateType = {
     completed: boolean;

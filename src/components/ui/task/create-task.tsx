@@ -10,10 +10,11 @@ import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
 
-import { PriorityPicker } from '../picker/priority-picker';
-import { RepeatPicker, RepeatStateType } from '../picker/reapeat-picker';
-import { DueDatePicker } from '../picker/due-date-picker';
-import { ImportantPicker } from '../picker/Important-picker';
+import { PriorityPicker } from '../inputs/priority-picker';
+import { RepeatPicker, RepeatStateType } from '../inputs/repeat-picker';
+import { DueDatePicker } from '../inputs/due-date-picker';
+import { ImportantPicker } from '../inputs/Important-picker';
+import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 
 type FormStateType = {
     title: string;
@@ -23,73 +24,6 @@ type FormStateType = {
     repeatInterval: undefined | $Enums.RepeatInterval;
     priority: $Enums.Priority;
     important: boolean;
-};
-
-export const TaskNameInput = ({
-    className,
-    ...props
-}: React.DetailedHTMLProps<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-> & { submit?: () => void }) => {
-    return (
-        <textarea
-            onInput={(ev) => {
-                const el = ev.target as HTMLTextAreaElement;
-
-                el.style.height = '5px';
-                el.style.height = el.scrollHeight + 'px';
-            }}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-
-                    if (props.submit) {
-                        props.submit();
-                    }
-                }
-            }}
-            className={cn(
-                'w-full overflow-hidden h-max resize-none outline-none placeholder:font-medium text-[0.95rem] bg-inherit',
-                className
-            )}
-            placeholder="Task name"
-            name="task name"
-            autoComplete="off"
-            autoCapitalize="off"
-            rows={1}
-            {...props}
-        />
-    );
-};
-
-export const DescriptionInput = ({
-    className,
-    ...props
-}: React.DetailedHTMLProps<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
->) => {
-    return (
-        <textarea
-            onInput={(ev) => {
-                const el = ev.target as HTMLTextAreaElement;
-
-                el.style.height = '5px';
-                el.style.height = el.scrollHeight + 'px';
-            }}
-            className={cn(
-                'w-full overflow-hidden h-max text-[0.8rem] outline-none font-light placeholder:font-light resize-none bg-inherit',
-                className
-            )}
-            placeholder="Description"
-            name="description"
-            autoComplete="off"
-            autoCapitalize="off"
-            rows={1}
-            {...props}
-        />
-    );
 };
 
 export const CreateTaskForm = ({

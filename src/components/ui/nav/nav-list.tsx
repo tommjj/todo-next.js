@@ -15,9 +15,7 @@ export const NavLink = () => {
             <div>
                 <GoHash className="w-6 h-6 p-[0.20rem] mr-[8px] text-[#444] dark:text-inherit" />
             </div>
-            <div className="flex-grow line-clamp-1 text-left">
-                Search ab sdvhjef dadwa wdad wdada wda
-            </div>
+            <div className="flex-grow line-clamp-1 text-left">List #1</div>
         </Button>
     );
 };

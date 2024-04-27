@@ -16,7 +16,7 @@ function CompletedTskList() {
         setIsOpen((privState) => !privState);
     }, []);
 
-    if (!tasks) return <></>;
+    if (!tasks) return null;
 
     const count = tasks.reduce((count, item) => {
         if (item.completed && !bin.has(item.id)) return ++count;
