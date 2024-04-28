@@ -4,7 +4,7 @@ import { List, SubTask, Task, TaskUpdate } from '@/lib/zod.schema';
 import { DeleteWithCancel, Sync } from './type.store';
 import { AppSlice } from './app.store';
 import { arrayMove, setTaskById } from '../utils';
-import { deleteTaskById, updateTaskById } from '../http';
+import { deleteTaskById, updateSubtaskById, updateTaskById } from '../http';
 import { CountSlice } from './count.store';
 
 export interface ListSlice {
@@ -24,6 +24,7 @@ export interface ListSlice {
     ) => void;
     addTask: (task: Task) => void;
     addSubtask: (subtask: SubTask) => void;
+    toggleCompleteSubtask: (taskId: string, subtask: string) => Sync;
 }
 
 export const createListSlice: StateCreator<
@@ -216,6 +217,34 @@ export const createListSlice: StateCreator<
                 };
             }
         });
+    },
+    toggleCompleteSubtask: (taskId, subtaskId) => {
+        let complete = false;
+
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
+
+            if (!tasks) return {};
+            let newTasks = tasks.map((task) => {
+                if (task.id !== taskId) return task;
+
+                task.subTasks = task.subTasks?.map((subtask) => {
+                    if (subtask.id !== subtaskId) return subtask;
+
+                    complete = !subtask.completed;
+                    return { ...subtask, completed: complete };
+                });
+
+                return { ...task };
+            });
+
+            return { list: { ...list, tasks: [...newTasks] } };
+        });
+
+        return {
+            sync: () => updateSubtaskById(subtaskId, { completed: complete }),
+        };
     },
 });
 

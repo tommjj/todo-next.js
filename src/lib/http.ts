@@ -1,4 +1,4 @@
-import { List, ListSchema, TaskUpdate } from './zod.schema';
+import { List, ListSchema, SubTaskUpdate, TaskUpdate } from './zod.schema';
 
 import { User } from './zod.schema';
 
@@ -127,3 +127,14 @@ export async function deleteTaskById(id: string) {
         method: 'DELETE',
     });
 }
+
+export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
+    const [res] = await fetcher.patch.json(`/v1/api/subtask/${id}`, {
+        ...data,
+    });
+
+    if (res?.ok) {
+        return undefined;
+    }
+    return new Error('update err');
+};

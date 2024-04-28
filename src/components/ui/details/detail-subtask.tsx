@@ -14,7 +14,7 @@ export const SubtaskView = ({ task }: { task: Task }) => {
 
     const subTaskCompletedCount = useMemo(() => {
         return subtasks.reduce((pri, cur) => {
-            return cur.completed ? ++pri : pri;
+            return cur.completed ? pri + 1 : pri;
         }, 0);
     }, [subtasks]);
 

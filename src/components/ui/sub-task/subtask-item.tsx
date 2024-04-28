@@ -1,11 +1,20 @@
+import useStore from '@/lib/stores/index.store';
 import { cn } from '@/lib/utils';
 import { SubTask } from '@/lib/zod.schema';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { useCallback } from 'react';
 
 export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
+    const toggleCompleteSubtask = useStore((s) => s.toggleCompleteSubtask);
+
+    const handleClick = useCallback(() => {
+        const { sync } = toggleCompleteSubtask(subtask.taskId, subtask.id);
+        sync();
+    }, [subtask.id, subtask.taskId, toggleCompleteSubtask]);
+
     return (
         <button
-            // onClick={handleClick}
+            onClick={handleClick}
             className={`flex justify-center items-center w-4 h-4 border border-primary-color dark:border-primary-color-dark rounded-full group ${cn(
                 {
                     'bg-primary-color dark:bg-primary-color-dark':

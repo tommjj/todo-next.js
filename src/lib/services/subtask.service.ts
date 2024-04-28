@@ -23,3 +23,28 @@ export const createSubTask = async (data: createSubTaskData) => {
 
     return await func({ data });
 };
+
+type updateSubTaskData =
+    | (Prisma.Without<
+          Prisma.SubTaskUpdateInput,
+          Prisma.SubTaskUncheckedUpdateInput
+      > &
+          Prisma.SubTaskUncheckedUpdateInput)
+    | (Prisma.Without<
+          Prisma.SubTaskUncheckedUpdateInput,
+          Prisma.SubTaskUpdateInput
+      > &
+          Prisma.SubTaskUpdateInput);
+
+export const updateSubtaskById = async (
+    id: string,
+    data: updateSubTaskData
+) => {
+    const func = withError(prisma.subTask.update);
+    return await func({
+        data: data,
+        where: {
+            id: id,
+        },
+    });
+};
