@@ -3,6 +3,9 @@ import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { SubTaskCreateWithoutIdSchema } from '../zod.schema';
+import { createSubTask as crSubTask } from '@services/subtask.service';
+import { getListById } from '../services/list.service';
+import { getTaskById } from '../services/task.service';
 
 const factory = new Factory();
 
@@ -15,8 +18,23 @@ export const createSubTask = factory.createHandlers(
     zValidator('json', SubTaskCreateWithoutIdSchema),
 
     async (c) => {
+        const user = c.get('user');
         const body = c.req.valid('json');
 
-        return c.json({ mess: body });
+        if (!user.id) throw new Error('HOW ?');
+
+        const [task] = await getTaskById(
+            {
+                taskId: body.taskId,
+                userId: user.id,
+            },
+            { id: true }
+        );
+
+        if (!task) return c.json(undefined, { status: 400 });
+
+        const [subTask, err] = await crSubTask({ ...body });
+
+        return c.json({ data: subTask });
     }
 );
