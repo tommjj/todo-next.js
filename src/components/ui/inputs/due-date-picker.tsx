@@ -17,88 +17,10 @@ import {
 } from 'react-icons/bs';
 import { MdDoNotDisturbAlt } from 'react-icons/md';
 import { Calendar } from '@/components/ui-lib/ui/calendar';
-import { cn } from '@/lib/utils';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getDayOfYear } from 'date-fns';
+import { cn, getYesterday } from '@/lib/utils';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { LiaTimesSolid } from 'react-icons/lia';
-
-export const days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday ',
-    'Saturday',
-];
-
-export const month = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-];
-
-const getDateOffset = (from: Date, to: Date) => {
-    const fromWithoutTime = new Date(
-        from.getFullYear(),
-        from.getMonth(),
-        from.getDate()
-    );
-
-    const toWithoutTime = new Date(
-        to.getFullYear(),
-        to.getMonth(),
-        to.getDate()
-    );
-
-    return (
-        (toWithoutTime.getTime() - fromWithoutTime.getTime()) /
-        (24 * 60 * 60 * 1000)
-    );
-};
-
-const getDataTitle = (date: Date) => {
-    const now = new Date();
-
-    const offset = getDateOffset(now, date);
-
-    if (offset < -1 || offset > 7)
-        return `${date.getDate()} ${month[date.getMonth()]}${
-            now.getFullYear() === date.getFullYear()
-                ? ``
-                : ` ${date.getFullYear()}`
-        }`;
-    if (offset === -1) return 'Yesterday';
-    if (offset === 0) return 'Today';
-    if (offset === 1) return 'Tomorrow';
-    return days[date.getDay()];
-};
-
-const getYesterday = () => {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    return yesterday;
-};
-
-export const daysIntoYear = (date: Date) => {
-    return (
-        (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
-            Date.UTC(date.getFullYear(), 0, 0)) /
-        24 /
-        60 /
-        60 /
-        1000
-    );
-};
+import { DateTitle } from '../date';
 
 export const DueDatePicker = ({
     defaultValue,
@@ -119,11 +41,6 @@ export const DueDatePicker = ({
             dropDownMenuRef.current?.handleClose();
         },
         [onChanged]
-    );
-
-    const dateOffset = useMemo(
-        () => selectedDay && getDateOffset(new Date(), selectedDay),
-        [selectedDay]
     );
 
     const handleSetToday = useCallback(() => {
@@ -178,17 +95,16 @@ export const DueDatePicker = ({
                     variant="ghost"
                     className={cn(
                         'text-[0.8rem] leading-4 px-2 py-[5px] font-light border',
-                        {
-                            'text-green-600': dateOffset === 0,
-                            'text-amber-600': dateOffset === 1,
-                            'text-indigo-600':
-                                dateOffset && 1 < dateOffset && dateOffset < 7,
-                        },
+
                         className
                     )}
                 >
                     <CiCalendar className="w-4 h-4 mr-1 opacity-80" />
-                    {selectedDay ? getDataTitle(selectedDay) : `Due date`}
+                    {selectedDay ? (
+                        <DateTitle date={selectedDay} />
+                    ) : (
+                        `Due date`
+                    )}
 
                     {selectedDay ? (
                         <div

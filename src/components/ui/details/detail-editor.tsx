@@ -2,7 +2,7 @@ import { Task, TaskUpdateSchema } from '@/lib/zod.schema';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { $Enums } from '@prisma/client';
 import { RepeatPicker, RepeatStateType } from '../inputs/repeat-picker';
-import { CheckBox } from '../task/task-list-item';
+import { TaskCheckBox } from '../task/task-list-item';
 import { DueDatePicker } from '../inputs/due-date-picker';
 import { PriorityPicker } from '../inputs/priority-picker';
 import { ImportantPicker } from '../inputs/Important-picker';
@@ -109,7 +109,7 @@ export const DetailEditorTask = ({ task }: { task: Task }) => {
         <div className="w-full px-1">
             <div className="flex pt-2 min-h-[60px]">
                 <div className="flex pl-1 pt-[2px] items-center justify-center">
-                    <CheckBox completed={task.completed} taskId={task.id} />
+                    <TaskCheckBox completed={task.completed} taskId={task.id} />
                 </div>
                 <div className="flex items-center justify-center flex-grow ">
                     <TaskNameInput

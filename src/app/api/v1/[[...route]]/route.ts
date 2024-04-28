@@ -70,8 +70,8 @@ app.get('/otp-token/:token', async (c) => {
 });
 
 //! test
-app.get('/count/:listId/count', auth, async (c) => {
-    c.json({ mess: 'hello' });
+app.get('/lists/:listId/count', auth, async (c) => {
+    return c.json({ mess: 'hello' });
 });
 
 const handler = handle(app);

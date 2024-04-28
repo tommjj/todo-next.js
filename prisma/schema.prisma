@@ -33,7 +33,7 @@ model List {
 }
 
 model Share {
-  id     String @id @default(uuid())
+  id     String @id @default(cuid())
   listId String
   userId String
   list   List   @relation(fields: [listId], references: [id])
@@ -43,7 +43,7 @@ model Share {
 }
 
 model Task {
-  id             String         @id @default(uuid())
+  id             String         @id @default(cuid())
   title          String         @db.VarChar(250)
   important      Boolean        @default(false)
   completed      Boolean        @default(false)
@@ -63,14 +63,15 @@ model Task {
 }
 
 model SubTask {
-  id          String  @id @default(cuid())
-  title       String  @db.VarChar(125)
-  completed   Boolean @default(false)
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(125)
+  completed   Boolean  @default(false)
   taskId      String
-  description String? @db.VarChar(255)
-  task        Task    @relation(fields: [taskId], references: [id])
+  description String?  @db.VarChar(255)
+  task        Task     @relation(fields: [taskId], references: [id])
+  createAt    DateTime @default(now()) @db.Timestamp()
 
-  @@index([id, taskId])
+  @@index([id, taskId, createAt])
 }
 
 model Comment {

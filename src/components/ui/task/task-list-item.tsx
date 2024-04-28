@@ -23,8 +23,9 @@ import {
     useDndMethods,
 } from '@/components/ui/drag-a-drop/drag-a-drop';
 import { cn } from '@/lib/utils';
+import { DateTitle } from '../date';
 
-export function CheckBox({
+export function TaskCheckBox({
     completed,
     taskId,
 }: {
@@ -222,14 +223,14 @@ const TaskItem = ({ task }: { task: Task }) => {
                 }
             )}
         >
-            <CheckBox completed={task.completed} taskId={task.id} />
+            <TaskCheckBox completed={task.completed} taskId={task.id} />
 
             <div
                 className={cn('text-[#444] dark:text-inherit flex-grow touch')}
             >
                 <p className="text-sm">{task.title}</p>
                 <p className="text-xs font-light">
-                    {task.dueDate?.toDateString()}
+                    {task.dueDate && <DateTitle date={task.dueDate} />}
                 </p>
             </div>
             <Important important={task.important} taskId={task.id} />

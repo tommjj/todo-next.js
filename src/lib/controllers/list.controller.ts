@@ -1,6 +1,7 @@
 import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
+import prisma from '../databases/prisma.init';
 
 const factory = new Factory();
 
@@ -25,5 +26,13 @@ export const createListHandler = factory.createHandlers(auth, async (c) => {});
  * @method:: PATCH
  */
 export const updateListHandler = factory.createHandlers(auth, async (c) => {
+    const { id } = c.req.param();
+});
+
+/*
+ * @path:: /lists/:id/subtask
+ * @method:: POST
+ */
+export const createSubTaskHandler = factory.createHandlers(auth, async (c) => {
     const { id } = c.req.param();
 });

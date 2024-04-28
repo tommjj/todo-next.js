@@ -99,7 +99,6 @@ export function AlertDialogContent({
                           onClick={(e) => {
                               if (ref.current === e.target) setIsOpen(false);
                           }}
-                          style={{ pointerEvents: 'auto' }}
                       >
                           <div
                               className={cn(

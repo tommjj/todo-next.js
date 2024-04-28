@@ -48,12 +48,10 @@ export const NavLinks = ({ lists }: { lists: Lists }) => {
                 </div>
             </Button>
             <ul
-                className={cn(
-                    'overflow-hidden max-h-96 transition-all duration-300',
-                    {
-                        'max-h-0': !isOpen,
-                    }
-                )}
+                className={cn('overflow-hidden transition-all duration-300')}
+                style={{
+                    maxHeight: `${isOpen ? (1 + lists.length) * 50 : 0}px`,
+                }}
             >
                 {/* {lists.map((item) => (
                 <li key={item.id}>

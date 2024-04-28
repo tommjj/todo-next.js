@@ -83,3 +83,83 @@ export const convertTime = (date: Date | null | undefined) => {
     const ictDate = new Date(ictTimeInMs);
     return ictDate;
 };
+
+//
+
+export const Days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday ',
+    'Saturday',
+];
+
+export const Months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+];
+
+export const getDateOffset = (from: Date, to: Date) => {
+    const fromWithoutTime = new Date(
+        from.getFullYear(),
+        from.getMonth(),
+        from.getDate()
+    );
+
+    const toWithoutTime = new Date(
+        to.getFullYear(),
+        to.getMonth(),
+        to.getDate()
+    );
+
+    return (
+        (toWithoutTime.getTime() - fromWithoutTime.getTime()) /
+        (24 * 60 * 60 * 1000)
+    );
+};
+
+export const getDateTitle = (date: Date) => {
+    const now = new Date();
+
+    const offset = getDateOffset(now, date);
+
+    if (offset < -1 || offset > 7)
+        return `${date.getDate()} ${Months[date.getMonth()]}${
+            now.getFullYear() === date.getFullYear()
+                ? ``
+                : ` ${date.getFullYear()}`
+        }`;
+    if (offset === -1) return 'Yesterday';
+    if (offset === 0) return 'Today';
+    if (offset === 1) return 'Tomorrow';
+    return Days[date.getDay()];
+};
+
+export const getYesterday = () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday;
+};
+
+export const daysIntoYear = (date: Date) => {
+    return (
+        (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+            Date.UTC(date.getFullYear(), 0, 0)) /
+        24 /
+        60 /
+        60 /
+        1000
+    );
+};
