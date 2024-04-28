@@ -73,3 +73,26 @@ export const updateSubTask = factory.createHandlers(
         return c.json(undefined, { status: err ? 404 : 204 });
     }
 );
+
+/*
+ * @path:: /subtask/:id
+ * @method:: DELETE
+ */
+
+export const deleteSubtask = factory.createHandlers(auth, async (c) => {
+    const id = c.req.param('id');
+    const user = c.get('user');
+
+    if (!user.id) throw new Error('HOW ?');
+
+    const func = withError(prisma.subTask.delete);
+
+    const [data, err] = await func({
+        where: {
+            id: id,
+            task: { list: { userId: user.id } },
+        },
+    });
+
+    return c.json(undefined, { status: err ? 404 : 204 });
+});

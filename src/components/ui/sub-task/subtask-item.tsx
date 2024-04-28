@@ -1,8 +1,20 @@
 import useStore from '@/lib/stores/index.store';
 import { cn } from '@/lib/utils';
 import { SubTask } from '@/lib/zod.schema';
-import { CheckIcon } from '@heroicons/react/24/outline';
+import {
+    CheckIcon,
+    EllipsisHorizontalIcon,
+    TrashIcon,
+} from '@heroicons/react/24/outline';
 import { useCallback } from 'react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '../drop-down-menu/drop-down-menu';
+import Button from '../button';
+import { buttonProps } from '../nav/nav-buttons';
 
 export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
     const toggleCompleteSubtask = useStore((s) => s.toggleCompleteSubtask);
@@ -15,7 +27,7 @@ export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
     return (
         <button
             onClick={handleClick}
-            className={`flex justify-center items-center w-4 h-4 border border-primary-color dark:border-primary-color-dark rounded-full group ${cn(
+            className={`flex justify-center items-center w-4 h-4 border border-primary-color dark:border-primary-color-dark rounded-full group/checkbox ${cn(
                 {
                     'bg-primary-color dark:bg-primary-color-dark':
                         subtask.completed,
@@ -24,7 +36,7 @@ export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
         >
             <CheckIcon
                 className={`h-2  ${cn({
-                    'hidden md:group-hover:block': !subtask.completed,
+                    'hidden md:group-hover/checkbox:block': !subtask.completed,
                     'text-white dark:text-main-bg-color-dark':
                         subtask.completed,
                 })}`}
@@ -35,8 +47,15 @@ export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
 };
 
 export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
+    const removeSubtask = useStore((s) => s.removeSubtask);
+
+    const handleClick = useCallback(() => {
+        const { sync } = removeSubtask(subtask);
+        sync();
+    }, [subtask, removeSubtask]);
+
     return (
-        <div className="flex w-full py-1.5 border-b">
+        <div className="group flex w-full py-1.5 border-b">
             <div
                 className={cn('flex justify-center items-start px-2 pt-[3px]', {
                     'pt-1': subtask.description,
@@ -44,11 +63,41 @@ export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
             >
                 <SubTaskCheckBox subtask={subtask} />
             </div>
-            <div>
+            <div className="flex-grow">
                 <div className="text-[0.9rem]">{subtask.title}</div>
                 <div className="text-[0.8rem] font-light opacity-80">
                     {subtask.description}
                 </div>
+            </div>
+            <div className="pr-1">
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                'p-[1px] select-none opacity-0 group-hover:opacity-50'
+                            )}
+                        >
+                            <EllipsisHorizontalIcon className="h-[20px] w-[20px] " />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="transition-all duration-75">
+                        <DropdownMenuItem>
+                            <Button
+                                onClick={handleClick}
+                                variant="ghost"
+                                className={cn(
+                                    buttonProps.className,
+                                    ' w-36 px-3 py-1 text-red-600 flex justify-start items-center font-light'
+                                )}
+                            >
+                                <TrashIcon className="h-4 mr-2" />
+                                Delete
+                            </Button>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
     );

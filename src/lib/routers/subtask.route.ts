@@ -1,5 +1,9 @@
 import { Hono } from 'hono';
-import { createSubTask, updateSubTask } from '@controllers/subtask.controller';
+import {
+    createSubTask,
+    updateSubTask,
+    deleteSubtask,
+} from '@controllers/subtask.controller';
 
 const subtask = new Hono();
 
@@ -12,6 +16,8 @@ subtask.get('/hello', async (c) => {
 });
 
 subtask.patch('/:id', ...updateSubTask);
+
+subtask.delete('/:id', ...deleteSubtask);
 
 subtask.post('/', ...createSubTask);
 

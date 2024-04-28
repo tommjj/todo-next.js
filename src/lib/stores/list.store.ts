@@ -4,7 +4,12 @@ import { List, SubTask, Task, TaskUpdate } from '@/lib/zod.schema';
 import { DeleteWithCancel, Sync } from './type.store';
 import { AppSlice } from './app.store';
 import { arrayMove, setTaskById } from '../utils';
-import { deleteTaskById, updateSubtaskById, updateTaskById } from '../http';
+import {
+    deleteSubtask,
+    deleteTaskById,
+    updateSubtaskById,
+    updateTaskById,
+} from '../http';
 import { CountSlice } from './count.store';
 
 export interface ListSlice {
@@ -25,6 +30,8 @@ export interface ListSlice {
     addTask: (task: Task) => void;
     addSubtask: (subtask: SubTask) => void;
     toggleCompleteSubtask: (taskId: string, subtask: string) => Sync;
+
+    removeSubtask: (id: SubTask) => Sync;
 }
 
 export const createListSlice: StateCreator<
@@ -244,6 +251,30 @@ export const createListSlice: StateCreator<
 
         return {
             sync: () => updateSubtaskById(subtaskId, { completed: complete }),
+        };
+    },
+
+    removeSubtask: (subtask) => {
+        set((priv) => {
+            const list = priv.list;
+            const tasks = list?.tasks;
+
+            if (!tasks) return {};
+            let newTasks = tasks.map((task) => {
+                if (task.id !== subtask.taskId) return task;
+
+                task.subTasks = task.subTasks?.filter(
+                    (item) => item.id !== subtask.id
+                );
+
+                return { ...task };
+            });
+
+            return { list: { ...list, tasks: [...newTasks] } };
+        });
+
+        return {
+            sync: () => deleteSubtask(subtask.id),
         };
     },
 });

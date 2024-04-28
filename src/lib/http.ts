@@ -138,3 +138,12 @@ export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
     }
     return new Error('update err');
 };
+
+export const deleteSubtask = async (id: string) => {
+    const [res] = await fetcher.delete(`/v1/api/subtask/${id}`);
+
+    if (res?.ok) {
+        return undefined;
+    }
+    return new Error('delete err');
+};
