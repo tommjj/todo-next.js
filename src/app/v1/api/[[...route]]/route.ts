@@ -5,10 +5,9 @@ import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
 import { sendOTP, verifyOTP } from '@/lib/services/otp.service';
-import prisma from '@/lib/databases/prisma.init';
 import jwt from 'jsonwebtoken';
 
-const app = new Hono().basePath('/api/v1');
+const app = new Hono().basePath('/v1/api/');
 
 app.route('/', router);
 
@@ -71,7 +70,7 @@ app.get('/otp-token/:token', async (c) => {
 
 //! test
 app.get('/lists/:listId/count', auth, async (c) => {
-    return c.json({ mess: 'hello' });
+    return c.json({ mess: 'pares' });
 });
 
 const handler = handle(app);

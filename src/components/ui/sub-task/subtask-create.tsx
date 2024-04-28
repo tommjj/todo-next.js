@@ -3,6 +3,8 @@ import { useCallback, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 import Button from '../button';
+import { fetcher } from '@/lib/http';
+import { SubTaskCreateWithoutId } from '@/lib/zod.schema';
 
 export const CreateTaskForm = ({
     className = '',
@@ -28,7 +30,20 @@ export const CreateTaskForm = ({
             setFormState((priv) => ({ ...priv, description: e.target.value }));
         }, []);
 
-    const submit = useCallback(async () => {}, []);
+    const submit = useCallback(async () => {
+        if (formState.title.trim() === '') return;
+
+        const [res, err] = await fetcher.post.json('/v1/api/subtask', {
+            title: formState.title,
+            description: formState.description,
+            taskId: taskId,
+        } satisfies SubTaskCreateWithoutId);
+
+        if (res?.ok) {
+            const json = await res.json();
+            console.log(json);
+        }
+    }, [formState, taskId]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {

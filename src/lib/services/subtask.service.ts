@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import prisma from '../databases/prisma.init';
+import { withError } from '../utils';
 
 /*
  * ----==== CREATE ====----
@@ -17,6 +18,8 @@ type createSubTaskData =
       > &
           Prisma.SubTaskCreateInput);
 
-const createSubTask = (data: createSubTaskData) => {
-    return prisma.subTask.create({ data: { ...data } });
+export const createSubTask = async (data: createSubTaskData) => {
+    const func = withError(prisma.subTask.create);
+
+    return await func({ data });
 };

@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge, ClassNameValue } from 'tailwind-merge';
 
 import { Task, TaskUpdate } from './zod.schema';
+import { ArgumentTypes, ReturnTypes } from './definitions';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -162,4 +163,21 @@ export const daysIntoYear = (date: Date) => {
         60 /
         1000
     );
+};
+
+//* with err
+export const withError = <T extends Function>(
+    func: T
+): ((
+    ...a: ArgumentTypes<T>
+) => Promise<[undefined, unknown] | [ReturnTypes<T>, undefined]>) => {
+    return async (...a: ArgumentTypes<T>) => {
+        try {
+            const data = (await func(...a)) as ReturnTypes<T>;
+
+            return [data, undefined];
+        } catch (err) {
+            return [undefined, err];
+        }
+    };
 };

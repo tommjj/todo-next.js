@@ -95,6 +95,35 @@ export const TaskUpdateSchema = z.object({
 });
 export type TaskUpdate = z.infer<typeof TaskUpdateSchema>;
 
+/*
+ *   CREATE SCHEMA
+ */
+
+export const SubTaskCreateSchema = z.object({
+    id: z.string().optional(),
+    title: z.string(),
+    description: z.string().optional(),
+    completed: z.boolean().optional(),
+    taskId: z.string(),
+});
+
+export const SubTaskCreateWithoutIdSchema = SubTaskCreateSchema.omit({
+    id: true,
+});
+
+export type SubTaskCreateWithoutId = z.infer<
+    typeof SubTaskCreateWithoutIdSchema
+>;
+
+export const SubTaskCreateWithoutIdAndTaskIdSchema = SubTaskCreateSchema.omit({
+    id: true,
+    taskId: true,
+});
+
+export type SubTaskCreateWithoutIdAndTaskId = z.infer<
+    typeof SubTaskCreateWithoutIdAndTaskIdSchema
+>;
+
 export const CreateTaskSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(1),
@@ -108,7 +137,10 @@ export const CreateTaskSchema = z.object({
     listId: z.string().optional(),
     order: z.number().optional(),
     createAt: z.coerce.date().optional(),
+    subTasks: z.array(SubTaskCreateWithoutIdSchema).optional(),
 });
+
+export type CreateTask = z.infer<typeof CreateTaskSchema>;
 
 export const AccountSchema = z.object({
     username: z.string({ invalid_type_error: 'please enter username' }).max(29),
@@ -118,5 +150,3 @@ export const AccountSchema = z.object({
         .min(8, { message: 'Password must be longer than 8 characters' }),
     confirm: z.string({ invalid_type_error: 'please enter password' }).min(8),
 });
-
-export type CreateTask = z.infer<typeof CreateTaskSchema>;
