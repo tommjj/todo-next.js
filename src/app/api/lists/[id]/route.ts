@@ -49,6 +49,7 @@ export async function POST(
         const task = await prisma.task.create({
             data: {
                 ...bodyParse.data,
+                subTasks: undefined, //!
                 dueDate: convertTime(bodyParse.data.dueDate),
                 listId: params.id,
             },
