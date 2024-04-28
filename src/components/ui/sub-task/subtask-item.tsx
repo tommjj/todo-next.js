@@ -28,7 +28,11 @@ export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
 export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
     return (
         <div className="flex w-full py-1.5 border-b">
-            <div className="flex pt-1 justify-center items-start px-2">
+            <div
+                className={cn('flex justify-center items-start px-2 pt-[3px]', {
+                    'pt-1': subtask.description,
+                })}
+            >
                 <SubTaskCheckBox subtask={subtask} />
             </div>
             <div>

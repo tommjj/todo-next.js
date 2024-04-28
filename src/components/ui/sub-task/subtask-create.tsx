@@ -4,7 +4,8 @@ import { IoAddOutline } from 'react-icons/io5';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 import Button from '../button';
 import { fetcher } from '@/lib/http';
-import { SubTaskCreateWithoutId } from '@/lib/zod.schema';
+import { SubTaskCreateWithoutId, SubTaskSchema } from '@/lib/zod.schema';
+import useStore from '@/lib/stores/index.store';
 
 export const CreateTaskForm = ({
     className = '',
@@ -15,6 +16,7 @@ export const CreateTaskForm = ({
     className?: string;
     onCancel?: () => void;
 }) => {
+    const addSubtask = useStore((s) => s.addSubtask);
     const [formState, setFormState] = useState({
         title: '',
         description: '',
@@ -41,9 +43,16 @@ export const CreateTaskForm = ({
 
         if (res?.ok) {
             const json = await res.json();
-            console.log(json);
+
+            const data = SubTaskSchema.safeParse(json.data);
+
+            if (data.success) {
+                addSubtask(data.data);
+            }
+
+            onCancel && onCancel();
         }
-    }, [formState, taskId]);
+    }, [addSubtask, formState.description, formState.title, onCancel, taskId]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {

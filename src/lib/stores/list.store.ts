@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import { List, Task, TaskUpdate } from '@/lib/zod.schema';
+import { List, SubTask, Task, TaskUpdate } from '@/lib/zod.schema';
 import { DeleteWithCancel, Sync } from './type.store';
 import { AppSlice } from './app.store';
 import { arrayMove, setTaskById } from '../utils';
@@ -23,6 +23,7 @@ export interface ListSlice {
         dir: 'top' | 'bottom'
     ) => void;
     addTask: (task: Task) => void;
+    addSubtask: (subtask: SubTask) => void;
 }
 
 export const createListSlice: StateCreator<
@@ -195,4 +196,27 @@ export const createListSlice: StateCreator<
                 list: { ...list, tasks: [task, ...tasks] },
             };
         }),
+    addSubtask: (subtask) => {
+        set((p) => {
+            const list = p.list;
+            const tasks = list?.tasks;
+            if (!tasks) return {};
+
+            let task = tasks.find((i) => i.id === subtask.taskId);
+            if (!task) return {};
+            if (task?.subTasks) {
+                task.subTasks.push(subtask);
+                return {
+                    list: { ...list, tasks: [...tasks] },
+                };
+            } else {
+                task.subTasks = [subtask];
+                return {
+                    list: { ...list, tasks: [...tasks] },
+                };
+            }
+        });
+    },
 });
+
+export default createListSlice;

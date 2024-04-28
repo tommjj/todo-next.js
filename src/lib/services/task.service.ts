@@ -73,9 +73,7 @@ export async function deleteTask(id: string) {
     try {
         await prisma.subTask.deleteMany({
             where: {
-                task: {
-                    listId: id,
-                },
+                taskId: id,
             },
         });
 
@@ -84,8 +82,10 @@ export async function deleteTask(id: string) {
                 id: id,
             },
         });
+
         return undefined;
     } catch (err) {
+        console.log(err);
         return err as Error;
     }
 }
