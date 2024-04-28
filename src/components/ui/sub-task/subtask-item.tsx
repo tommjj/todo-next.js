@@ -15,6 +15,7 @@ import {
 } from '../drop-down-menu/drop-down-menu';
 import Button from '../button';
 import { buttonProps } from '../nav/nav-buttons';
+import { FaRegEdit } from 'react-icons/fa';
 
 export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
     const toggleCompleteSubtask = useStore((s) => s.toggleCompleteSubtask);
@@ -46,7 +47,13 @@ export const SubTaskCheckBox = ({ subtask }: { subtask: SubTask }) => {
     );
 };
 
-export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
+export const SubtaskItem = ({
+    subtask,
+    setEditor,
+}: {
+    subtask: SubTask;
+    setEditor: () => void;
+}) => {
     const removeSubtask = useStore((s) => s.removeSubtask);
 
     const handleClick = useCallback(() => {
@@ -64,7 +71,13 @@ export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
                 <SubTaskCheckBox subtask={subtask} />
             </div>
             <div className="flex-grow">
-                <div className="text-[0.9rem]">{subtask.title}</div>
+                <div
+                    className={cn('text-[0.9rem]', {
+                        'line-through': subtask.completed,
+                    })}
+                >
+                    {subtask.title}
+                </div>
                 <div className="text-[0.8rem] font-light opacity-80">
                     {subtask.description}
                 </div>
@@ -82,7 +95,18 @@ export const SubtaskItem = ({ subtask }: { subtask: SubTask }) => {
                             <EllipsisHorizontalIcon className="h-[20px] w-[20px] " />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="transition-all duration-75">
+                    <DropdownMenuContent className="transition-all duration-75 p-1">
+                        <Button
+                            onClick={setEditor}
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                ' w-36 px-3 py-1 flex justify-start items-center font-light mb-1'
+                            )}
+                        >
+                            <FaRegEdit className="h-4 mr-2 opacity-90 mb-[1px]" />
+                            Edit
+                        </Button>
                         <DropdownMenuItem>
                             <Button
                                 onClick={handleClick}

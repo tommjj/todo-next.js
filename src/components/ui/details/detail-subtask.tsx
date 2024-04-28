@@ -5,12 +5,18 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import { AddSubtaskButton } from '../sub-task/subtask-create';
 import { SubtaskItem } from '../sub-task/subtask-item';
+import { SubTaskFormEditor } from '../sub-task/subtask-editor';
 
 export const SubtaskView = ({ task }: { task: Task }) => {
+    const [subtaskEditor, setSubtaskEditor] = useState<string | undefined>(
+        undefined
+    );
     const [isOpen, setIsOpen] = useState(true);
     const subtasks = task.subTasks;
 
     const toggleList = useCallback(() => setIsOpen((p) => !p), []);
+
+    const handleClose = useCallback(() => setSubtaskEditor(undefined), []);
 
     const subTaskCompletedCount = useMemo(() => {
         return subtasks.reduce((pri, cur) => {
@@ -52,7 +58,17 @@ export const SubtaskView = ({ task }: { task: Task }) => {
             >
                 {subtasks.map((item) => (
                     <li key={`subtask::${item.id}`}>
-                        <SubtaskItem subtask={item} />
+                        {subtaskEditor !== item.id ? (
+                            <SubtaskItem
+                                subtask={item}
+                                setEditor={() => setSubtaskEditor(item.id)}
+                            />
+                        ) : (
+                            <SubTaskFormEditor
+                                subTask={item}
+                                onCancel={handleClose}
+                            />
+                        )}
                     </li>
                 ))}
                 <li>
