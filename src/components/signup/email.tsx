@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Button from '../ui/button';
 import { buttonProps } from '../ui/nav/nav-buttons';
 import { z } from 'zod';
@@ -18,27 +18,35 @@ export const EmailForm = () => {
     const { push } = useRouter();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState(searchParams.get('email') || '');
+    const [error, setError] = useState('');
+    const [isSubmit, setIsSubmit] = useState(false);
 
     const handleSubmitEmailClick: React.FormEventHandler<HTMLFormElement> =
         useCallback(
-            (e) => {
+            async (e) => {
                 e.preventDefault();
+                if (isSubmit) return;
+                setIsSubmit(true);
 
                 if (z.string().email().safeParse(email).success) {
-                    fetcher.post
-                        .json('v1/api/auth/email-verify', {
+                    const [res] = await fetcher.post.json(
+                        'v1/api/auth/email-verify',
+                        {
                             email: email,
-                        })
-                        .then(([res]) => {
-                            if (res?.ok) {
-                                console.log('ok');
-                            }
-                        });
-
-                    push(`?email=${email}&otp=true`);
+                        }
+                    );
+                    if (res) {
+                        if (res.ok) {
+                            push(`?email=${email}&otp=true`);
+                        } else {
+                            setError((await res.json()).mess);
+                        }
+                    }
                 }
+
+                setIsSubmit(false);
             },
-            [email, push]
+            [email, push, isSubmit]
         );
 
     return (
@@ -58,7 +66,10 @@ export const EmailForm = () => {
                     <div className="mt-1">
                         <input
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setError('');
+                            }}
                             autoCapitalize="none"
                             id="Email"
                             placeholder="example@mail.com"
@@ -69,6 +80,7 @@ export const EmailForm = () => {
                             className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
                         />
                     </div>
+                    <p className="text-red-600 text-[0.8rem] mt-1"> {error}</p>
                 </div>
 
                 <div className="flex justify-end">
@@ -76,7 +88,8 @@ export const EmailForm = () => {
                         variant="primary"
                         className="w-full py-2 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
                         aria-disabled={
-                            !z.string().email().safeParse(email).success
+                            !z.string().email().safeParse(email).success ||
+                            isSubmit
                         }
                     >
                         Continue
@@ -98,9 +111,52 @@ export const EmailForm = () => {
 };
 
 const OptForm = () => {
+    const { push } = useRouter();
+    const searchParams = useSearchParams();
+    const [email, setEmail] = useState(searchParams.get('email') || '');
+    const [error, setError] = useState('');
+
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [value, setValue] = useState('');
+
+    const handleSubmit = useCallback(async () => {
+        setIsVerifying(true);
+        if (value.length === 6) {
+            const [res] = await fetcher.post.json('/v1/api/auth/otp-verify', {
+                email: email,
+                otp: value,
+            });
+
+            if (res?.ok) {
+                push(`/sign-up/${(await res.json()).token}`);
+            } else {
+                setError('your code is not valid');
+            }
+            setIsVerifying(false);
+        }
+    }, [email, value, push]);
+
+    useEffect(() => {
+        handleSubmit();
+    }, [handleSubmit, value]);
+
+    const handleSubmitOTP: React.FormEventHandler<HTMLFormElement> =
+        useCallback(
+            async (e) => {
+                e.preventDefault();
+
+                await handleSubmit();
+            },
+            [handleSubmit]
+        );
+
     return (
         <div className="">
-            <form className="space-y-5" aria-describedby="error">
+            <form
+                className="space-y-5"
+                aria-describedby="error"
+                onSubmit={handleSubmitOTP}
+            >
                 <div>
                     <label
                         htmlFor="username"
@@ -113,7 +169,11 @@ const OptForm = () => {
                     </p>
 
                     <div className="w-full mt-2">
-                        <InputOTP maxLength={6}>
+                        <InputOTP
+                            maxLength={6}
+                            value={value}
+                            onChange={(e) => setValue(e)}
+                        >
                             <InputOTPGroup>
                                 <InputOTPSlot index={0} />
                                 <InputOTPSlot index={1} />
@@ -130,13 +190,14 @@ const OptForm = () => {
                             </InputOTPGroup>
                         </InputOTP>
                     </div>
+                    <p className="text-red-600 text-[0.8rem]">{error}</p>
                 </div>
 
                 <div className="flex justify-end mt-6">
                     <Button
-                        type="button"
                         variant="primary"
                         className="w-full py-2 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                        aria-disabled={isVerifying || value.length < 6}
                     >
                         Verify
                     </Button>
@@ -154,7 +215,7 @@ const OptForm = () => {
 };
 
 const EmailVerify = () => {
-    const { has } = useSearchParams();
+    const { has, get } = useSearchParams();
 
     return (
         <div
@@ -167,7 +228,12 @@ const EmailVerify = () => {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-                {!has('otp') ? <EmailForm /> : <OptForm />}
+                {get('otp') &&
+                z.string().email().safeParse(get('email')).success ? (
+                    <OptForm />
+                ) : (
+                    <EmailForm />
+                )}
             </div>
         </div>
     );

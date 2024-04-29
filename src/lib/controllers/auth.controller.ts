@@ -38,27 +38,19 @@ export const verifyOTPHandler = factory.createHandlers(
     async (c) => {
         const body = c.req.valid('json');
 
-        try {
-            const otp = c.req.param('code');
+        const isValid = await verifyOTP(body.email, body.otp);
 
-            const isValid = await verifyOTP(body.email, body.otp);
+        if (isValid) {
+            const jwtToken = jwt.sign(
+                {
+                    email: body.email,
+                },
+                process.env.AUTH_SECRET!,
+                { expiresIn: 60 * 60 }
+            );
 
-            if (isValid) {
-                const jwtToken = jwt.sign(
-                    {
-                        email: 'nndang.sc@gmail.com',
-                    },
-                    process.env.AUTH_SECRET!,
-                    { expiresIn: 60 * 60 }
-                );
-
-                return c.json({ token: jwtToken });
-            }
-            return c.json(undefined, { status: 406 });
-
-            return c.json(undefined, { status: 204 });
-        } catch (error) {
-            return c.json({ mess: (error as Error).message }, { status: 400 });
+            return c.json({ token: jwtToken });
         }
+        return c.json(undefined, { status: 406 });
     }
 );

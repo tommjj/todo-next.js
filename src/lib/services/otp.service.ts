@@ -6,7 +6,7 @@ import transporter from '../mailer/mailer.init';
 
 const OTP_EXPIRED_TIME_SECOND = 60 * 5;
 const CACHE_EXPIRED_TIME_SECOND = 60 * 60;
-const MAX_OTP_PER_EMAIL = 1;
+const MAX_OTP_PER_EMAIL = 2;
 
 export const createRandomOTP = () => {
     const otp = Math.round(Math.random() * 1000000);

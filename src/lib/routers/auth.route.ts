@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { sendOtpHandler } from '@controllers/auth.controller';
+import { sendOtpHandler, verifyOTPHandler } from '@controllers/auth.controller';
 
 const auth = new Hono();
 
@@ -8,5 +8,7 @@ const auth = new Hono();
  */
 
 auth.post('/email-verify', ...sendOtpHandler);
+
+auth.post('/otp-verify', ...verifyOTPHandler);
 
 export default auth;
