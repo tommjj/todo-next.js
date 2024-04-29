@@ -9,7 +9,13 @@ const CACHE_EXPIRED_TIME_SECOND = 60 * 60;
 const MAX_OTP_PER_EMAIL = 1;
 
 export const createRandomOTP = () => {
-    return Math.round(Math.random() * 1000000);
+    const otp = Math.round(Math.random() * 1000000);
+
+    let otpString = otp.toString();
+
+    while (otpString.length < 6) otpString = '0' + otpString;
+
+    return otpString;
 };
 
 export const sendOTP = async (email: string) => {

@@ -1,4 +1,4 @@
-export const HTML_OTP_TEMPLATE = (otp: number) => {
+export const HTML_OTP_TEMPLATE = (otp: number | string) => {
     return `<!DOCTYPE html>
     <html lang="en">
         <head>
