@@ -22,7 +22,7 @@ const defaultTaskSelect = {
 
 type TaskIdUserId = { taskId: string; userId?: string };
 
-export async function getTaskById<T extends Prisma.TaskSelect>(
+export async function findTaskById<T extends Prisma.TaskSelect>(
     { taskId, userId }: TaskIdUserId,
     select: T = defaultTaskSelect as T
 ): Promise<

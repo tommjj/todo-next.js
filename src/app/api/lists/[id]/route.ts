@@ -1,7 +1,7 @@
 import prisma from '@/lib/databases/prisma.init';
 import { CreateTaskSchema } from '@/lib/zod.schema';
 import { getSessionUser } from '@/lib/auth';
-import { getListById } from '@/lib/services/list.service';
+import { findListById } from '@/lib/services/list.service';
 import { convertTime } from '@/lib/utils';
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
     const user = await getSessionUser();
     if (!user) return new Response(undefined, { status: 401 });
 
-    const [list, err] = await getListById({
+    const [list, err] = await findListById({
         listId: params.id,
         userId: user.id,
     });
@@ -29,7 +29,7 @@ export async function POST(
         const user = await getSessionUser();
         if (!user) return new Response(undefined, { status: 401 });
 
-        const [list] = await getListById(
+        const [list] = await findListById(
             {
                 listId: params.id,
                 userId: user.id,

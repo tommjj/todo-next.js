@@ -35,12 +35,14 @@ export const defaultListSelect = {
  * ----==== GET ====----
  */
 
-export async function getListById<T extends Prisma.ListSelect>(
+export async function findListById<T extends Prisma.ListSelect>(
     { listId, userId }: { listId: string; userId?: string },
     select: T = defaultListSelect as T
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {
+    if (listId === 'todo' && userId) return getTodo({ userId: userId }, select);
+
     const list = await prisma.list.findUnique({
         select,
         where: { id: listId, userId: userId },
@@ -94,4 +96,44 @@ export async function deleteList(listId: string) {
     } catch (err) {
         return err as Error;
     }
+}
+
+export async function getTodo<T extends Prisma.ListSelect>(
+    { userId }: { userId: string },
+    select: T = defaultListSelect as T
+): Promise<
+    [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
+> {
+    const user = await prisma.user.findUnique({
+        select: { primaryList: { select: select } },
+        where: { id: userId },
+    });
+
+    if (!user?.primaryList) {
+        const newList = await prisma.list.create({
+            data: {
+                name: 'Todo',
+                userId: userId,
+            },
+        });
+
+        await prisma.user.update({
+            data: {
+                primaryListId: newList.id,
+            },
+            where: {
+                id: userId,
+            },
+        });
+
+        const user = await prisma.user.findUnique({
+            select: { primaryList: { select: select } },
+            where: { id: userId },
+        });
+
+        if (user?.primaryList) return [user.primaryList, undefined];
+        return [undefined, new Error('can not create')];
+    }
+
+    return [user.primaryList, undefined];
 }

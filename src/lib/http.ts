@@ -129,7 +129,7 @@ export async function deleteTaskById(id: string) {
 }
 
 export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
-    const [res] = await fetcher.patch.json(`/v1/api/subtask/${id}`, {
+    const [res] = await fetcher.patch.json(`/v1/api/subtasks/${id}`, {
         ...data,
     });
 
@@ -140,7 +140,7 @@ export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
 };
 
 export const deleteSubtask = async (id: string) => {
-    const [res] = await fetcher.delete(`/v1/api/subtask/${id}`);
+    const [res] = await fetcher.delete(`/v1/api/subtasks/${id}`);
 
     if (res?.ok) {
         return undefined;

@@ -1,5 +1,5 @@
 import { getSessionUser } from '@/lib/auth';
-import { getListById } from '@/lib/services/list.service';
+import { findListById } from '@/lib/services/list.service';
 
 export async function GET() {
     return new Response(undefined, { status: 204 });
@@ -12,7 +12,7 @@ export async function PATCH(
     const user = await getSessionUser();
     if (!user) return new Response(undefined, { status: 401 });
 
-    const [list] = await getListById(
+    const [list] = await findListById(
         { listId: params.id, userId: user.id },
         {
             tasks: {

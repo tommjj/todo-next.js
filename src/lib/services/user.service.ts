@@ -28,7 +28,7 @@ export async function createUser({
                 password: hashPassword,
                 List: {
                     create: {
-                        name: 'Todo',
+                        name: 'Home 🏠',
                     },
                 },
             },

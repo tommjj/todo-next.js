@@ -7,8 +7,8 @@ import {
     SubTaskUpdateSchema,
 } from '../zod.schema';
 import { createSubTask as crSubTask } from '@services/subtask.service';
-import { getListById } from '../services/list.service';
-import { getTaskById } from '../services/task.service';
+import { findListById } from '../services/list.service';
+import { findTaskById } from '../services/task.service';
 import { withError } from '../utils';
 
 const factory = new Factory();
@@ -27,7 +27,7 @@ export const createSubTask = factory.createHandlers(
 
         if (!user.id) throw new Error('HOW ?');
 
-        const [task] = await getTaskById(
+        const [task] = await findTaskById(
             {
                 taskId: body.taskId,
                 userId: user.id,

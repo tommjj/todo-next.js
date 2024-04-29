@@ -35,7 +35,7 @@ export const CreateTaskForm = ({
     const submit = useCallback(async () => {
         if (formState.title.trim() === '') return;
 
-        const [res, err] = await fetcher.post.json('/v1/api/subtask', {
+        const [res, err] = await fetcher.post.json('/v1/api/subtasks', {
             title: formState.title,
             description: formState.description,
             taskId: taskId,

@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
 import list from './list.router';
-import subtask from './subtask.route';
+import subtasks from './subtask.route';
 
 const router = new Hono();
 
 router.route('/lists', list);
 
-router.route('/subtask', subtask);
+router.route('/subtasks', subtasks);
 
 export default router;

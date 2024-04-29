@@ -1,6 +1,6 @@
 import prisma from '@/lib/databases/prisma.init';
 import { getSessionUser } from '@/lib/auth';
-import { deleteTask, getTaskById } from '@/lib/services/task.service';
+import { deleteTask, findTaskById } from '@/lib/services/task.service';
 import { TaskUpdateSchema } from '@/lib/zod.schema';
 import { Prisma } from '@prisma/client';
 import { convertTime } from '@/lib/utils';
@@ -50,7 +50,7 @@ export async function DELETE(
     const user = await getSessionUser();
     if (!user) return new Response(undefined, { status: 401 });
 
-    const [task] = await getTaskById(
+    const [task] = await findTaskById(
         { taskId: params.id, userId: user.id },
         { id: true }
     );

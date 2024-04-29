@@ -5,20 +5,20 @@ import {
     deleteSubtask,
 } from '@controllers/subtask.controller';
 
-const subtask = new Hono();
+const subtasks = new Hono();
 
 /*
- * Base path: '/subtask'
+ * Base path: '/subtasks'
  */
 
-subtask.get('/hello', async (c) => {
+subtasks.get('/hello', async (c) => {
     return c.text('HELLO');
 });
 
-subtask.patch('/:id', ...updateSubTask);
+subtasks.patch('/:id', ...updateSubTask);
 
-subtask.delete('/:id', ...deleteSubtask);
+subtasks.delete('/:id', ...deleteSubtask);
 
-subtask.post('/', ...createSubTask);
+subtasks.post('/', ...createSubTask);
 
-export default subtask;
+export default subtasks;

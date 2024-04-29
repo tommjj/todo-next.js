@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 import { createUser, getUserByUsername } from './services/user.service';
 import { deleteList, getAllListsBySession } from './services/list.service';
-import { deleteTask, getTaskById } from './services/task.service';
+import { deleteTask, findTaskById } from './services/task.service';
 
 export type State =
     | {
@@ -30,7 +30,7 @@ export async function createAccountAction(
 
     const validatedFields = AccountSchema.safeParse({
         username: newAccount.username,
-        email: 'nndang.dev@gmail.com',
+        email: 'nndang.sc@gmail.com',
         password: newAccount.password,
         confirm: newAccount.confirm,
     });
@@ -137,7 +137,7 @@ export async function deleteTaskAction(id: string) {
     const user = await getSessionUser();
     if (!user) return;
 
-    const [task, err] = await getTaskById(
+    const [task, err] = await findTaskById(
         { taskId: id, userId: user.id },
         { id: true }
     );

@@ -2,11 +2,11 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import TaskList from '@/components/ui/task/task-list';
 import { ListViewCreateTask } from '@/components/ui/task/create-task';
 import ToolBar from '@/components/ui/task/tool-bar';
-import { getListById } from '@/lib/services/list.service';
+import { findListById } from '@/lib/services/list.service';
 import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
-import { getTaskById } from '@/lib/services/task.service';
+import { findTaskById } from '@/lib/services/task.service';
 import { MainHeader } from '@/components/ui/main/main-header';
 
 type Props = {
@@ -25,7 +25,7 @@ export async function generateMetadata(
         };
 
     const id = params.board;
-    const [list, error] = await getListById(
+    const [list, error] = await findListById(
         { listId: id, userId: user.id },
         { name: true }
     );
@@ -38,7 +38,7 @@ export async function generateMetadata(
     let title = list.name;
 
     if (searchParams?.details) {
-        const [task] = await getTaskById(
+        const [task] = await findTaskById(
             { taskId: searchParams.details, userId: user.id },
             {
                 title: true,
@@ -59,13 +59,16 @@ async function Page({ params }: Props) {
     const user = await getSessionUser();
     if (!user) notFound();
 
-    const [list, error] = await getListById(
-        { listId: params.board, userId: user.id },
-        {
-            id: true,
-            name: true,
-        }
-    );
+    const [list, error] =
+        params.board === 'important'
+            ? [{ id: 'important', name: 'important' }, undefined]
+            : await findListById(
+                  { listId: params.board, userId: user.id },
+                  {
+                      id: true,
+                      name: true,
+                  }
+              );
 
     if (error) notFound();
 
