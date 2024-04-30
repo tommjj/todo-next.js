@@ -3,6 +3,7 @@ import redis from '../databases/redis.init';
 
 import { HTML_OTP_TEMPLATE } from '../mailer/mail-template';
 import transporter from '../mailer/mailer.init';
+import prisma from '../databases/prisma.init';
 
 const OTP_EXPIRED_TIME_SECOND = 60 * 5;
 const CACHE_EXPIRED_TIME_SECOND = 60 * 60;
@@ -19,6 +20,17 @@ export const createRandomOTP = () => {
 };
 
 export const sendOTP = async (email: string) => {
+    const user = await prisma.user.findUnique({
+        select: { id: true },
+        where: {
+            email: email,
+        },
+    });
+
+    if (user) {
+        throw new Error('Email is already exists!');
+    }
+
     const otp = createRandomOTP();
 
     const options: MailOptions = {

@@ -5,8 +5,16 @@ import { useFormState, useFormStatus } from 'react-dom';
 import Button from '../ui/button';
 import Link from 'next/link';
 
-function SignUpForm({ className }: { className?: string }) {
-    const [code, action] = useFormState(createAccountAction, undefined);
+function SignUpForm({
+    className,
+    token,
+}: {
+    className?: string;
+    token: string;
+}) {
+    const actionCreate = createAccountAction.bind(null, token);
+
+    const [code, action] = useFormState(actionCreate, undefined);
 
     return (
         <div
@@ -34,7 +42,7 @@ function SignUpForm({ className }: { className?: string }) {
                         >
                             Username
                         </label>
-                        <div className="mt-2">
+                        <div className="mt-1">
                             <input
                                 autoCapitalize="none"
                                 id="username"
@@ -42,7 +50,7 @@ function SignUpForm({ className }: { className?: string }) {
                                 name="username"
                                 required
                                 autoComplete="off"
-                                className="block dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
+                                className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
                                 aria-invalid={!!code?.errors?.username}
                             />
                         </div>
@@ -57,13 +65,13 @@ function SignUpForm({ className }: { className?: string }) {
                                 Password
                             </label>
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-1">
                             <input
                                 required
                                 id="password"
                                 type="password"
                                 name="password"
-                                className={`block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 ${
+                                className={`block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600 ${
                                     code?.errors?.password && 'ring-red-500'
                                 }`}
                                 aria-invalid={!!code?.errors?.password}
@@ -79,13 +87,13 @@ function SignUpForm({ className }: { className?: string }) {
                                 Confirm password
                             </label>
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-1">
                             <input
                                 required
                                 id="confirm"
                                 type="password"
                                 name="confirm"
-                                className={`block dark:bg-[#ffffff10] px-2 w-full outline-none rounded-md border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500 ${
+                                className={`block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600 ${
                                     code?.errors?.confirm && 'ring-red-600'
                                 }`}
                                 aria-invalid={!!code?.errors?.confirm}
@@ -93,7 +101,7 @@ function SignUpForm({ className }: { className?: string }) {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="pt-4">
                         <SignUpButton />
                     </div>
                 </form>
@@ -101,7 +109,7 @@ function SignUpForm({ className }: { className?: string }) {
                     Do you already have an account?
                     <Link
                         href="/sign-in"
-                        className="font-semibold leading-6 text-[#0D6EFD] hover:opacity-90"
+                        className="font-semibold leading-6 text-primary-color hover:opacity-90"
                     >
                         {' '}
                         Sign in
@@ -120,7 +128,7 @@ function SignUpButton() {
             variant="primary"
             type="submit"
             aria-disabled={pending}
-            className="w-full aria-disabled:opacity-75 aria-disabled:cursor-not-allowed mt-12 py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D6EFD]"
+            className="w-full py-2 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
         >
             Sign up
         </Button>

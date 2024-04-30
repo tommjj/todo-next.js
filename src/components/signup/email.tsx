@@ -13,6 +13,7 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
 } from '../ui-lib/ui/input-otp';
+import SignUpForm from './signup-form';
 
 export const EmailForm = () => {
     const { push } = useRouter();
@@ -128,7 +129,7 @@ const OptForm = () => {
             });
 
             if (res?.ok) {
-                push(`/sign-up/${(await res.json()).token}`);
+                push(`?token=${(await res.json()).token}`);
             } else {
                 setError('your code is not valid');
             }
@@ -168,7 +169,7 @@ const OptForm = () => {
                         A code has been sent to your email
                     </p>
 
-                    <div className="w-full mt-2">
+                    <div className="flex justify-center w-full mt-2">
                         <InputOTP
                             maxLength={6}
                             value={value}
@@ -216,8 +217,11 @@ const OptForm = () => {
 
 const EmailVerify = () => {
     const { has, get } = useSearchParams();
+    const token = get('token');
 
-    return (
+    return token ? (
+        <SignUpForm token={token}></SignUpForm>
+    ) : (
         <div
             className={`rounded-lg w-full px-4 max-w-[420px] md:px-7 pb-12 pt-4`}
         >

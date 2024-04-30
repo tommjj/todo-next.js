@@ -11,6 +11,7 @@ import { AccountSchema, CreateTaskSchema } from './zod.schema';
 import { createUser, getUserByUsername } from './services/user.service';
 import { deleteList, getAllListsBySession } from './services/list.service';
 import { deleteTask, findTaskById } from './services/task.service';
+import jwt from 'jsonwebtoken';
 
 export type State =
     | {
@@ -23,49 +24,65 @@ export type State =
     | undefined;
 
 export async function createAccountAction(
+    token: string,
     privState: State,
     formData: FormData
 ) {
-    const newAccount = Object.fromEntries(formData);
-
-    const validatedFields = AccountSchema.safeParse({
-        username: newAccount.username,
-        email: 'nndang.sc@gmail.com',
-        password: newAccount.password,
-        confirm: newAccount.confirm,
-    });
-
-    if (!validatedFields.success) {
-        return {
-            errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Create account!',
-        };
-    }
-
-    const { username, email, password, confirm } = validatedFields.data;
-
-    const user = await getUserByUsername(username);
-
-    if (user) {
-        return {
-            errors: { username: ['username is already exists'] },
-            message: 'username is already exists!',
-        };
-    }
-
-    if (password !== confirm) {
-        return {
-            errors: { username: ['username is already exists'] },
-            message: 'password is not matching!',
-        };
-    }
-
     try {
-        await createUser({ username, email, password });
-    } catch (e) {
-        console.log(e);
-    }
+        console.log(token);
+        const decoded = jwt.verify(token, process.env.AUTH_SECRET!) as {
+            email?: string;
+        };
 
+        if (!decoded?.email) {
+            return {};
+        }
+
+        const newAccount = Object.fromEntries(formData);
+
+        const validatedFields = AccountSchema.safeParse({
+            username: newAccount.username,
+            email: decoded.email,
+            password: newAccount.password,
+            confirm: newAccount.confirm,
+        });
+
+        if (!validatedFields.success) {
+            return {
+                errors: validatedFields.error.flatten().fieldErrors,
+                message: 'Missing Fields. Failed to Create account!',
+            };
+        }
+
+        const { username, email, password, confirm } = validatedFields.data;
+
+        const user = await getUserByUsername(username);
+
+        if (user) {
+            return {
+                errors: { username: ['username is already exists'] },
+                message: 'username is already exists!',
+            };
+        }
+
+        if (password !== confirm) {
+            return {
+                errors: { username: ['username is already exists'] },
+                message: 'password is not matching!',
+            };
+        }
+
+        const [, err] = await createUser({ username, email, password });
+
+        if (err)
+            return {
+                message: 'create err',
+            };
+    } catch (error) {
+        return {
+            message: 'create token err',
+        };
+    }
     redirect('/sign-in');
 }
 

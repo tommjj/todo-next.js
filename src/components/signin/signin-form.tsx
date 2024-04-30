@@ -34,7 +34,7 @@ function SignInForm({ className }: { className?: String }) {
                         >
                             Username
                         </label>
-                        <div className="mt-2">
+                        <div className="mt-1">
                             <input
                                 autoCapitalize="none"
                                 id="username"
@@ -42,7 +42,7 @@ function SignInForm({ className }: { className?: String }) {
                                 name="username"
                                 required
                                 autoComplete="off"
-                                className="block dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-1.5 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500"
+                                className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
                             />
                         </div>
                     </div>
@@ -56,19 +56,19 @@ function SignInForm({ className }: { className?: String }) {
                                 Password
                             </label>
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-1">
                             <input
                                 id="password"
                                 type="password"
                                 name="password"
                                 autoComplete="current-password"
-                                className="block px-2 w-full outline-none rounded-md border-0 py-1.5 dark:bg-[#ffffff10] text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0D6EFD] sm:text-sm sm:leading-6 dark:ring-gray-500"
+                                className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
                             />
                         </div>
                         <div className="text-sm text-right mt-1">
                             <a
                                 href="#"
-                                className=" font-semibold text-[#0D6EFD] hover:opacity-90"
+                                className=" font-semibold text-primary-color hover:opacity-90"
                             >
                                 Forgot password?
                             </a>
@@ -84,7 +84,7 @@ function SignInForm({ className }: { className?: String }) {
                     Do not have an account?
                     <Link
                         href="/sign-up"
-                        className="font-semibold leading-6 text-[#0D6EFD] hover:opacity-90"
+                        className="font-semibold leading-6 text-primary hover:opacity-90"
                     >
                         {' '}
                         create new account
@@ -102,7 +102,7 @@ function SignInButton() {
             variant="primary"
             type="submit"
             aria-disabled={pending}
-            className="w-full aria-disabled:opacity-75  py-1.5 text-sm font-semibold leading-6 shadow-s focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 aria-disabled:cursor-not-allowed"
+            className="w-full py-2 aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
         >
             Sign in
         </Button>
