@@ -56,7 +56,7 @@ const RepeatPickerData: {
         label: 'Every month',
         triggerLabel: 'M',
         icon: (
-            <BsCalendar3Week className="w-full h-full p-[1px] mr-2 text-blue-600" />
+            <BsCalendar3 className="w-full h-full p-[1px] mr-2 text-blue-600" />
         ),
     },
     YEARLY: {

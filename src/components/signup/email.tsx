@@ -101,7 +101,7 @@ export const EmailForm = () => {
                 Do you already have an account?
                 <Link
                     href="/sign-in"
-                    className="font-semibold leading-6 text-[#0D6EFD] hover:opacity-90"
+                    className="font-semibold leading-6 text-primary-color hover:opacity-90"
                 >
                     {' '}
                     Sign in
