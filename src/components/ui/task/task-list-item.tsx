@@ -27,6 +27,33 @@ import {
 import { cn } from '@/lib/utils';
 import { DateTitle } from '../date';
 
+const Color = {
+    BgColor: {
+        primary: ' ',
+        red: 'bg-red-400 bg-opacity-[0.15]',
+        amber: 'bg-amber-400 bg-opacity-[0.15]',
+        blue: 'bg-blue-400 bg-opacity-[0.15]',
+    },
+    CompletedBgColor: {
+        primary: 'bg-primary-color dark:bg-primary-color-dark',
+        red: 'bg-red-400',
+        amber: 'bg-amber-400',
+        blue: 'bg-blue-400',
+    },
+    TextColor: {
+        primary: 'text-primary-color dark:text-primary-color-dark',
+        red: 'text-red-400',
+        amber: 'text-amber-400',
+        blue: 'text-blue-400',
+    },
+    BorderColor: {
+        primary: 'border-primary-color dark:border-primary-color-dark',
+        red: 'border-red-400',
+        amber: 'border-amber-400',
+        blue: 'border-blue-400',
+    },
+};
+
 export function TaskCheckBox({
     completed,
     taskId,
@@ -48,46 +75,17 @@ export function TaskCheckBox({
         [handleToggleCompleteTask, taskId]
     );
 
-    const BgColor = cn({
-        ' ': color === 'primary',
-        'bg-red-400 bg-opacity-[0.15]': color === 'red',
-        'bg-amber-400 bg-opacity-[0.15]': color === 'amber',
-        'bg-blue-400 bg-opacity-[0.15]': color === 'blue',
-    });
-
-    const completedBgColor = cn({
-        'bg-primary-color dark:bg-primary-color-dark': color === 'primary',
-        'bg-red-400': color === 'red',
-        'bg-amber-400': color === 'amber',
-        'bg-blue-400': color === 'blue',
-    });
-
-    const textColor = cn({
-        'text-primary-color dark:text-primary-color-dark': color === 'primary',
-        'text-red-400': color === 'red',
-        'text-amber-400': color === 'amber',
-        'text-blue-400': color === 'blue',
-    });
-
-    const BorderColor = cn({
-        'border-primary-color dark:border-primary-color-dark':
-            color === 'primary',
-        'border-red-400': color === 'red',
-        'border-amber-400': color === 'amber',
-        'border-blue-400': color === 'blue',
-    });
-
     return (
         <span
-            className={`flex justify-center text-primary-color dark:text-primary-color-dark mr-[10px] ${textColor}`}
+            className={`flex justify-center text-primary-color dark:text-primary-color-dark mr-[10px] ${Color.TextColor[color]}`}
         >
             <button
                 onClick={handleClick}
                 className={`flex justify-center items-center w-4 h-4 border  rounded-full group ${clsx(
                     {
-                        [BorderColor]: true,
-                        [completedBgColor]: completed,
-                        [BgColor]: !completed,
+                        [Color.BorderColor[color]]: true,
+                        [Color.CompletedBgColor[color]]: completed,
+                        [Color.BgColor[color]]: !completed,
                     }
                 )}`}
             >
