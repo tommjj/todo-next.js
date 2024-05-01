@@ -16,9 +16,9 @@ import {
     updateSubtaskById,
     updateTaskById,
 } from '../http';
-import { CountSlice } from './count.store';
+import { CountSlice } from './lists.store';
 
-export interface ListSlice {
+export interface CurrentListSlice {
     list: List | null;
     bin: Set<string>;
 
@@ -41,11 +41,11 @@ export interface ListSlice {
     removeSubtask: (subTask: SubTask) => Sync;
 }
 
-export const createListSlice: StateCreator<
-    AppSlice & ListSlice & CountSlice,
+export const createCurrentListSlice: StateCreator<
+    AppSlice & CurrentListSlice & CountSlice,
     [],
     [],
-    ListSlice
+    CurrentListSlice
 > = (set) => ({
     list: null,
     bin: new Set<string>(),
@@ -312,4 +312,4 @@ export const createListSlice: StateCreator<
     },
 });
 
-export default createListSlice;
+export default createCurrentListSlice;

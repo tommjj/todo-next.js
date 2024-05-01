@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
-import { ListSlice, createListSlice } from './list.store';
+import { CurrentListSlice, createCurrentListSlice } from './current-list.store';
 import { AppSlice, createAppSlice } from './app.store';
-import { CountSlice, createCountSlice } from './count.store';
+import { CountSlice, createListsSlice } from './lists.store';
 
-const useStore = create<AppSlice & ListSlice & CountSlice>()((...a) => ({
+const useStore = create<AppSlice & CurrentListSlice & CountSlice>()((...a) => ({
     ...createAppSlice(...a),
-    ...createListSlice(...a),
-    ...createCountSlice(...a),
+    ...createCurrentListSlice(...a),
+    ...createListsSlice(...a),
 }));
 
 export default useStore;

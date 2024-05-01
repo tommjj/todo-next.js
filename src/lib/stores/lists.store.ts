@@ -1,11 +1,11 @@
 import { StateCreator } from 'zustand';
-import { ListSlice } from './list.store';
+import { CurrentListSlice } from './current-list.store';
 import { AppSlice } from './app.store';
 
 export interface CountSlice {}
 
-export const createCountSlice: StateCreator<
-    AppSlice & ListSlice & CountSlice,
+export const createListsSlice: StateCreator<
+    AppSlice & CurrentListSlice & CountSlice,
     [],
     [],
     CountSlice

@@ -4,11 +4,12 @@ import { cn } from '@/lib/utils';
 
 export const TaskNameInput = ({
     className,
+    onEnter,
     ...props
 }: React.DetailedHTMLProps<
     React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     HTMLTextAreaElement
-> & { submit?: () => void }) => {
+> & { onEnter?: () => void }) => {
     return (
         <textarea
             onInput={(ev) => {
@@ -21,8 +22,8 @@ export const TaskNameInput = ({
                 if (e.key === 'Enter') {
                     e.preventDefault();
 
-                    if (props.submit) {
-                        props.submit();
+                    if (onEnter) {
+                        onEnter();
                     }
                 }
             }}

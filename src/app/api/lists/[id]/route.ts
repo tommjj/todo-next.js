@@ -21,6 +21,7 @@ export async function GET(
     return Response.json({ message: err.message }, { status: 410 });
 }
 
+// TODO: change to path: tasks
 export async function POST(
     req: Request,
     { params }: { params: { id: string } }
@@ -51,7 +52,7 @@ export async function POST(
                 ...bodyParse.data,
                 subTasks: undefined, //!
                 dueDate: convertTime(bodyParse.data.dueDate),
-                listId: params.id,
+                listId: params.id, //!
             },
         });
 

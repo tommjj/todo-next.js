@@ -63,9 +63,10 @@ export const SubTaskFormEditor = ({
         >
             <div className="w-full px-[10px] pt-[10px]">
                 <TaskNameInput
-                    onSubmit={submit}
+                    onEnter={submit}
                     value={formState.title}
                     onChange={handleTaskNameChange}
+                    autoFocus
                 />
                 <DescriptionInput
                     value={formState.description}
