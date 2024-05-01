@@ -10,7 +10,6 @@ import useStore from '@/lib/stores/index.store';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 
 type FormStateType = {
-    completed: boolean;
     title: string;
     description: string;
     dueDate: Date | null;
@@ -24,7 +23,6 @@ export const DetailEditorTask = ({ task }: { task: Task }) => {
     const ref = useRef<FormStateType | undefined>(undefined);
     const updateTask = useStore((s) => s.updateTask);
     const [formState, setFormState] = useState<FormStateType>({
-        completed: task.completed,
         title: task.title,
         description: task.description || '',
         dueDate: task.dueDate || null,
@@ -39,7 +37,6 @@ export const DetailEditorTask = ({ task }: { task: Task }) => {
             const parse = TaskUpdateSchema.safeParse({ ...task, ...formState });
 
             if (parse.success) {
-                console.log(parse.data);
                 const sync = updateTask(task.id, parse.data);
                 sync.sync();
             }

@@ -5,6 +5,7 @@ import {
     MouseEventHandler,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from 'react';
@@ -15,6 +16,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import { GoWorkflow } from 'react-icons/go';
 import clsx from 'clsx';
 
 import useStore from '@/lib/stores/index.store';
@@ -28,9 +30,11 @@ import { DateTitle } from '../date';
 export function TaskCheckBox({
     completed,
     taskId,
+    color = 'primary',
 }: {
     completed: boolean;
     taskId: string;
+    color?: 'primary' | 'red' | 'amber' | 'blue';
 }) {
     const handleToggleCompleteTask = useStore(
         (state) => state.handleToggleCompleteTask
@@ -44,18 +48,54 @@ export function TaskCheckBox({
         [handleToggleCompleteTask, taskId]
     );
 
+    const BgColor = cn({
+        ' ': color === 'primary',
+        'bg-red-400 bg-opacity-[0.15]': color === 'red',
+        'bg-amber-400 bg-opacity-[0.15]': color === 'amber',
+        'bg-blue-400 bg-opacity-[0.15]': color === 'blue',
+    });
+
+    const completedBgColor = cn({
+        'bg-primary-color dark:bg-primary-color-dark': color === 'primary',
+        'bg-red-400': color === 'red',
+        'bg-amber-400': color === 'amber',
+        'bg-blue-400': color === 'blue',
+    });
+
+    const textColor = cn({
+        'text-primary-color dark:text-primary-color-dark': color === 'primary',
+        'text-red-400': color === 'red',
+        'text-amber-400': color === 'amber',
+        'text-blue-400': color === 'blue',
+    });
+
+    const BorderColor = cn({
+        'border-primary-color dark:border-primary-color-dark':
+            color === 'primary',
+        'border-red-400': color === 'red',
+        'border-amber-400': color === 'amber',
+        'border-blue-400': color === 'blue',
+    });
+
     return (
-        <span className="flex justify-center text-primary-color dark:text-primary-color-dark mr-[10px]">
+        <span
+            className={`flex justify-center text-primary-color dark:text-primary-color-dark mr-[10px] ${textColor}`}
+        >
             <button
                 onClick={handleClick}
-                className={`flex justify-center items-center w-4 h-4 border border-primary-color dark:border-primary-color-dark rounded-full group ${clsx(
-                    { 'bg-primary-color dark:bg-primary-color-dark': completed }
+                className={`flex justify-center items-center w-4 h-4 border  rounded-full group ${clsx(
+                    {
+                        [BorderColor]: true,
+                        [completedBgColor]: completed,
+                        [BgColor]: !completed,
+                    }
                 )}`}
             >
                 <CheckIcon
                     className={`h-2  ${clsx({
                         'hidden md:group-hover:block': !completed,
-                        'text-white dark:text-main-bg-color-dark': completed,
+                        'text-main-bg-color dark:text-main-bg-color-dark':
+                            completed,
                     })}`}
                     strokeWidth={3}
                 />
@@ -193,6 +233,12 @@ const TaskItem = ({ task }: { task: Task }) => {
         setOver({ dir: false, isOver: false });
     }, []);
 
+    const subTaskCompletedCount = useMemo(() => {
+        return task.subTasks.reduce((pri, cur) => {
+            return cur.completed ? pri + 1 : pri;
+        }, 0);
+    }, [task.subTasks]);
+
     return (
         <div
             ref={ref as any}
@@ -223,15 +269,40 @@ const TaskItem = ({ task }: { task: Task }) => {
                 }
             )}
         >
-            <TaskCheckBox completed={task.completed} taskId={task.id} />
+            <TaskCheckBox
+                completed={task.completed}
+                color={
+                    (task.priority === 'PRIORITY4' && 'primary') ||
+                    (task.priority === 'PRIORITY3' && 'blue') ||
+                    (task.priority === 'PRIORITY2' && 'amber') ||
+                    (task.priority === 'PRIORITY1' && 'red') ||
+                    'primary'
+                }
+                taskId={task.id}
+            />
 
             <div
                 className={cn('text-[#444] dark:text-inherit flex-grow touch')}
             >
                 <p className="text-sm">{task.title}</p>
-                <p className="text-xs font-light">
-                    {task.dueDate && <DateTitle date={task.dueDate} />}
-                </p>
+                <div className="flex gap-2.5 mt-0.5">
+                    {task.subTasks.length > 0 && (
+                        <span className="flex items-center text-xs font-light">
+                            <GoWorkflow className="mr-1 w-[0.6rem] h-[0.6rem]" />
+                            {`${subTaskCompletedCount}/${task.subTasks.length}`}
+                        </span>
+                    )}
+                    <span className="text-xs font-light">
+                        {task.dueDate && (
+                            <DateTitle
+                                className="flex items-center "
+                                date={task.dueDate}
+                                withIcon={true}
+                                iconClassName="mr-1 w-[0.58rem] h-[0.58rem]"
+                            />
+                        )}
+                    </span>
+                </div>
             </div>
             <Important important={task.important} taskId={task.id} />
         </div>

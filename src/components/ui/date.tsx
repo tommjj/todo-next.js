@@ -1,7 +1,18 @@
 import { useMemo, useState } from 'react';
 import { Days, Months, cn, getDateOffset } from '@/lib/utils';
+import { BsCalendar } from 'react-icons/bs';
 
-export const DateTitle = ({ date }: { date: Date }) => {
+export const DateTitle = ({
+    date,
+    withIcon = false,
+    className,
+    iconClassName,
+}: {
+    date: Date;
+    withIcon?: boolean;
+    className?: string;
+    iconClassName?: string;
+}) => {
     const [now] = useState(new Date());
 
     const offset = useMemo(() => getDateOffset(now, date), [date, now]);
@@ -21,13 +32,17 @@ export const DateTitle = ({ date }: { date: Date }) => {
 
     return (
         <span
-            className={cn({
-                'text-red-600': offset < 0,
-                'text-green-600': offset === 0,
-                'text-amber-600': offset === 1,
-                'text-indigo-600': offset && 1 < offset && offset < 7,
-            })}
+            className={cn(
+                {
+                    'text-red-600': offset < 0,
+                    'text-green-600': offset === 0,
+                    'text-amber-600': offset === 1,
+                    'text-indigo-600': offset && 1 < offset && offset < 7,
+                },
+                className
+            )}
         >
+            {withIcon && <BsCalendar className={iconClassName}></BsCalendar>}
             {dateString}
         </span>
     );

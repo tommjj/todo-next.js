@@ -74,11 +74,12 @@ export const DueDatePicker = ({
 
     const handleSetNextMonth = useCallback(() => {
         const now = new Date();
-        now.setMilliseconds(1);
-        now.setSeconds(0);
-        now.setHours(0);
-        now.setDate(0);
+
         now.setMonth(now.getMonth() + 1);
+        now.setDate(1);
+        now.setHours(0);
+        now.setSeconds(0);
+        now.setMilliseconds(0);
 
         handleSelectDay(now);
     }, [handleSelectDay]);
