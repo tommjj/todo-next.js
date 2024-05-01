@@ -85,6 +85,7 @@ export const CreateTaskForm = ({
     const submit = useCallback(async () => {
         if (formState.title.trim() === '') return;
 
+        console.log(formState.repeatCount);
         const parse = CreateTaskSchema.safeParse(formState);
         if (!parse.success) return;
 

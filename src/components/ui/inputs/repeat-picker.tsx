@@ -109,7 +109,7 @@ export const RepeatPicker = ({
                 });
             }}
             onClose={() => {
-                setRepeatState({
+                handleChanged({
                     ...repeatState,
                     repeatCount: Number(inputRef.current?.value || 0),
                 });

@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
-import { sendOTP, verifyOTP } from '@/lib/services/otp.service';
+import { sendCreateAccountOTP, verifyOTP } from '@/lib/services/otp.service';
 import jwt from 'jsonwebtoken';
 
 const app = new Hono().basePath('/v1/api/');

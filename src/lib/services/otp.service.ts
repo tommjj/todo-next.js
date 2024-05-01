@@ -19,7 +19,7 @@ export const createRandomOTP = () => {
     return otpString;
 };
 
-export const sendOTP = async (email: string) => {
+export const sendCreateAccountOTP = async (email: string) => {
     const user = await prisma.user.findUnique({
         select: { id: true },
         where: {

@@ -3,7 +3,7 @@ import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { z } from 'zod';
-import { sendOTP, verifyOTP } from '../services/otp.service';
+import { sendCreateAccountOTP, verifyOTP } from '../services/otp.service';
 import jwt from 'jsonwebtoken';
 
 const factory = new Factory();
@@ -18,7 +18,7 @@ export const sendOtpHandler = factory.createHandlers(
         const body = c.req.valid('json');
 
         try {
-            await sendOTP(body.email);
+            await sendCreateAccountOTP(body.email);
             return c.json(undefined, { status: 204 });
         } catch (error) {
             return c.json({ mess: (error as Error).message }, { status: 400 });

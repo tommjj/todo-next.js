@@ -125,7 +125,6 @@ export type SubTaskCreateWithoutIdAndTaskId = z.infer<
 >;
 
 export const CreateTaskSchema = z.object({
-    id: z.string().optional(),
     title: z.string().min(1),
     important: z.boolean().optional(),
     completed: z.boolean().optional(),
@@ -136,7 +135,6 @@ export const CreateTaskSchema = z.object({
     priority: z.nullable(Priority).optional(),
     listId: z.string().optional(),
     order: z.number().optional(),
-    createAt: z.coerce.date().optional(),
     subTasks: z.array(SubTaskCreateWithoutIdSchema).optional(),
 });
 
