@@ -57,6 +57,11 @@ export const ListSchema = z.object({
 });
 export type List = z.infer<typeof ListSchema>;
 
+export const ListWithoutTasksSchema = ListSchema.omit({
+    tasks: true,
+});
+export type ListWithoutTasksType = z.infer<typeof ListWithoutTasksSchema>;
+
 export const UserSchema = z.object({
     id: z.string(),
     email: z.string().email(),

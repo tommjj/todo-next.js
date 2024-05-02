@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import type { Account } from '@/lib/definitions';
 import prisma from '../databases/prisma.init';
 import { User } from '.prisma/client';
+import { getTodo } from './list.service';
 
 export async function getUserByUsername(username: string) {
     try {
@@ -33,6 +34,9 @@ export async function createUser({
                 },
             },
         });
+
+        await getTodo({ userId: user.id });
+
         return [user, undefined];
     } catch (error) {
         return [undefined, error as Error];
