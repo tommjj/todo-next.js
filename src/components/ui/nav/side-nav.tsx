@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 
 import { Lists } from '@/lib/definitions';
 import clsx from 'clsx';
-import CreateListForm from '../create-list/create-list-form';
+import CreateListForm from '../lists/create-list-form';
 import {
     ListBulletIcon,
     EllipsisVerticalIcon,

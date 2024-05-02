@@ -1,4 +1,4 @@
-import CreateListForm from '@/components/ui/create-list/create-list-form';
+import CreateListForm from '@/components/ui/lists/create-list-form';
 import { getSessionUser } from '@/lib/auth';
 import prisma from '@/lib/databases/prisma.init';
 import { notFound, redirect } from 'next/navigation';

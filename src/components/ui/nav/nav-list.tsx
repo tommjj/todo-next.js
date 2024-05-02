@@ -5,7 +5,7 @@ import { GoHash } from 'react-icons/go';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
-import CreateListForm from '../create-list/list-create';
+import CreateListForm from '../lists/list-create';
 import { buttonProps, getButtonClassName } from './nav-buttons';
 import useStore from '@/lib/stores/index.store';
 import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -13,7 +13,6 @@ import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
 import AlertDialog, {
@@ -26,15 +25,19 @@ import AlertDialog, {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '../alert-dialog/alert-dialog';
+import ListEditor from '../lists/list-editor';
+import { FaRegEdit } from 'react-icons/fa';
 
 export const NavLink = ({
     list,
+    setEditor,
 }: {
     list: {
         id: string;
         name: string;
         color: string | null;
     };
+    setEditor: (id: string) => void;
 }) => {
     const { board } = useParams();
 
@@ -48,6 +51,10 @@ export const NavLink = ({
         }
         sync();
     }, [board, list.id, removeList, push]);
+
+    const handleSetEditor = useCallback(() => {
+        setEditor(list.id);
+    }, [list.id, setEditor]);
 
     return (
         <div className="flex items-center group">
@@ -77,6 +84,17 @@ export const NavLink = ({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                        <Button
+                            onClick={handleSetEditor}
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                ' w-36 px-3 py-1 flex justify-start items-center font-light mb-1'
+                            )}
+                        >
+                            <FaRegEdit className="h-4 mr-2 opacity-90 mb-[1px]" />
+                            Edit
+                        </Button>
                         <AlertDialog>
                             <AlertDialogTrigger>
                                 <Button
@@ -127,8 +145,12 @@ export const NavLink = ({
 export const NavLinks = () => {
     const lists = useStore((s) => s.lists);
     const [isOpen, setIsOpen] = useState(true);
+    const [editId, setEditId] = useState<undefined | string>(undefined);
 
     const toggleList = useCallback(() => setIsOpen((priv) => !priv), []);
+    const handleCloseEdit = useCallback(() => {
+        setEditId(undefined);
+    }, []);
 
     return (
         <div className="px-[10px] w-full mt-5">
@@ -158,7 +180,11 @@ export const NavLinks = () => {
             >
                 {lists.map((item) => (
                     <li key={item.id}>
-                        <NavLink list={item} />
+                        {editId === item.id ? (
+                            <ListEditor list={item} onClose={handleCloseEdit} />
+                        ) : (
+                            <NavLink setEditor={setEditId} list={item} />
+                        )}
                     </li>
                 ))}
 
