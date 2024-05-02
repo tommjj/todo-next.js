@@ -74,7 +74,13 @@ async function Page({ params }: Props) {
 
     return (
         <main className="w-full h-full overflow-y-auto custom-scrollbar">
-            <MainHeader list={list} />
+            <MainHeader
+                list={
+                    params.board === 'important' || params.board === 'todo'
+                        ? undefined
+                        : list
+                }
+            />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <ToolBar list={list} />

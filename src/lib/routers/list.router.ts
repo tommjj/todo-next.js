@@ -3,6 +3,7 @@ import {
     getListHandler,
     getAllListsDetailsHandler,
     deleteListHandler,
+    createListHandler,
 } from '@controllers/list.controller';
 
 const list = new Hono();
@@ -14,6 +15,8 @@ const list = new Hono();
 list.get('/', ...getAllListsDetailsHandler);
 
 list.get('/:id', ...getListHandler);
+
+list.post('/', ...createListHandler);
 
 list.delete('/:id', ...deleteListHandler);
 

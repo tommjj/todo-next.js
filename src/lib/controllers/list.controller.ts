@@ -4,6 +4,7 @@ import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { deleteList, getTodo } from '../services/list.service';
 import { withError } from '../utils';
+import { CreateListSchema } from '../zod.schema';
 
 const factory = new Factory();
 
@@ -69,7 +70,25 @@ export const getListHandler = factory.createHandlers(auth, async (c) => {
  * @path:: /lists
  * @method:: POST
  */
-export const createListHandler = factory.createHandlers(auth, async (c) => {});
+export const createListHandler = factory.createHandlers(
+    auth,
+    zValidator('json', CreateListSchema),
+    async (c) => {
+        const user = c.get('user');
+        const body = c.req.valid('json');
+
+        const [data, err] = await withError(prisma.list.create)({
+            data: {
+                ...body,
+                userId: user.id,
+            },
+        });
+
+        if (!data) return c.json(undefined, 500);
+
+        return c.json({ data: data });
+    }
+);
 
 /*
  * @path:: /lists/:id

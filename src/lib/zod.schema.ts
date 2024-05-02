@@ -16,6 +16,17 @@ export const Priority = z.enum([
     'PRIORITY4',
 ]);
 
+export const ListColor = z.enum([
+    'RED',
+    'PURPLE',
+    'GREEN',
+    'BLUE',
+    'YELLOW',
+    'BLACK',
+    'ORANGE',
+    'NONE',
+]);
+
 export const EmptyStringToNull = z.preprocess.bind(null, (e) =>
     e === '' ? null : e
 );
@@ -104,6 +115,12 @@ export type TaskUpdate = z.infer<typeof TaskUpdateSchema>;
  *   CREATE SCHEMA
  */
 
+export const CreateListSchema = z.object({
+    name: z.string().min(3),
+    color: ListColor.optional(),
+});
+export type CreateListType = z.infer<typeof CreateListSchema>;
+
 export const SubTaskCreateSchema = z.object({
     id: z.string().optional(),
     title: z.string(),
@@ -111,11 +128,9 @@ export const SubTaskCreateSchema = z.object({
     completed: z.boolean().optional(),
     taskId: z.string(),
 });
-
 export const SubTaskCreateWithoutIdSchema = SubTaskCreateSchema.omit({
     id: true,
 });
-
 export type SubTaskCreateWithoutId = z.infer<
     typeof SubTaskCreateWithoutIdSchema
 >;
