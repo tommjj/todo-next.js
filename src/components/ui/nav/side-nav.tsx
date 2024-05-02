@@ -44,7 +44,7 @@ import { ResizeContainer } from '../resize-container';
 import { cn } from '@/lib/utils';
 import { NavLinks } from './nav-list';
 
-function Nav({ lists }: { lists: Lists }) {
+function Nav() {
     const { isOpen, width, setWidth, closeNav, openNav, toggleNav } =
         useNavContext();
     const [isSmS, setIsSmS] = useState(false);
@@ -119,7 +119,7 @@ function Nav({ lists }: { lists: Lists }) {
 
                             <AddTaskButton />
                             <NavItems />
-                            <NavLinks lists={lists} />
+                            <NavLinks />
                         </div>
                     </nav>
                 </ResizeContainer>

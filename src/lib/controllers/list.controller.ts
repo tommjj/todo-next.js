@@ -2,7 +2,7 @@ import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { getTodo } from '../services/list.service';
+import { deleteList, getTodo } from '../services/list.service';
 import { withError } from '../utils';
 
 const factory = new Factory();
@@ -14,9 +14,9 @@ const factory = new Factory();
 export const getAllListsDetailsHandler = factory.createHandlers(
     auth,
     async (c) => {
-        const session = c.get('user');
+        const user = c.get('user');
         const [primaryList] = await getTodo(
-            { userId: session.id },
+            { userId: user.id },
             { id: true, name: true, userId: true, color: true }
         );
 
@@ -26,7 +26,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
                 NOT: {
                     id: primaryList?.id,
                 },
-                userId: session.id,
+                userId: user.id,
             },
         });
 
@@ -35,7 +35,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
             where: {
                 Share: {
                     some: {
-                        userId: session.id,
+                        userId: user.id,
                     },
                 },
             },
@@ -77,6 +77,27 @@ export const createListHandler = factory.createHandlers(auth, async (c) => {});
  */
 export const updateListHandler = factory.createHandlers(auth, async (c) => {
     const { id } = c.req.param();
+});
+
+/*
+ * @path:: /lists/:id
+ * @method:: DELETE
+ */
+
+export const deleteListHandler = factory.createHandlers(auth, async (c) => {
+    const { id } = c.req.param();
+    const user = c.get('user');
+
+    const list = await prisma.list.findUnique({
+        select: { id: true },
+        where: { id, userId: user.id },
+    });
+
+    if (!list) return c.json(undefined, { status: 401 });
+
+    const err = await deleteList(id);
+
+    return c.json(undefined, { status: err ? 401 : 204 });
 });
 
 /*

@@ -16,7 +16,7 @@ import {
     updateSubtaskById,
     updateTaskById,
 } from '../http';
-import { CountSlice } from './lists.store';
+import { ListsSlice } from './lists.store';
 
 export interface CurrentListSlice {
     list: List | null;
@@ -42,7 +42,7 @@ export interface CurrentListSlice {
 }
 
 export const createCurrentListSlice: StateCreator<
-    AppSlice & CurrentListSlice & CountSlice,
+    AppSlice & CurrentListSlice & ListsSlice,
     [],
     [],
     CurrentListSlice

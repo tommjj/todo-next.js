@@ -1,29 +1,132 @@
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Button from '../button';
-import { Lists } from '@/lib/definitions';
 
 import { GoHash } from 'react-icons/go';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
 import CreateListForm from '../create-list/create-list-form';
-import { getButtonClassName } from './nav-buttons';
+import { buttonProps, getButtonClassName } from './nav-buttons';
+import useStore from '@/lib/stores/index.store';
+import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
 
-export const NavLink = () => {
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '../drop-down-menu/drop-down-menu';
+import AlertDialog, {
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '../alert-dialog/alert-dialog';
+
+export const NavLink = ({
+    list,
+}: {
+    list: {
+        id: string;
+        name: string;
+        color: string | null;
+    };
+}) => {
+    const { board } = useParams();
+
+    const { push } = useRouter();
+    const removeList = useStore((s) => s.removeList);
+
+    const handleDelete = useCallback(() => {
+        const { sync, nextId, privId } = removeList(list.id);
+        if (board === list.id) {
+            push(`/tasks/${privId || nextId || 'todo'}`);
+        }
+        sync();
+    }, [board, list.id, removeList, push]);
+
     return (
-        <Button variant="ghost" className={getButtonClassName(false)}>
-            <div>
-                <GoHash className="w-6 h-6 p-[0.20rem] mr-[8px] text-[#444] dark:text-inherit" />
+        <div className="flex items-center group">
+            <Button
+                variant="ghost"
+                href={`/tasks/${list.id}`}
+                className={`${getButtonClassName(board === list.id)} `}
+            >
+                <div>
+                    <GoHash className="w-6 h-6 p-[0.20rem] mr-[8px] text-[#444] dark:text-inherit" />
+                </div>
+                <div className="flex-grow line-clamp-1 text-left">
+                    {list.name}
+                </div>
+            </Button>
+            <div className="absolute right-4">
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                'p-[1px] select-none opacity-0 group-hover:opacity-50'
+                            )}
+                        >
+                            <EllipsisHorizontalIcon className="h-[20px] w-[20px] " />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <AlertDialog>
+                            <AlertDialogTrigger>
+                                <Button
+                                    variant="ghost"
+                                    className={cn(
+                                        buttonProps.className,
+                                        ' w-36 px-3 py-1 text-red-600 flex justify-start items-center font-light'
+                                    )}
+                                >
+                                    <TrashIcon className="h-4 mr-2" />
+                                    Delete list
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Are you absolutely sure?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will
+                                        permanently delete your list and remove
+                                        all data of list from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                        Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <Button
+                                            onClick={handleDelete}
+                                            type="button"
+                                            variant="destructive"
+                                        >
+                                            Continue
+                                        </Button>
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
-            <div className="flex-grow line-clamp-1 text-left">List #1</div>
-        </Button>
+        </div>
     );
 };
 
-export const NavLinks = ({ lists }: { lists: Lists }) => {
+export const NavLinks = () => {
+    const lists = useStore((s) => s.lists);
     const [isOpen, setIsOpen] = useState(true);
-
-    const { board } = useParams();
 
     const toggleList = useCallback(() => setIsOpen((priv) => !priv), []);
 
@@ -53,14 +156,12 @@ export const NavLinks = ({ lists }: { lists: Lists }) => {
                     maxHeight: `${isOpen ? (1 + lists.length) * 50 : 0}px`,
                 }}
             >
-                {/* {lists.map((item) => (
-                <li key={item.id}>
-                    <NavLink active={`${item.id}` === board} list={item} />
-                </li>
-            ))} */}
-                <li>
-                    <NavLink />
-                </li>
+                {lists.map((item) => (
+                    <li key={item.id}>
+                        <NavLink list={item} />
+                    </li>
+                ))}
+
                 <li>
                     <CreateListForm />
                 </li>

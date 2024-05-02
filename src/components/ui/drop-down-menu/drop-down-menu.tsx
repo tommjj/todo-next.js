@@ -205,6 +205,7 @@ export function DropdownMenuTrigger({
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(
         (e) => {
+            e.preventDefault();
             e.stopPropagation();
             open();
         },

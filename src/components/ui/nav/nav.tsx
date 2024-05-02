@@ -1,12 +1,17 @@
-'use server';
+'use client';
 
 import { getAllListsBySession } from '@/lib/services/list.service';
 
 import Nav from './side-nav';
+import useStore from '@/lib/stores/index.store';
+import { useLayoutEffect } from 'react';
 
-export default async function SideNav() {
-    const [lists, err] = await getAllListsBySession();
+export default function SideNav() {
+    const fetchLists = useStore((s) => s.fetchLists);
 
-    if (err) return null;
-    return <Nav lists={lists} />;
+    useLayoutEffect(() => {
+        fetchLists();
+    }, [fetchLists]);
+
+    return <Nav />;
 }

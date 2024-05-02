@@ -2,9 +2,9 @@ import { create } from 'zustand';
 
 import { CurrentListSlice, createCurrentListSlice } from './current-list.store';
 import { AppSlice, createAppSlice } from './app.store';
-import { CountSlice, createListsSlice } from './lists.store';
+import { ListsSlice, createListsSlice } from './lists.store';
 
-const useStore = create<AppSlice & CurrentListSlice & CountSlice>()((...a) => ({
+const useStore = create<AppSlice & CurrentListSlice & ListsSlice>()((...a) => ({
     ...createAppSlice(...a),
     ...createCurrentListSlice(...a),
     ...createListsSlice(...a),
