@@ -5,7 +5,7 @@ import { GoHash } from 'react-icons/go';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
-import CreateListForm from '../create-list/create-list-form';
+import CreateListForm from '../create-list/list-create';
 import { buttonProps, getButtonClassName } from './nav-buttons';
 import useStore from '@/lib/stores/index.store';
 import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
