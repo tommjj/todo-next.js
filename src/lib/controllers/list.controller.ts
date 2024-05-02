@@ -4,7 +4,7 @@ import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { deleteList, getTodo } from '../services/list.service';
 import { withError } from '../utils';
-import { CreateListSchema } from '../zod.schema';
+import { ListCreateSchema, ListUpdateSchema } from '../zod.schema';
 
 const factory = new Factory();
 
@@ -23,6 +23,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
 
         const ListsPromise = await withError(prisma.list.findMany)({
             select: { id: true, name: true, userId: true, color: true },
+
             where: {
                 NOT: {
                     id: primaryList?.id,
@@ -33,6 +34,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
 
         const shareListsPromise = withError(prisma.list.findMany)({
             select: { id: true, name: true, userId: true, color: true },
+
             where: {
                 Share: {
                     some: {
@@ -72,7 +74,7 @@ export const getListHandler = factory.createHandlers(auth, async (c) => {
  */
 export const createListHandler = factory.createHandlers(
     auth,
-    zValidator('json', CreateListSchema),
+    zValidator('json', ListCreateSchema),
     async (c) => {
         const user = c.get('user');
         const body = c.req.valid('json');
@@ -94,9 +96,25 @@ export const createListHandler = factory.createHandlers(
  * @path:: /lists/:id
  * @method:: PATCH
  */
-export const updateListHandler = factory.createHandlers(auth, async (c) => {
-    const { id } = c.req.param();
-});
+export const updateListHandler = factory.createHandlers(
+    auth,
+    zValidator('json', ListUpdateSchema),
+    async (c) => {
+        const body = c.req.valid('json');
+        const user = c.get('user');
+        const { id } = c.req.param();
+
+        const [data, err] = await withError(prisma.list.update)({
+            data: body,
+            where: {
+                id: id,
+                userId: user.id,
+            },
+        });
+
+        return c.json(undefined, err ? 401 : 204);
+    }
+);
 
 /*
  * @path:: /lists/:id

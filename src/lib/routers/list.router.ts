@@ -4,6 +4,7 @@ import {
     getAllListsDetailsHandler,
     deleteListHandler,
     createListHandler,
+    updateListHandler,
 } from '@controllers/list.controller';
 
 const list = new Hono();
@@ -17,6 +18,8 @@ list.get('/', ...getAllListsDetailsHandler);
 list.get('/:id', ...getListHandler);
 
 list.post('/', ...createListHandler);
+
+list.patch('/:id', ...updateListHandler);
 
 list.delete('/:id', ...deleteListHandler);
 

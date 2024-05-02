@@ -85,6 +85,12 @@ export type User = z.infer<typeof UserSchema>;
  * ----==== UPDATE SCHEMA ====----
  */
 
+export const ListUpdateSchema = z.object({
+    name: z.string().min(1).optional(),
+    color: ListColor.optional(),
+});
+export type ListUpdateType = z.infer<typeof ListUpdateSchema>;
+
 export const SubTaskUpdateSchema = z.object({
     id: z.string().optional(),
     title: z.string().optional(),
@@ -115,11 +121,11 @@ export type TaskUpdate = z.infer<typeof TaskUpdateSchema>;
  *   CREATE SCHEMA
  */
 
-export const CreateListSchema = z.object({
-    name: z.string().min(3),
+export const ListCreateSchema = z.object({
+    name: z.string().min(1),
     color: ListColor.optional(),
 });
-export type CreateListType = z.infer<typeof CreateListSchema>;
+export type ListCreateType = z.infer<typeof ListCreateSchema>;
 
 export const SubTaskCreateSchema = z.object({
     id: z.string().optional(),

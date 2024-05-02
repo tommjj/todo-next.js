@@ -1,7 +1,7 @@
 import { StateCreator } from 'zustand';
 import { CurrentListSlice } from './current-list.store';
 import { AppSlice } from './app.store';
-import { CreateListType, ListWithoutTasksType } from '@/lib/zod.schema';
+import { ListCreateType, ListWithoutTasksType } from '@/lib/zod.schema';
 import { fetcher } from '../http';
 import { Sync } from './type.store';
 
@@ -11,7 +11,7 @@ export interface ListsSlice {
     shareLists: ListWithoutTasksType[];
     fetchLists: () => void;
     addListSync: (
-        data: CreateListType
+        data: ListCreateType
     ) => Promise<ListWithoutTasksType | undefined>;
     removeList: (id: string) => Sync & { nextId?: string; privId?: string };
 }
