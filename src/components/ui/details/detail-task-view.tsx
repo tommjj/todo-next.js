@@ -11,11 +11,11 @@ export const NotFound = () => {
 
 export const DetailTaskView = (props: { taskId?: string }) => {
     const [taskId, setTaskId] = useState(props.taskId);
-    const list = useStore((state) => state.list);
+    const tasks = useStore((state) => state.tasks);
 
     const task = useMemo(() => {
-        return list && list.tasks?.find((e) => e.id === taskId);
-    }, [list, taskId]);
+        return tasks.find((e) => e.id === taskId);
+    }, [taskId, tasks]);
 
     useLayoutEffect(() => {
         if (props.taskId) {

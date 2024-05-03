@@ -8,6 +8,7 @@ import {
 } from '@/lib/zod.schema';
 import { fetcher } from '../http';
 import { Sync } from './type.store';
+import { TasksSlice } from './tasks.store';
 
 export interface ListsSlice {
     primary?: ListWithoutTasksType;
@@ -22,7 +23,7 @@ export interface ListsSlice {
 }
 
 export const createListsSlice: StateCreator<
-    AppSlice & CurrentListSlice & ListsSlice,
+    AppSlice & CurrentListSlice & ListsSlice & TasksSlice,
     [],
     [],
     ListsSlice

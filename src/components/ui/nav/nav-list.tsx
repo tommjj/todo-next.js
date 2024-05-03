@@ -83,7 +83,7 @@ export const NavLink = ({
                             <EllipsisHorizontalIcon className="h-[20px] w-[20px] " />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
+                    <DropdownMenuContent className="p-1">
                         <Button
                             onClick={handleSetEditor}
                             variant="ghost"

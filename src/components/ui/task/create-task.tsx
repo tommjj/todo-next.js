@@ -45,7 +45,7 @@ export const CreateTaskForm = ({
         important: false,
     });
 
-    const listId = useStore((s) => s.list?.id); // !
+    const listId = useStore((s) => s.currentList?.id); // !
     const addTask = useStore((s) => s.addTask);
     ListId = ListId || listId;
 

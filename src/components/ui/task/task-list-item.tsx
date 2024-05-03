@@ -81,7 +81,7 @@ export function TaskCheckBox({
         >
             <button
                 onClick={handleClick}
-                className={`flex justify-center items-center w-4 h-4 border  rounded-full group ${clsx(
+                className={`flex justify-center items-center w-[1.1rem] h-[1.1rem] border  rounded-full group ${clsx(
                     {
                         [Color.BorderColor[color]]: true,
                         [Color.CompletedBgColor[color]]: completed,
@@ -90,7 +90,7 @@ export function TaskCheckBox({
                 )}`}
             >
                 <CheckIcon
-                    className={`h-2  ${clsx({
+                    className={`h-2.5  ${clsx({
                         'hidden md:group-hover:block': !completed,
                         'text-main-bg-color dark:text-main-bg-color-dark':
                             completed,
@@ -163,7 +163,7 @@ export const RemoveAnimation = ({
             {isNull ? null : children ? (
                 <>{children}</>
             ) : (
-                <div className="animate-remove w-full h-[58px]"></div>
+                <div className="animate-remove w-full h-[52px]"></div>
             )}
         </>
     );
@@ -172,7 +172,7 @@ export const RemoveAnimation = ({
 const TaskItem = ({ task }: { task: Task }) => {
     const { push } = useRouter();
     const moveItemById = useStore((state) => state.moveItemById);
-    const listId = useStore((state) => state.list?.id);
+    const listId = useStore((state) => state.currentList?.id);
 
     const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,

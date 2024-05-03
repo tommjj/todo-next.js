@@ -25,12 +25,12 @@ export default function DetailsContainer({ id }: { id?: string }) {
     const [width] = useState(getStateFromStorage() || 360);
     const [maxWidth, setMaxWidth] = useState(900);
     const { board } = useParams();
-    const list = useStore((state) => state.list);
+    const tasks = useStore((state) => state.tasks);
     const ref = useRef<HTMLDivElement>(null);
 
     const { push } = useRouter();
 
-    const task = list && list.tasks?.find((e) => e.id === id);
+    const task = tasks.find((e) => e.id === id);
 
     const handleClose = useCallback(() => {
         push(`/tasks/${board}`);

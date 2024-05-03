@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { DNDProvider, DnDContainer } from '../drag-a-drop/drag-a-drop';
 
 function CompletedTskList() {
-    const tasks = useStore((state) => state.list?.tasks);
+    const tasks = useStore((state) => state.tasks);
     const bin = useStore((state) => state.bin);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -56,19 +56,18 @@ function CompletedTskList() {
 }
 
 const TodoList = () => {
-    const list = useStore((state) => state.list);
+    const tasks = useStore((state) => state.tasks);
     const bin = useStore((state) => state.bin);
 
     return (
         <>
-            {list &&
-                list.tasks?.map((task) => (
-                    <RemoveAnimation key={`todo::${task.id}`}>
-                        {task.completed || bin.has(task.id) ? null : (
-                            <TaskItem task={task} />
-                        )}
-                    </RemoveAnimation>
-                ))}
+            {tasks.map((task) => (
+                <RemoveAnimation key={`todo::${task.id}`}>
+                    {task.completed || bin.has(task.id) ? null : (
+                        <TaskItem task={task} />
+                    )}
+                </RemoveAnimation>
+            ))}
         </>
     );
 };
