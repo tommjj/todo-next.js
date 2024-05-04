@@ -9,6 +9,7 @@ import { getSessionUser } from '@/lib/auth';
 import { findTaskById } from '@/lib/services/task.service';
 import { AppHeader } from '@/components/ui/header/main-header';
 import { ListPage } from '@/components/ui/app-page/list-page';
+import { TodoPage } from '@/components/ui/app-page/todo-page';
 
 type Props = {
     params: { board: string };
@@ -57,6 +58,12 @@ export async function generateMetadata(
 }
 
 async function Page({ params }: Props) {
+    let Comp = ListPage;
+
+    if (params.board === 'todo') {
+        Comp = TodoPage;
+    }
+
     return (
         <main className="w-full h-full overflow-y-auto custom-scrollbar">
             {/* <AppHeader
@@ -79,7 +86,7 @@ async function Page({ params }: Props) {
                     </div>
                 </div>
             </div> */}
-            <ListPage />
+            <Comp />
         </main>
     );
 }
