@@ -2,20 +2,20 @@
 
 import { getListById } from '@/lib/http';
 import useStore from '@/lib/stores/index.store';
-import { useParams, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useLayoutEffect } from 'react';
 
 function FetchList(props: { id: string }) {
     const setList = useStore((state) => state.setList);
     const { board } = useParams();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         getListById(props.id).then(([list]) => {
             if (list) setList(list);
         });
     }, [props.id, setList]);
 
-    useEffect(
+    useLayoutEffect(
         () => () => {
             setList(null);
         },

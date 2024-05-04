@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
 import { findTaskById } from '@/lib/services/task.service';
-import { MainHeader } from '@/components/ui/main/main-header';
+import { MainHeader } from '@/components/ui/header/main-header';
 
 type Props = {
     params: { board: string };

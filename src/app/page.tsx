@@ -7,7 +7,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/drop-down-menu/drop-down-menu';
-import Header from '@/components/ui/header';
+import Header from '@/components/ui/header/header';
 import UserButton from '@/components/ui/user-button';
 import { ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 import { CiFlag1 } from 'react-icons/ci';

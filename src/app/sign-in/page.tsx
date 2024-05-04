@@ -1,6 +1,6 @@
 import Logo from '@/components/logo';
 import SignInForm from '@/components/signin/signin-form';
-import Header from '@/components/ui/header';
+import Header from '@/components/ui/header/header';
 
 function SignInPage() {
     return (

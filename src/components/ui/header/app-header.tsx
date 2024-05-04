@@ -1,7 +1,7 @@
-import Logo from '../logo';
+import Logo from '../../logo';
 import Header from './header';
 import { getSessionUser } from '@/lib/auth';
-import { UserMenu } from './user-button';
+import { UserMenu } from '../user-button';
 
 async function AppHeader() {
     const user = await getSessionUser();

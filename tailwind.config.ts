@@ -91,7 +91,7 @@ const config = {
                     '0%': { transform: 'scale(0.6)' },
                 },
                 expand: {
-                    from: { height: '0', opacity: '0' },
+                    from: { transform: 'translateY(-50px)', opacity: '0' },
                 },
                 expandX: {
                     '0%': { transform: 'translateX(100%)', opacity: '0' },

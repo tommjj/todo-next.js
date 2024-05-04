@@ -1,7 +1,7 @@
 import Logo from '@/components/logo';
 import EmailVerify from '@/components/signup/email';
 import SignUpForm from '@/components/signup/signup-form';
-import Header from '@/components/ui/header';
+import Header from '@/components/ui/header/header';
 
 function SignUpPage() {
     return (
