@@ -24,7 +24,7 @@ import { useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useStore from '@/lib/stores/index.store';
 
-export const MainHeader = ({
+export const AppHeader = ({
     list,
 }: {
     list?: { id: string; name: string };

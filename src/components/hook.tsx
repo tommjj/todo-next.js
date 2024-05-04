@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { getListById } from '@/lib/http';
+import useStore from '@/lib/stores/index.store';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export const useDrag = () => {
     const ref = useRef<any>();
@@ -109,4 +111,30 @@ export const useDrag = () => {
     }, [state.isDragging]);
 
     return { ...state, ref };
+};
+
+export const useLoadList = (listId: string) => {
+    const setList = useStore((s) => s.setList);
+    const [state, setState] = useState({
+        isLoading: true,
+        isNotFound: false,
+    });
+
+    useLayoutEffect(() => {
+        getListById(listId).then(([list, err]) => {
+            if (err) return setState({ isLoading: false, isNotFound: true });
+
+            if (list) setList(list);
+            setState({
+                isLoading: false,
+                isNotFound: false,
+            });
+        });
+
+        return () => {
+            setList(null);
+        };
+    }, [listId, setList]);
+
+    return state;
 };

@@ -163,7 +163,7 @@ export const CreateTaskForm = ({
     );
 };
 
-export const ListViewCreateTask = ({ listId }: { listId: string }) => {
+export const ListViewCreateTask = ({ listId }: { listId?: string }) => {
     const [isActive, seIsActive] = useState(false);
 
     const showForm = useCallback(() => seIsActive(true), []);

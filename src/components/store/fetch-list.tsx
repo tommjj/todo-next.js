@@ -10,7 +10,7 @@ function FetchList(props: { id: string }) {
     const { board } = useParams();
 
     useLayoutEffect(() => {
-        getListById(props.id).then(([list]) => {
+        getListById(props.id).then(([list, err]) => {
             if (list) setList(list);
         });
     }, [props.id, setList]);

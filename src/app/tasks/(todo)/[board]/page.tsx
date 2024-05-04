@@ -1,13 +1,14 @@
 import type { Metadata, ResolvingMetadata } from 'next';
 import TaskList from '@/components/ui/task/task-list';
 import { ListViewCreateTask } from '@/components/ui/task/create-task';
-import ToolBar from '@/components/ui/task/tool-bar';
+import AppTitle from '@/components/ui/task/app-title';
 import { findListById } from '@/lib/services/list.service';
 import { notFound } from 'next/navigation';
 import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
 import { findTaskById } from '@/lib/services/task.service';
-import { MainHeader } from '@/components/ui/header/main-header';
+import { AppHeader } from '@/components/ui/header/main-header';
+import { ListPage } from '@/components/ui/app-page/list-page';
 
 type Props = {
     params: { board: string };
@@ -56,25 +57,9 @@ export async function generateMetadata(
 }
 
 async function Page({ params }: Props) {
-    const user = await getSessionUser();
-    if (!user) notFound();
-
-    const [list, error] =
-        params.board === 'important'
-            ? [{ id: 'important', name: 'important' }, undefined]
-            : await findListById(
-                  { listId: params.board, userId: user.id },
-                  {
-                      id: true,
-                      name: true,
-                  }
-              );
-
-    if (error) notFound();
-
     return (
         <main className="w-full h-full overflow-y-auto custom-scrollbar">
-            <MainHeader
+            {/* <AppHeader
                 list={
                     params.board === 'important' || params.board === 'todo'
                         ? undefined
@@ -83,7 +68,7 @@ async function Page({ params }: Props) {
             />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
-                    <ToolBar list={list} />
+                    <AppTitle />
                     <div className="flex flex-col w-full flex-grow">
                         <div className="">
                             <ListViewCreateTask listId={list.id} />
@@ -93,7 +78,8 @@ async function Page({ params }: Props) {
                         <TaskList />
                     </div>
                 </div>
-            </div>
+            </div> */}
+            <ListPage />
         </main>
     );
 }
