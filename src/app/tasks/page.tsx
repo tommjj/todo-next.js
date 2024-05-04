@@ -1,23 +1,8 @@
 import CreateListForm from '@/components/ui/lists/create-list-form';
-import { getSessionUser } from '@/lib/auth';
-import prisma from '@/lib/databases/prisma.init';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export default async function TasksPage() {
-    const user = await getSessionUser();
-
-    if (!user) {
-        notFound();
-    }
-
-    const todo = await prisma.list.findFirst({
-        select: { id: true },
-        where: { user: { name: user.name } },
-    });
-
-    if (todo) {
-        redirect(`/tasks/${todo.id}`);
-    }
+    redirect(`/tasks/todo`);
 
     return (
         <main className="grid min-h-full w-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">

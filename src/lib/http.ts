@@ -1,7 +1,5 @@
 import { List, ListSchema, SubTaskUpdate, TaskUpdate } from './zod.schema';
 
-import { User } from './zod.schema';
-
 export const API_HOST =
     process.env.NEXT_PUBLIC_ORIGIN_API || 'http://localhost:3000';
 

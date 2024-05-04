@@ -1,13 +1,7 @@
 import type { Metadata, ResolvingMetadata } from 'next';
-import TaskList from '@/components/ui/task/task-list';
-import { ListViewCreateTask } from '@/components/ui/task/create-task';
-import AppTitle from '@/components/ui/task/app-title';
 import { findListById } from '@/lib/services/list.service';
-import { notFound } from 'next/navigation';
-import FetchList from '@/components/store/fetch-list';
 import { getSessionUser } from '@/lib/auth';
 import { findTaskById } from '@/lib/services/task.service';
-import { AppHeader } from '@/components/ui/header/main-header';
 import { ListPage } from '@/components/ui/app-page/list-page';
 import { TodoPage } from '@/components/ui/app-page/todo-page';
 
