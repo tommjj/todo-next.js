@@ -2,7 +2,15 @@ import { StateCreator } from 'zustand';
 import { CurrentListSlice } from './current-list.store';
 import { ListsSlice } from './lists.store';
 import { AppSlice } from './app.store';
-import { Task, List, SubTask, SubTaskUpdate, TaskUpdate } from '../zod.schema';
+import {
+    Task,
+    SubTask,
+    SubTaskUpdate,
+    TaskUpdate,
+    TaskRepeatSchema,
+    CreateTask,
+    TaskSchema,
+} from '../zod.schema';
 
 import {
     deleteSubtask,
@@ -17,8 +25,11 @@ export interface TasksSlice {
     tasks: Task[];
     bin: Set<string>;
 
-    handleToggleCompleteTask: (listId: string) => Sync;
+    handleToggleCompleteTask: (
+        listId: string
+    ) => Sync & { completed: boolean | undefined };
     handleToggleImportantTask: (listId: string) => Sync;
+    repeatTask: (taskId: string) => void;
     updateTask: (id: string, task: TaskUpdate) => Sync;
     deleteTask: (taskId: string) => DeleteWithCancel;
     moveItem: (fromIndex: number, toIndex: number) => void;
@@ -40,7 +51,7 @@ export const createTasksAppSlice: StateCreator<
     [],
     [],
     TasksSlice
-> = (set) => ({
+> = (set, get) => ({
     tasks: [],
     bin: new Set<string>(),
 
@@ -60,13 +71,30 @@ export const createTasksAppSlice: StateCreator<
         };
     },
     handleToggleCompleteTask: (taskId) => {
-        let complete = false;
+        let complete: undefined | boolean = undefined;
+
+        const promise: Promise<any>[] = [];
 
         set((priv) => {
             const tasks = priv.tasks;
 
             const [newTasks, newTask] = setTaskById(tasks, taskId, (state) => ({
                 ...state,
+                subTasks: state.completed
+                    ? state.subTasks
+                    : state.subTasks.map((i) => {
+                          if (i.completed) return i;
+
+                          promise.push(
+                              fetcher.patch.json(`/v1/api/subtasks/${i.id}`, {
+                                  completed: true,
+                              })
+                          );
+                          return {
+                              ...i,
+                              completed: true,
+                          };
+                      }),
                 completed: !state.completed,
             }));
             complete = newTask?.completed || false;
@@ -75,7 +103,14 @@ export const createTasksAppSlice: StateCreator<
         });
 
         return {
-            sync: () => updateTaskById(taskId, { completed: complete }),
+            completed: complete,
+            sync: () =>
+                complete === undefined
+                    ? undefined
+                    : Promise.all([
+                          updateTaskById(taskId, { completed: complete }),
+                          ...promise,
+                      ]),
         };
     },
     handleToggleImportantTask: (taskId) => {
@@ -95,6 +130,59 @@ export const createTasksAppSlice: StateCreator<
         return {
             sync: () => updateTaskById(taskId, { important: important }),
         };
+    },
+    repeatTask: async (taskId) => {
+        const { tasks, addTask } = get();
+        const task = tasks.find((t) => t.id === taskId);
+
+        if (!task) return;
+        if (task.repeatInterval === 'NONE') return;
+
+        const parse = TaskRepeatSchema.safeParse(task);
+        if (!parse.success) return;
+
+        const data = parse.data;
+
+        if (data.dueDate)
+            switch (data.repeatInterval) {
+                case 'DAILY':
+                    data.dueDate.setDate(data.dueDate.getDate() + 1);
+                    break;
+                case 'WEEKLY':
+                    data.dueDate.setDate(data.dueDate.getDate() + 7);
+                    break;
+                case 'MONTHLY':
+                    data.dueDate.setMonth(data.dueDate.getMonth() + 1);
+                    break;
+                case 'YEARLY':
+                    data.dueDate.setFullYear(data.dueDate.getFullYear() + 1);
+                    break;
+            }
+
+        if (data.repeatCount && data.repeatCount > 0)
+            if (data.repeatCount == 1) {
+                data.repeatInterval = 'NONE';
+                data.repeatCount = 0;
+            } else {
+                data.repeatCount = data.repeatCount - 1;
+            }
+
+        // create task
+        const [res] = await fetcher.post.json(`/v1/api/tasks`, {
+            ...parse.data,
+        } satisfies CreateTask);
+
+        if (res?.ok) {
+            const task = (await res.json()).data as Task;
+
+            const parse = TaskSchema.safeParse({
+                ...task,
+            });
+
+            if (parse.success) {
+                addTask(parse.data);
+            }
+        }
     },
     deleteTask: (taskId) => {
         var isCancel = false;

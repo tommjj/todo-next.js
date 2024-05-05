@@ -174,3 +174,23 @@ export const AccountSchema = z.object({
         .min(8, { message: 'Password must be longer than 8 characters' }),
     confirm: z.string({ invalid_type_error: 'please enter password' }).min(8),
 });
+
+// * Repeat schema
+
+export const SubTaskRepeatSchema = SubTaskCreateSchema.omit({
+    id: true,
+    taskId: true,
+    completed: true,
+});
+
+export const TaskRepeatSchema = z.object({
+    title: z.string().min(1),
+    important: z.boolean().optional(),
+    repeatInterval: RepeatInterval.optional(),
+    repeatCount: z.nullable(z.number()).optional(),
+    dueDate: z.nullable(z.coerce.date()).optional(),
+    description: z.nullable(z.string()).optional(),
+    priority: z.nullable(Priority).optional(),
+    listId: z.string(),
+    subTasks: z.array(SubTaskRepeatSchema).optional(),
+});

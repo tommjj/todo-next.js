@@ -1,5 +1,5 @@
 export interface Sync {
-    sync: () => Promise<any>;
+    sync: () => undefined | Promise<any>;
 }
 
 export interface DeleteWithCancel extends Sync {

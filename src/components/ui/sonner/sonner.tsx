@@ -5,7 +5,6 @@ import {
     MouseEventHandler,
     useCallback,
     useEffect,
-    useRef,
     useState,
 } from 'react';
 import Button, { Variant } from '../button';

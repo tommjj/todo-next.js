@@ -63,16 +63,19 @@ export function TaskCheckBox({
     taskId: string;
     color?: 'primary' | 'red' | 'amber' | 'blue';
 }) {
+    const repeatTask = useStore((s) => s.repeatTask);
     const handleToggleCompleteTask = useStore(
-        (state) => state.handleToggleCompleteTask
+        (s) => s.handleToggleCompleteTask
     );
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
         async (e) => {
             e.stopPropagation();
-            await handleToggleCompleteTask(taskId).sync();
+            const { completed, sync } = handleToggleCompleteTask(taskId);
+            sync();
+            if (completed !== undefined && completed) repeatTask(taskId);
         },
-        [handleToggleCompleteTask, taskId]
+        [handleToggleCompleteTask, repeatTask, taskId]
     );
 
     return (
@@ -282,7 +285,13 @@ const TaskItem = ({ task }: { task: Task }) => {
             <div
                 className={cn('text-[#444] dark:text-inherit flex-grow touch')}
             >
-                <p className="text-sm">{task.title}</p>
+                <p
+                    className={cn('text-sm', {
+                        'line-through': task.completed,
+                    })}
+                >
+                    {task.title}
+                </p>
                 <div className="flex gap-2.5 mt-0.5">
                     {task.subTasks.length > 0 && (
                         <span className="flex items-center text-xs font-light">

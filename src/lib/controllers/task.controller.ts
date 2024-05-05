@@ -2,7 +2,7 @@ import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { withError } from '../utils';
+import { convertTime, withError } from '../utils';
 import { CreateTaskSchema } from '../zod.schema';
 
 const factory = new Factory();
@@ -37,7 +37,7 @@ export const createTaskHandler = factory.createHandlers(
         const user = c.get('user');
         const body = c.req.valid('json');
 
-        const { subTasks, ...task } = body;
+        const { subTasks, dueDate, ...task } = body;
         //check
         const [list] = await withError(prisma.list.findUnique)({
             where: {
@@ -54,6 +54,7 @@ export const createTaskHandler = factory.createHandlers(
         const [data] = await withError(prisma.task.create)({
             data: {
                 ...task,
+                dueDate: convertTime(dueDate),
                 subTasks: subTasks && {
                     createMany: {
                         data: subTasks,
