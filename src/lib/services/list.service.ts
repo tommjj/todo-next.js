@@ -20,7 +20,11 @@ export const defaultListSelect = {
             repeatInterval: true,
             repeatCount: true,
             priority: true,
-            subTasks: true,
+            subTasks: {
+                orderBy: {
+                    createAt: 'asc',
+                },
+            },
             description: true,
             listId: true,
             order: true,

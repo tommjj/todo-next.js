@@ -85,19 +85,18 @@ export const CreateTaskForm = ({
     const submit = useCallback(async () => {
         if (formState.title.trim() === '') return;
 
-        const parse = CreateTaskSchema.safeParse(formState);
+        const parse = CreateTaskSchema.safeParse({ ...formState, listId });
         if (!parse.success) return;
 
-        const [res] = await fetcher.post.json(`/api/lists/${ListId}`, {
+        const [res] = await fetcher.post.json(`/v1/api/tasks`, {
             ...parse.data,
         } satisfies CreateTask);
 
         if (res && res.ok) {
-            const task = (await res.json()) as Task;
+            const task = (await res.json()).data as Task;
 
             const parse = TaskSchema.safeParse({
                 ...task,
-                subTasks: [],
             });
 
             if (parse.success) {
@@ -105,7 +104,7 @@ export const CreateTaskForm = ({
                 onCancel && onCancel();
             }
         }
-    }, [ListId, addTask, formState, onCancel]);
+    }, [addTask, formState, listId, onCancel]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {

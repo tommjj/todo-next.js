@@ -54,6 +54,25 @@ export async function POST(
                 dueDate: convertTime(bodyParse.data.dueDate),
                 listId: params.id, //!
             },
+            select: {
+                id: true,
+                title: true,
+                important: true,
+                completed: true,
+                createAt: true,
+                dueDate: true,
+                repeatInterval: true,
+                repeatCount: true,
+                priority: true,
+                subTasks: {
+                    orderBy: {
+                        createAt: 'asc',
+                    },
+                },
+                description: true,
+                listId: true,
+                order: true,
+            },
         });
 
         return Response.json(task, { status: 200 });

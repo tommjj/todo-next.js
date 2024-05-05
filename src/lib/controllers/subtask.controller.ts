@@ -7,7 +7,6 @@ import {
     SubTaskUpdateSchema,
 } from '../zod.schema';
 import { createSubTask as crSubTask } from '@services/subtask.service';
-import { findListById } from '../services/list.service';
 import { findTaskById } from '../services/task.service';
 import { withError } from '../utils';
 
@@ -20,12 +19,9 @@ const factory = new Factory();
 export const createSubTask = factory.createHandlers(
     auth,
     zValidator('json', SubTaskCreateWithoutIdSchema),
-
     async (c) => {
         const user = c.get('user');
         const body = c.req.valid('json');
-
-        if (!user.id) throw new Error('HOW ?');
 
         const [task] = await findTaskById(
             {
@@ -52,13 +48,10 @@ const SubtaskWithoutId = SubTaskUpdateSchema.omit({ id: true });
 export const updateSubTask = factory.createHandlers(
     auth,
     zValidator('json', SubtaskWithoutId),
-
     async (c) => {
         const id = c.req.param('id');
         const user = c.get('user');
         const body = c.req.valid('json');
-
-        if (!user.id) throw new Error('HOW ?');
 
         const func = withError(prisma.subTask.update);
 

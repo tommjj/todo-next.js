@@ -7,20 +7,20 @@ import {
     updateListHandler,
 } from '@controllers/list.controller';
 
-const list = new Hono();
+const lists = new Hono();
 
 /*
  * Base path: '/lists'
  */
 
-list.get('/', ...getAllListsDetailsHandler);
+lists.get('/', ...getAllListsDetailsHandler);
 
-list.get('/:id', ...getListHandler);
+lists.get('/:id', ...getListHandler);
 
-list.post('/', ...createListHandler);
+lists.post('/', ...createListHandler);
 
-list.patch('/:id', ...updateListHandler);
+lists.patch('/:id', ...updateListHandler);
 
-list.delete('/:id', ...deleteListHandler);
+lists.delete('/:id', ...deleteListHandler);
 
-export default list;
+export default lists;

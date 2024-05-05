@@ -58,6 +58,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
         });
     }
 );
+
 /*
  * @path:: /lists/:id
  * @method:: GET
@@ -120,7 +121,6 @@ export const updateListHandler = factory.createHandlers(
  * @path:: /lists/:id
  * @method:: DELETE
  */
-
 export const deleteListHandler = factory.createHandlers(auth, async (c) => {
     const { id } = c.req.param();
     const user = c.get('user');
@@ -135,12 +135,4 @@ export const deleteListHandler = factory.createHandlers(auth, async (c) => {
     const err = await deleteList(id);
 
     return c.json(undefined, { status: err ? 401 : 204 });
-});
-
-/*
- * @path:: /lists/:id/subtask
- * @method:: POST
- */
-export const createSubTaskHandler = factory.createHandlers(auth, async (c) => {
-    const { id } = c.req.param();
 });

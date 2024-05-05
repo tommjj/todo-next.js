@@ -122,12 +122,6 @@ export function updateTaskById(id: string, task: TaskUpdate) {
     });
 }
 
-export async function deleteTaskById(id: string) {
-    return fetch(`/api/tasks/${id}`, {
-        method: 'DELETE',
-    });
-}
-
 export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
     const [res] = await fetcher.patch.json(`/v1/api/subtasks/${id}`, {
         ...data,

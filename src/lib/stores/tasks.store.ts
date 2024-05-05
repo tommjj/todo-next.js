@@ -6,7 +6,7 @@ import { Task, List, SubTask, SubTaskUpdate, TaskUpdate } from '../zod.schema';
 
 import {
     deleteSubtask,
-    deleteTaskById,
+    fetcher,
     updateSubtaskById,
     updateTaskById,
 } from '../http';
@@ -103,7 +103,7 @@ export const createTasksAppSlice: StateCreator<
             sync: async () => {
                 if (isCancel) return;
                 try {
-                    await deleteTaskById(taskId);
+                    await fetcher.delete(`/api/tasks/${taskId}`);
 
                     set((priv) => {
                         const tasks = priv.tasks;

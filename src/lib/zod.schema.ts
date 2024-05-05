@@ -159,9 +159,9 @@ export const CreateTaskSchema = z.object({
     dueDate: EmptyStringToNull(z.nullable(z.coerce.date())).optional(),
     description: z.nullable(z.string()).optional(),
     priority: z.nullable(Priority).optional(),
-    listId: z.string().optional(),
+    listId: z.string(),
     order: z.number().optional(),
-    subTasks: z.array(SubTaskCreateWithoutIdSchema).optional(),
+    subTasks: z.array(SubTaskCreateWithoutIdAndTaskIdSchema).optional(),
 });
 
 export type CreateTask = z.infer<typeof CreateTaskSchema>;
