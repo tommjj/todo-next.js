@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import { List, ListWithoutTasksType } from '@/lib/zod.schema';
+import { List, ListWithoutTasksType, Task } from '@/lib/zod.schema';
 import { AppSlice } from './app.store';
 import { ListsSlice } from './lists.store';
 import { TasksSlice } from './tasks.store';
@@ -8,7 +8,7 @@ import { TasksSlice } from './tasks.store';
 export interface CurrentListSlice {
     currentList: ListWithoutTasksType | null;
 
-    setList: (list: List | null) => void;
+    setList: (list: List | { tasks: Task[] } | null) => void;
 }
 
 export const createCurrentListSlice: StateCreator<
@@ -23,7 +23,12 @@ export const createCurrentListSlice: StateCreator<
             if (!list) return { currentList: null, tasks: [] };
             const { tasks, ...listWithoutTask } = list;
 
-            return { currentList: listWithoutTask, tasks: tasks || [] };
+            const temp = listWithoutTask as any;
+
+            return {
+                currentList: temp?.id ? temp : null,
+                tasks: tasks,
+            };
         }),
 });
 

@@ -2,8 +2,9 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { findListById } from '@/lib/services/list.service';
 import { getSessionUser } from '@/lib/auth';
 import { findTaskById } from '@/lib/services/task.service';
-import { ListPage } from '@/components/ui/app-page/list-page';
-import { TodoPage } from '@/components/ui/app-page/todo-page';
+import { ListPage } from '@/components/app-page/list-page';
+import { TodoPage } from '@/components/app-page/todo-page';
+import { ImportantPage } from '@/components/app-page/important-page';
 
 type Props = {
     params: { board: string };
@@ -20,18 +21,31 @@ export async function generateMetadata(
             title: 'not found',
         };
 
-    const id = params.board;
-    const [list, error] = await findListById(
-        { listId: id, userId: user.id },
-        { name: true }
-    );
+    let title = '';
+    switch (params.board) {
+        case 'todo':
+            title = 'todo';
+            break;
+        case 'important':
+            title = 'important';
+            break;
+        case 'planned':
+            title = 'planned';
+            break;
+        default:
+            const id = params.board;
+            const [list, error] = await findListById(
+                { listId: id, userId: user.id },
+                { name: true }
+            );
+            if (error)
+                return {
+                    title: 'not found',
+                };
 
-    if (error)
-        return {
-            title: 'not found',
-        };
-
-    let title = list.name;
+            title = list.name;
+            break;
+    }
 
     if (searchParams?.details) {
         const [task] = await findTaskById(
@@ -51,11 +65,22 @@ export async function generateMetadata(
     };
 }
 
-async function Page({ params }: Props) {
-    let Comp = ListPage;
+async function Page({ params: { board } }: Props) {
+    let Comp;
 
-    if (params.board === 'todo') {
-        Comp = TodoPage;
+    switch (board) {
+        case 'todo':
+            Comp = TodoPage;
+            break;
+        case 'important':
+            Comp = ImportantPage;
+            break;
+        // case 'planned':
+        //     //Comp = TodoPage;
+        //     break;
+        default:
+            Comp = ListPage;
+            break;
     }
 
     return (

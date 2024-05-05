@@ -1,9 +1,9 @@
 'use client';
 
 import { useLoadList } from '@/components/hook';
-import AppTitle from '../task/app-title';
-import { ListViewCreateTask } from '../task/create-task';
-import TaskList from '../task/task-list';
+import AppTitle from '../ui/task/app-title';
+import { ListViewCreateTask } from '../ui/task/create-task';
+import TaskList from '../ui/task/task-list';
 
 export const TodoPage = () => {
     const { isLoading } = useLoadList('todo');

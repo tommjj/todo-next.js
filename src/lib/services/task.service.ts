@@ -3,6 +3,7 @@ import prisma from '../databases/prisma.init';
 
 import type { CreateTask } from '@/lib/definitions';
 import { Task } from '.prisma/client';
+import { withError } from '../utils';
 
 const defaultTaskSelect = {
     id: true,
@@ -83,3 +84,20 @@ export async function deleteTask(id: string) {
         return err as Error;
     }
 }
+
+export const getAllImportantTasksByUserId = async (id: string) => {
+    return await withError(prisma.task.findMany)({
+        select: {
+            ...defaultTaskSelect,
+        },
+        where: {
+            list: {
+                userId: id,
+            },
+            important: true,
+        },
+        orderBy: {
+            priority: 'asc',
+        },
+    });
+};

@@ -194,3 +194,20 @@ export const TaskRepeatSchema = z.object({
     listId: z.string(),
     subTasks: z.array(SubTaskRepeatSchema).optional(),
 });
+
+/// Fetch type
+
+export const ListFetchSchema = z
+    .object({
+        id: z.string(),
+        name: z.string(),
+        userId: z.string(),
+        color: z.nullable(z.string()),
+        tasks: z.array(TaskSchema),
+    })
+    .or(
+        z.object({
+            tasks: z.array(TaskSchema),
+        })
+    );
+export type ListFetchType = z.infer<typeof ListFetchSchema>;

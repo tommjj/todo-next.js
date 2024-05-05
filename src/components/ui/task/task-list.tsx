@@ -23,10 +23,12 @@ function CompletedTskList() {
         return count;
     }, 0);
 
+    if (count === 0) return null;
+
     return (
         <>
             <div
-                className="w-full h-[52px] mb-1 flex items-center border-b text-[#333] dark:text-white cursor-pointer"
+                className="w-full h-[52px] flex items-center border-b text-[#333] dark:text-white cursor-pointer"
                 onClick={handleClick}
             >
                 <samp className="pr-2">

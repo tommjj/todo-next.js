@@ -16,38 +16,45 @@ import { DueDatePicker } from '../inputs/due-date-picker';
 import { ImportantPicker } from '../inputs/Important-picker';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 
-type FormStateType = {
+export type CreateTaskFormStateType = {
     title: string;
     description: string;
     dueDate: null | Date;
-    repeatCount: undefined | number;
-    repeatInterval: undefined | $Enums.RepeatInterval;
+    repeatCount: number;
+    repeatInterval: $Enums.RepeatInterval;
     priority: $Enums.Priority;
     important: boolean;
+};
+
+export const defaultCreateTaskFormValue: CreateTaskFormStateType = {
+    title: '',
+    description: '',
+    dueDate: null,
+    repeatCount: 0,
+    repeatInterval: 'NONE',
+    priority: 'PRIORITY4',
+    important: false,
 };
 
 export const CreateTaskForm = ({
     className = '',
     onCancel,
     ListId,
+    defaultValue = defaultCreateTaskFormValue,
 }: {
     ListId?: string;
     className?: string;
     onCancel?: () => void;
+    defaultValue?: CreateTaskFormStateType;
 }) => {
-    const [formState, setFormState] = useState<FormStateType>({
-        title: '',
-        description: '',
-        dueDate: null,
-        repeatCount: undefined,
-        repeatInterval: undefined,
-        priority: 'PRIORITY4',
-        important: false,
-    });
+    const [formState, setFormState] =
+        useState<CreateTaskFormStateType>(defaultValue);
 
     const listId = useStore((s) => s.currentList?.id); // !
+    const primaryListId = useStore((s) => s.primary?.id); // !
+
     const addTask = useStore((s) => s.addTask);
-    ListId = ListId || listId;
+    const ListIdID = ListId || listId || primaryListId;
 
     const handleTaskNameChange: React.ChangeEventHandler<HTMLTextAreaElement> =
         useCallback((e) => {
@@ -85,7 +92,10 @@ export const CreateTaskForm = ({
     const submit = useCallback(async () => {
         if (formState.title.trim() === '') return;
 
-        const parse = CreateTaskSchema.safeParse({ ...formState, listId });
+        const parse = CreateTaskSchema.safeParse({
+            ...formState,
+            listId: ListIdID,
+        });
         if (!parse.success) return;
 
         const [res] = await fetcher.post.json(`/v1/api/tasks`, {
@@ -104,7 +114,7 @@ export const CreateTaskForm = ({
                 onCancel && onCancel();
             }
         }
-    }, [addTask, formState, listId, onCancel]);
+    }, [ListIdID, addTask, formState, onCancel]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {
@@ -135,10 +145,29 @@ export const CreateTaskForm = ({
                     onChange={handleDescriptionChange}
                 />
                 <div className="flex gap-[0.35rem] flex-wrap py-2">
-                    <DueDatePicker onChanged={handleDueDayChange} />
-                    <PriorityPicker onChanged={handlePriorityChange} />
-                    <RepeatPicker onChanged={handleRepeatChange} />
-                    <ImportantPicker onChange={handleImportantChange} />
+                    <DueDatePicker
+                        onChanged={handleDueDayChange}
+                        defaultValue={
+                            formState.dueDate === null
+                                ? undefined
+                                : formState.dueDate
+                        }
+                    />
+                    <PriorityPicker
+                        onChanged={handlePriorityChange}
+                        defaultValue={formState.priority}
+                    />
+                    <RepeatPicker
+                        onChanged={handleRepeatChange}
+                        defaultValue={{
+                            repeat: formState.repeatInterval,
+                            repeatCount: formState.repeatCount,
+                        }}
+                    />
+                    <ImportantPicker
+                        onChange={handleImportantChange}
+                        defaultValue={formState.important}
+                    />
                 </div>
             </div>
             <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">
@@ -162,7 +191,13 @@ export const CreateTaskForm = ({
     );
 };
 
-export const ListViewCreateTask = ({ listId }: { listId?: string }) => {
+export const ListViewCreateTask = ({
+    listId,
+    defaultValue,
+}: {
+    listId?: string;
+    defaultValue?: CreateTaskFormStateType;
+}) => {
     const [isActive, seIsActive] = useState(false);
 
     const showForm = useCallback(() => seIsActive(true), []);
@@ -180,7 +215,11 @@ export const ListViewCreateTask = ({ listId }: { listId?: string }) => {
         </button>
     ) : (
         <div>
-            <CreateTaskForm ListId={listId} onCancel={closeForm} />
+            <CreateTaskForm
+                ListId={listId}
+                onCancel={closeForm}
+                defaultValue={defaultValue}
+            />
         </div>
     );
 };

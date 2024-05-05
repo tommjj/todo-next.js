@@ -2,11 +2,11 @@
 
 import { useLoadList } from '@/components/hook';
 import { useParams } from 'next/navigation';
-import { ListNotFound } from '../not-found/not-found';
-import { AppHeader } from '../header/main-header';
-import AppTitle from '../task/app-title';
-import { ListViewCreateTask } from '../task/create-task';
-import TaskList from '../task/task-list';
+import { ListNotFound } from '../ui/not-found/not-found';
+import { AppHeader } from '../ui/header/main-header';
+import AppTitle from '../ui/task/app-title';
+import { ListViewCreateTask } from '../ui/task/create-task';
+import TaskList from '../ui/task/task-list';
 
 export const ListPage = () => {
     const { board } = useParams();
