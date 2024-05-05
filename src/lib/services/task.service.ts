@@ -71,12 +71,6 @@ export async function updateTask(
 
 export async function deleteTask(id: string) {
     try {
-        await prisma.subTask.deleteMany({
-            where: {
-                taskId: id,
-            },
-        });
-
         await prisma.task.delete({
             where: {
                 id: id,

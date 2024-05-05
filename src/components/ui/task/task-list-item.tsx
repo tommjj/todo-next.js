@@ -71,6 +71,7 @@ export function TaskCheckBox({
     const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
         async (e) => {
             e.stopPropagation();
+
             const { completed, sync } = handleToggleCompleteTask(taskId);
             sync();
             if (completed !== undefined && completed) repeatTask(taskId);

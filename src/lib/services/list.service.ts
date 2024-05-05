@@ -117,20 +117,6 @@ export async function getTodo<T extends Prisma.ListSelect>(
 
 export async function deleteList(listId: string) {
     try {
-        await prisma.subTask.deleteMany({
-            where: {
-                task: {
-                    listId: listId,
-                },
-            },
-        });
-
-        await prisma.task.deleteMany({
-            where: {
-                listId: listId,
-            },
-        });
-
         await prisma.list.delete({
             where: {
                 id: listId,

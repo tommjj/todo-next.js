@@ -56,7 +56,7 @@ model Task {
   description    String?        @db.VarChar(512)
   priority       Priority?
   subTasks       SubTask[]
-  list           List           @relation(fields: [listId], references: [id])
+  list           List           @relation(fields: [listId], references: [id], onDelete: Cascade)
   Comments       Comment[]
 
   @@index([id, listId])
@@ -68,7 +68,7 @@ model SubTask {
   completed   Boolean  @default(false)
   taskId      String
   description String?  @db.VarChar(255)
-  task        Task     @relation(fields: [taskId], references: [id])
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   createAt    DateTime @default(now()) @db.Timestamp()
 
   @@index([id, taskId, createAt])
