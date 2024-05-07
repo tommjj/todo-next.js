@@ -8,6 +8,7 @@ import {
     useMemo,
     useRef,
     useState,
+    forwardRef,
 } from 'react';
 import { Task } from '@/lib/zod.schema';
 import {
@@ -173,103 +174,33 @@ export const RemoveAnimation = ({
     );
 };
 
-const TaskItem = ({ task }: { task: Task }) => {
+export const TaskItem = forwardRef<
+    HTMLDivElement,
+    React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLDivElement>,
+        HTMLDivElement
+    > & { task: Task }
+>(function TaskItem({ className, task, ...props }, ref) {
     const { push } = useRouter();
-    const moveItemById = useStore((state) => state.moveItemById);
-    const listId = useStore((state) => state.currentList?.id);
-
-    const { ref, translateY, isDrag } = useDndDrag({
-        id: task.id,
-        delay: 500,
-    });
-    const { getDraggingItem } = useDndMethods();
-
-    const timeStartClick = useRef(0);
-    const [over, setOver] = useState({ dir: true, isOver: false });
-
-    const handleStartClick = useCallback(() => {
-        timeStartClick.current = Date.now();
-    }, []);
-
-    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
-        if (timeStartClick.current + 200 > Date.now())
-            push(`?details=${task.id}`, {
-                shallow: true,
-            });
-    }, [push, task.id]);
-
-    const handleOver: DragEventHandler = useCallback(
-        (e) => {
-            const draggingRect = getDraggingItem()?.getBoundingClientRect();
-            const rect = ref.current?.getBoundingClientRect();
-            if (draggingRect && rect)
-                setOver({ dir: draggingRect.y < rect.y, isOver: true });
-        },
-        [getDraggingItem, ref]
-    );
-    const handleEnd: DragEventHandler = useCallback(
-        (e) => {
-            const draggingRect = getDraggingItem()?.getBoundingClientRect();
-            const rect = ref.current?.getBoundingClientRect();
-            if (draggingRect && rect) {
-                moveItemById(
-                    e.dataTransfer.getData('id'),
-                    task.id,
-                    draggingRect.y < rect.y ? 'top' : 'bottom'
-                );
-            }
-            setOver({ dir: false, isOver: false });
-        },
-        [getDraggingItem, moveItemById, ref, task.id]
-    );
-    const handleEnter: DragEventHandler = useCallback(
-        (e) => {
-            const draggingRect = getDraggingItem()?.getBoundingClientRect();
-            const rect = ref.current?.getBoundingClientRect();
-            if (draggingRect && rect)
-                setOver({ dir: draggingRect.y < rect.y, isOver: true });
-        },
-        [getDraggingItem, ref]
-    );
-    const handleLeave: DragEventHandler = useCallback((e) => {
-        setOver({ dir: false, isOver: false });
-    }, []);
 
     const subTaskCompletedCount = useMemo(() => {
         return task.subTasks.reduce((pri, cur) => {
             return cur.completed ? pri + 1 : pri;
         }, 0);
     }, [task.subTasks]);
-
     return (
         <div
-            ref={ref as any}
-            onClick={handleClick}
-            onMouseDown={handleStartClick}
-            onTouchStart={handleStartClick}
-            onDragOver={handleOver}
-            onDragLeave={handleLeave}
-            onDragEnter={handleEnter}
-            onDragEnd={handleEnd}
-            style={
-                isDrag
-                    ? {
-                          transform: `translateY(${translateY}px)`,
-                          transition: 'none',
-                      }
-                    : {}
-            }
+            ref={ref}
             className={cn(
                 'animate-expand relative bg-inherit flex items-center w-full h-[52px] border-b cursor-pointer',
-                {
-                    'shadow-lg touch-none bg-white opacity-80 z-50 px-2 rounded-b':
-                        isDrag,
-                    'before:absolute before:bg-primary-color before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
-                        over.isOver,
-                    'before:top-[-1px]': over.dir,
-                    'before:bottom-[0px]': !over.dir,
-                }
+                className
             )}
+            onClick={() => {
+                push(`?details=${task.id}`, {
+                    shallow: true,
+                });
+            }}
+            {...props}
         >
             <TaskCheckBox
                 completed={task.completed}
@@ -315,5 +246,97 @@ const TaskItem = ({ task }: { task: Task }) => {
             <Important important={task.important} taskId={task.id} />
         </div>
     );
+});
+
+const DraggableTaskItem = ({ task }: { task: Task }) => {
+    const { push } = useRouter();
+    const moveItemById = useStore((state) => state.moveItemById);
+
+    const { ref, translateY, isDrag } = useDndDrag({
+        id: task.id,
+        delay: 150,
+    });
+    const { getDraggingItem } = useDndMethods();
+
+    const timeStartClick = useRef(0);
+    const [over, setOver] = useState({ dir: true, isOver: false });
+
+    const handleStartClick = useCallback(() => {
+        timeStartClick.current = Date.now();
+    }, []);
+
+    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
+        if (timeStartClick.current + 150 > Date.now())
+            push(`?details=${task.id}`, {
+                shallow: true,
+            });
+    }, [push, task.id]);
+
+    const handleOver: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect)
+                setOver({ dir: draggingRect.y < rect.y, isOver: true });
+        },
+        [getDraggingItem, ref]
+    );
+    const handleEnd: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect) {
+                moveItemById(
+                    e.dataTransfer.getData('id'),
+                    task.id,
+                    draggingRect.y < rect.y ? 'top' : 'bottom'
+                );
+            }
+            setOver({ dir: false, isOver: false });
+        },
+        [getDraggingItem, moveItemById, ref, task.id]
+    );
+    const handleEnter: DragEventHandler = useCallback(
+        (e) => {
+            const draggingRect = getDraggingItem()?.getBoundingClientRect();
+            const rect = ref.current?.getBoundingClientRect();
+            if (draggingRect && rect)
+                setOver({ dir: draggingRect.y < rect.y, isOver: true });
+        },
+        [getDraggingItem, ref]
+    );
+    const handleLeave: DragEventHandler = useCallback((e) => {
+        setOver({ dir: false, isOver: false });
+    }, []);
+
+    return (
+        <TaskItem
+            ref={ref as any}
+            onClick={handleClick}
+            onMouseDown={handleStartClick}
+            onTouchStart={handleStartClick}
+            onDragOver={handleOver}
+            onDragLeave={handleLeave}
+            onDragEnter={handleEnter}
+            onDragEnd={handleEnd}
+            style={
+                isDrag
+                    ? {
+                          transform: `translateY(${translateY}px)`,
+                          transition: 'none',
+                      }
+                    : {}
+            }
+            task={task}
+            className={cn({
+                'shadow-lg touch-none bg-white opacity-80 z-50 px-2 rounded-b':
+                    isDrag,
+                'before:absolute before:bg-primary-color before:w-full before:h-[1px] before:z-40 z-20 before:left-0':
+                    over.isOver,
+                'before:top-[-1px]': over.dir,
+                'before:bottom-[0px]': !over.dir,
+            })}
+        />
+    );
 };
-export default TaskItem;
+export default DraggableTaskItem;

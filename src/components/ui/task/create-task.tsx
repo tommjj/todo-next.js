@@ -6,7 +6,6 @@ import useStore from '@/lib/stores/index.store';
 import { IoAddOutline } from 'react-icons/io5';
 import { $Enums, Task } from '@prisma/client';
 import { useCallback, useState } from 'react';
-import { IoIosAddCircle } from 'react-icons/io';
 import { cn } from '@/lib/utils';
 import Button from '../button';
 

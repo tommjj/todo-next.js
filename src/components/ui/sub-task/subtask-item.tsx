@@ -62,7 +62,7 @@ export const SubtaskItem = ({
     }, [subtask, removeSubtask]);
 
     return (
-        <div className="group flex w-full py-1.5 border-b">
+        <div className="group flex w-full py-2 border-b">
             <div
                 className={cn('flex justify-center items-start px-2 pt-[3px]', {
                     'pt-1': subtask.description,
@@ -72,7 +72,7 @@ export const SubtaskItem = ({
             </div>
             <div className="flex-grow">
                 <div
-                    className={cn('text-[0.9rem]', {
+                    className={cn('text-[0.9rem] text-[#444444]', {
                         'line-through': subtask.completed,
                     })}
                 >

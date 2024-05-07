@@ -6,7 +6,7 @@ import {
     defaultCreateTaskFormValue,
     ListViewCreateTask,
 } from '../ui/task/create-task';
-import TaskList from '../ui/task/task-list';
+import TaskContainer from '../ui/task/task-list';
 import { useLayoutEffect, useState } from 'react';
 import { fetcher } from '@/lib/http';
 import { z } from 'zod';
@@ -66,7 +66,7 @@ export const ImportantPage = () => {
                             />
                         </div>
 
-                        <TaskList />
+                        <TaskContainer />
                     </div>
                 </div>
             </div>

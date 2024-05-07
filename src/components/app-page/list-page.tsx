@@ -6,7 +6,7 @@ import { ListNotFound } from '../ui/not-found/not-found';
 import { AppHeader } from '../ui/header/main-header';
 import AppTitle from '../ui/task/app-title';
 import { ListViewCreateTask } from '../ui/task/create-task';
-import TaskList from '../ui/task/task-list';
+import TaskContainer from '../ui/task/task-list';
 
 export const ListPage = () => {
     const { board } = useParams();
@@ -25,7 +25,7 @@ export const ListPage = () => {
                             <ListViewCreateTask />
                         </div>
 
-                        <TaskList />
+                        <TaskContainer />
                     </div>
                 </div>
             </div>

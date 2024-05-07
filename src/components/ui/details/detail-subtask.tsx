@@ -34,14 +34,14 @@ export const SubtaskView = ({ task }: { task: Task }) => {
                 <div className="p-0 rounded-sm">
                     <IoIosArrowForward
                         className={cn(
-                            'h-6 w-5 py-1 pr-1 transition-all duration-300',
+                            'h-6 w-5 pr-1 mt-1 transition-all duration-300 mr-1',
                             {
                                 'rotate-90': isOpen,
                             }
                         )}
                     />
                 </div>
-                Sub-tasks{' '}
+                <span className="">Sub-tasks</span>
                 <span className="ml-1 px-1 rounded font-light text-[0.8rem]">
                     {subTaskCompletedCount}/{subtasks.length}
                 </span>

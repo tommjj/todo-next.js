@@ -1,7 +1,7 @@
 'use client';
 
 import useStore from '@/lib/stores/index.store';
-import TaskItem, { RemoveAnimation } from './task-list-item';
+import DraggableTaskItem, { RemoveAnimation } from './task-list-item';
 import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
@@ -48,7 +48,7 @@ function CompletedTskList() {
                     tasks.map((task) => (
                         <RemoveAnimation key={`todo::${task.id}`}>
                             {!task.completed || bin.has(task.id) ? null : (
-                                <TaskItem task={task} />
+                                <DraggableTaskItem task={task} />
                             )}
                         </RemoveAnimation>
                     ))}
@@ -57,7 +57,7 @@ function CompletedTskList() {
     );
 }
 
-const TodoList = () => {
+const TasksList = () => {
     const tasks = useStore((state) => state.tasks);
     const bin = useStore((state) => state.bin);
 
@@ -66,7 +66,7 @@ const TodoList = () => {
             {tasks.map((task) => (
                 <RemoveAnimation key={`todo::${task.id}`}>
                     {task.completed || bin.has(task.id) ? null : (
-                        <TaskItem task={task} />
+                        <DraggableTaskItem task={task} />
                     )}
                 </RemoveAnimation>
             ))}
@@ -74,12 +74,12 @@ const TodoList = () => {
     );
 };
 
-function TaskList() {
+function TaskContainer() {
     return (
         <div className="w-full flex-grow relative">
             <DNDProvider>
                 <DnDContainer>
-                    <TodoList />
+                    <TasksList />
                     <CompletedTskList />
                 </DnDContainer>
             </DNDProvider>
@@ -87,4 +87,4 @@ function TaskList() {
     );
 }
 
-export default TaskList;
+export default TaskContainer;
