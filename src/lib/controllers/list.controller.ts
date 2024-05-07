@@ -136,3 +136,28 @@ export const deleteListHandler = factory.createHandlers(auth, async (c) => {
 
     return c.json(undefined, { status: err ? 401 : 204 });
 });
+
+/*
+ * @path:: /lists/:id/clear
+ * @method:: DELETE
+ */
+export const clearAllCompletedTaskInListHandler = factory.createHandlers(
+    auth,
+    async (c) => {
+        const { id } = c.req.param();
+        const user = c.get('user');
+
+        const list = await prisma.list.findUnique({
+            select: { id: true },
+            where: { id, userId: user.id },
+        });
+
+        if (!list) return c.json(undefined, { status: 401 });
+
+        const [data, err] = await withError(prisma.task.deleteMany)({
+            where: { listId: id, completed: true },
+        });
+
+        return c.json(undefined, { status: err ? 401 : 204 });
+    }
+);

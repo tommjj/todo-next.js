@@ -44,6 +44,7 @@ export interface TasksSlice {
 
     updateSubtask: (subTask: SubTask, data: SubTaskUpdate) => Sync;
     removeSubtask: (subTask: SubTask) => Sync;
+    clearCompletedTasksSync: (listId: string) => void;
 }
 
 export const createTasksAppSlice: StateCreator<
@@ -370,5 +371,14 @@ export const createTasksAppSlice: StateCreator<
         return {
             sync: () => deleteSubtask(subtask.id),
         };
+    },
+    clearCompletedTasksSync: async (listId) => {
+        set((priv) => ({
+            tasks: priv.tasks.filter(
+                (task) => task.listId === listId && task.completed === false
+            ),
+        }));
+
+        const [] = await fetcher.delete(`/v1/api/lists/${listId}/clear`);
     },
 });
