@@ -15,7 +15,7 @@ import {
     TasksNotCompletedList,
 } from '../ui/task/list-container';
 
-export const useImportantTask = () => {
+export const usePlannedTask = () => {
     const setList = useStore((s) => s.setList);
     const [state, setState] = useState({
         isLoading: true,
@@ -23,7 +23,7 @@ export const useImportantTask = () => {
     });
 
     useLayoutEffect(() => {
-        fetcher.get('/v1/api/tasks/important').then(async ([res]) => {
+        fetcher.get('/v1/api/tasks/planned').then(async ([res]) => {
             if (!res?.ok) return;
 
             const data = (await res?.json()).data;
@@ -50,12 +50,12 @@ export const useImportantTask = () => {
     return state;
 };
 
-export const ImportantPage = () => {
+export const PlannedPage = () => {
     const tasks = useStore((state) => state.tasks);
-    const { isLoading } = useImportantTask();
+    const { isLoading } = usePlannedTask();
 
-    const importantTask = useMemo(
-        () => tasks.filter((task) => task.important),
+    const plannedTask = useMemo(
+        () => tasks.filter((task) => task.dueDate),
         [tasks]
     );
 
@@ -64,7 +64,7 @@ export const ImportantPage = () => {
             <header className="flex items-center justify-between w-full h-14 px-3"></header>
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
-                    <AppTitle name="Important" />
+                    <AppTitle name="Planned" />
                     <div className="flex flex-col w-full flex-grow">
                         <div className="">
                             <ListViewCreateTask
@@ -75,8 +75,8 @@ export const ImportantPage = () => {
                             />
                         </div>
                         <div className="w-full flex-grow relative">
-                            <TasksNotCompletedList tasks={importantTask} />
-                            <TasksCompletedTskList tasks={importantTask} />
+                            <TasksNotCompletedList tasks={plannedTask} />
+                            <TasksCompletedTskList tasks={plannedTask} />
                         </div>
                     </div>
                 </div>

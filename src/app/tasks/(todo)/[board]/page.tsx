@@ -5,6 +5,7 @@ import { findTaskById } from '@/lib/services/task.service';
 import { ListPage } from '@/components/app-page/list-page';
 import { TodoPage } from '@/components/app-page/todo-page';
 import { ImportantPage } from '@/components/app-page/important-page';
+import { PlannedPage } from '@/components/app-page/planned-page';
 
 type Props = {
     params: { board: string };
@@ -75,9 +76,9 @@ async function Page({ params: { board } }: Props) {
         case 'important':
             Comp = ImportantPage;
             break;
-        // case 'planned':
-        //     //Comp = TodoPage;
-        //     break;
+        case 'planned':
+            Comp = PlannedPage;
+            break;
         default:
             Comp = ListPage;
             break;

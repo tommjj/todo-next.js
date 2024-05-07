@@ -101,3 +101,22 @@ export const getAllImportantTasksByUserId = async (id: string) => {
         },
     });
 };
+
+export const getAllPlannedTasksByUserId = async (id: string) => {
+    return await withError(prisma.task.findMany)({
+        select: {
+            ...defaultTaskSelect,
+        },
+        where: {
+            list: {
+                userId: id,
+            },
+            NOT: {
+                dueDate: null,
+            },
+        },
+        orderBy: {
+            priority: 'asc',
+        },
+    });
+};

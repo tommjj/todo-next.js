@@ -4,7 +4,10 @@ import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { convertTime, withError } from '../utils';
 import { CreateTaskSchema } from '../zod.schema';
-import { getAllImportantTasksByUserId } from '../services/task.service';
+import {
+    getAllImportantTasksByUserId,
+    getAllPlannedTasksByUserId,
+} from '../services/task.service';
 
 const factory = new Factory();
 
@@ -97,6 +100,26 @@ export const getAllImportantTaskHandler = factory.createHandlers(
         const user = c.get('user');
 
         const [tasks] = await getAllImportantTasksByUserId(user.id);
+        if (tasks)
+            return c.json({
+                data: {
+                    tasks,
+                },
+            });
+        return c.json(undefined, 500);
+    }
+);
+
+/*
+ * @path:: /tasks/planned
+ * @method:: GET
+ */
+export const getAllPlannedTaskHandler = factory.createHandlers(
+    auth,
+    async (c) => {
+        const user = c.get('user');
+
+        const [tasks] = await getAllPlannedTasksByUserId(user.id);
         if (tasks)
             return c.json({
                 data: {
