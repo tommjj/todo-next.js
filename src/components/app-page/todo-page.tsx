@@ -3,7 +3,7 @@
 import { useLoadList } from '@/components/hook';
 import AppTitle from '../ui/task/app-title';
 import { ListViewCreateTask } from '../ui/task/create-task';
-import TaskContainer from '../ui/task/task-list';
+import SortTasksListContainer from '../ui/task/sort-list-container';
 
 export const TodoPage = () => {
     const { isLoading } = useLoadList('todo');
@@ -19,7 +19,7 @@ export const TodoPage = () => {
                             <ListViewCreateTask />
                         </div>
 
-                        <TaskContainer />
+                        <SortTasksListContainer />
                     </div>
                 </div>
             </div>

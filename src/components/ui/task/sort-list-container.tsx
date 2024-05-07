@@ -6,6 +6,7 @@ import { useCallback, useState } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { DNDProvider, DnDContainer } from '../drag-a-drop/drag-a-drop';
+import { Task } from '@/lib/zod.schema';
 
 function CompletedTskList() {
     const tasks = useStore((state) => state.tasks);
@@ -74,7 +75,7 @@ const TasksList = () => {
     );
 };
 
-function TaskContainer() {
+function SortTasksListContainer() {
     return (
         <div className="w-full flex-grow relative">
             <DNDProvider>
@@ -87,4 +88,4 @@ function TaskContainer() {
     );
 }
 
-export default TaskContainer;
+export default SortTasksListContainer;

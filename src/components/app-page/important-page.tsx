@@ -6,11 +6,14 @@ import {
     defaultCreateTaskFormValue,
     ListViewCreateTask,
 } from '../ui/task/create-task';
-import TaskContainer from '../ui/task/task-list';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { fetcher } from '@/lib/http';
 import { z } from 'zod';
 import { TaskSchema } from '@/lib/zod.schema';
+import {
+    TasksCompletedTskList,
+    TasksNotCompletedList,
+} from '../ui/task/list-container';
 
 export const useImportantTask = () => {
     const setList = useStore((s) => s.setList);
@@ -48,7 +51,13 @@ export const useImportantTask = () => {
 };
 
 export const ImportantPage = () => {
+    const tasks = useStore((state) => state.tasks);
     const { isLoading } = useImportantTask();
+
+    const importantTask = useMemo(
+        () => tasks.filter((task) => task.important),
+        [tasks]
+    );
 
     return isLoading ? null : (
         <>
@@ -65,8 +74,10 @@ export const ImportantPage = () => {
                                 }}
                             />
                         </div>
-
-                        <TaskContainer />
+                        <div className="w-full flex-grow relative">
+                            <TasksNotCompletedList tasks={importantTask} />
+                            <TasksCompletedTskList tasks={importantTask} />
+                        </div>
                     </div>
                 </div>
             </div>
