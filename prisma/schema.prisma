@@ -33,12 +33,12 @@ model List {
 }
 
 model Share {
-  id     String @id @default(cuid())
   listId String
   userId String
   list   List   @relation(fields: [listId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
 
+  @@unique([listId, userId])
   @@index([listId])
 }
 

@@ -4,7 +4,11 @@ import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { deleteList, getTodo } from '../services/list.service';
 import { withError } from '../utils';
-import { ListCreateSchema, ListUpdateSchema } from '../zod.schema';
+import {
+    ListCreateSchema,
+    ListUpdateSchema,
+    OrderTaskSchema,
+} from '../zod.schema';
 
 const factory = new Factory();
 
@@ -114,6 +118,22 @@ export const updateListHandler = factory.createHandlers(
         });
 
         return c.json(undefined, err ? 401 : 204);
+    }
+);
+
+/*
+ * @path:: /lists/:id/order
+ * @method:: PATCH
+ */
+export const updateOrderTaskInListHandler = factory.createHandlers(
+    auth,
+    zValidator('json', OrderTaskSchema),
+    async (c) => {
+        const id = c.req.param('id');
+        const user = c.get('user');
+        const body = c.req.valid('json');
+
+        return c.json(undefined, 204);
     }
 );
 

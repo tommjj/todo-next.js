@@ -211,3 +211,8 @@ export const ListFetchSchema = z
         })
     );
 export type ListFetchType = z.infer<typeof ListFetchSchema>;
+
+//
+export const OrderTaskSchema = z.object({
+    order: z.array(z.string()),
+});
