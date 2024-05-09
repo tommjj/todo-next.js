@@ -196,11 +196,9 @@ export const createTasksAppSlice: StateCreator<
 
                     set((priv) => {
                         const tasks = priv.tasks;
-
                         const bin = priv.bin;
                         bin.delete(taskId);
 
-                        if (!tasks) return {};
                         const newTasks = tasks.filter(
                             (task) => task.id !== taskId
                         );
@@ -262,7 +260,7 @@ export const createTasksAppSlice: StateCreator<
                     : fromIndex > toIndex
                     ? toIndex
                     : toIndex - 1;
-            };
+            }; //!
 
             const newList = [...tasks];
 

@@ -4,8 +4,6 @@ import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 
 import router from '@/lib/routers/index.router';
-import { sendCreateAccountOTP, verifyOTP } from '@/lib/services/otp.service';
-import jwt from 'jsonwebtoken';
 
 const app = new Hono().basePath('/v1/api/');
 
@@ -24,18 +22,6 @@ app.get('/hello', auth, async (c) => {
         name: name,
         count: data,
     });
-});
-
-//! test
-app.get('/otp-token/:token', async (c) => {
-    const token = c.req.param('token');
-    try {
-        const decoded = jwt.verify(token, process.env.AUTH_SECRET!);
-
-        return c.json({ tokenParse: decoded });
-    } catch (err) {
-        return c.json(undefined, { status: 406 });
-    }
 });
 
 //! test

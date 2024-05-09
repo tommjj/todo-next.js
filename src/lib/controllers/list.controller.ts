@@ -21,7 +21,7 @@ export const getAllListsDetailsHandler = factory.createHandlers(
             { id: true, name: true, userId: true, color: true }
         );
 
-        const ListsPromise = await withError(prisma.list.findMany)({
+        const ListsPromise = withError(prisma.list.findMany)({
             select: { id: true, name: true, userId: true, color: true },
 
             where: {

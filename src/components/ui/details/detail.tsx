@@ -81,7 +81,7 @@ export default function DetailsContainer({ id }: { id?: string }) {
                 ></div>
                 <ResizeContainer
                     className={cn(
-                        ' bg-nav-bg-color dark:bg-nav-bg-color-dark h-full z-50',
+                        'max-w-[360px] bg-nav-bg-color dark:bg-nav-bg-color-dark h-full z-50',
                         {
                             'max-w-[360px] md:max-w-[360px] -ml-[360px] translate-x-[360px]':
                                 !task,
