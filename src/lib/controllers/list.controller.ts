@@ -124,6 +124,7 @@ export const updateListHandler = factory.createHandlers(
 /*
  * @path:: /lists/:id/order
  * @method:: PATCH
+ !
  */
 export const updateOrderTaskInListHandler = factory.createHandlers(
     auth,
@@ -132,6 +133,55 @@ export const updateOrderTaskInListHandler = factory.createHandlers(
         const id = c.req.param('id');
         const user = c.get('user');
         const body = c.req.valid('json');
+
+        const data = await prisma.list.findUnique({
+            select: {
+                tasks: {
+                    select: {
+                        id: true,
+                        order: true,
+                    },
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
+            },
+            where: {
+                id: id,
+                userId: user.id,
+            },
+        });
+
+        if (!data) return c.json(undefined, 410);
+
+        const map = new Map<string, { id: string; order: number }>();
+
+        data.tasks.forEach((i) => {
+            map.set(i.id, i);
+        });
+
+        const promise: Promise<any>[] = [];
+
+        let order = body.order.length;
+        body.order.forEach((cur, ind) => {
+            const task = map.get(cur);
+            if (!task) return;
+            if (task.order !== order) {
+                promise.push(
+                    prisma.task.update({
+                        data: {
+                            order: order,
+                        },
+                        where: {
+                            id: task.id,
+                        },
+                    })
+                );
+            }
+            order -= 1;
+        });
+
+        await Promise.allSettled(promise);
 
         return c.json(undefined, 204);
     }

@@ -166,6 +166,7 @@ export const daysIntoYear = (date: Date) => {
 };
 
 //* with err
+//! just work
 export const withError = <T extends Function>(
     func: T
 ): ((
@@ -173,7 +174,7 @@ export const withError = <T extends Function>(
 ) => Promise<[undefined, unknown] | [ReturnTypes<T>, undefined]>) => {
     return async (...a: ArgumentTypes<T>) => {
         try {
-            const data = (await func(...a)) as ReturnTypes<T>;
+            const data = await func(...a);
 
             return [data, undefined];
         } catch (err) {

@@ -6,6 +6,7 @@ import {
     createListHandler,
     updateListHandler,
     clearAllCompletedTaskInListHandler,
+    updateOrderTaskInListHandler,
 } from '@controllers/list.controller';
 
 const lists = new Hono();
@@ -21,6 +22,8 @@ lists.get('/:id', ...getListHandler);
 lists.post('/', ...createListHandler);
 
 lists.patch('/:id', ...updateListHandler);
+
+lists.put('/:id/order', ...updateOrderTaskInListHandler);
 
 lists.delete('/:id', ...deleteListHandler);
 

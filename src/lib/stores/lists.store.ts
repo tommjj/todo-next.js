@@ -20,6 +20,7 @@ export interface ListsSlice {
     ) => Promise<ListWithoutTasksType | undefined>;
     updateListById: (id: string, data: ListUpdateType) => Sync;
     removeList: (id: string) => Sync & { nextId?: string; privId?: string };
+    syncOrder: () => void;
 }
 
 export const createListsSlice: StateCreator<
@@ -27,7 +28,7 @@ export const createListsSlice: StateCreator<
     [],
     [],
     ListsSlice
-> = (set) => ({
+> = (set, get) => ({
     primary: undefined,
     lists: [],
     shareLists: [],
@@ -85,5 +86,13 @@ export const createListsSlice: StateCreator<
                 const [res] = await fetcher.delete(`/v1/api/lists/${id}`);
             },
         };
+    },
+    syncOrder: async () => {
+        const { currentList, tasks } = get();
+        if (!currentList?.id) return;
+
+        await fetcher.put.json(`/v1/api/lists/${currentList.id}/order`, {
+            order: tasks.map((i) => i.id),
+        });
     },
 });

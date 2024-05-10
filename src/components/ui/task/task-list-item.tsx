@@ -251,6 +251,7 @@ export const TaskItem = forwardRef<
 const DraggableTaskItem = ({ task }: { task: Task }) => {
     const { push } = useRouter();
     const moveItemById = useStore((state) => state.moveItemById);
+    const syncOrder = useStore((state) => state.syncOrder);
 
     const { ref, translateY, isDrag } = useDndDrag({
         id: task.id,
@@ -291,10 +292,11 @@ const DraggableTaskItem = ({ task }: { task: Task }) => {
                     task.id,
                     draggingRect.y < rect.y ? 'top' : 'bottom'
                 );
+                setTimeout(syncOrder);
             }
             setOver({ dir: false, isOver: false });
         },
-        [getDraggingItem, moveItemById, ref, task.id]
+        [getDraggingItem, moveItemById, ref, syncOrder, task.id]
     );
     const handleEnter: DragEventHandler = useCallback(
         (e) => {
