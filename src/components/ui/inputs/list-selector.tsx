@@ -76,7 +76,7 @@ const ListSelector = ({
                 <DropdownMenuTrigger>
                     <Button
                         variant="ghost"
-                        className="text-[0.8rem] py-[0.35rem] font-medium opacity-95"
+                        className="text-[0.8rem] py-[0.35rem] px-2 font-medium opacity-95"
                     >
                         <div>
                             {primaryList.id === state.id ? (
