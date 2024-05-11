@@ -12,11 +12,21 @@ import AlertDialog, {
     DialogRef,
 } from '../alert-dialog/alert-dialog';
 import { CreateTaskForm } from '../task/create-task';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
+import useStore from '@/lib/stores/index.store';
 
 export const AddTaskButton = () => {
     const ref = useRef<DialogRef>(null);
+
     const { board } = useParams();
+
+    const primaryList = useStore((s) => s.primary)!;
+    const lists = useStore((s) => s.lists);
+
+    const defaultList = useMemo(
+        () => lists.find((l) => l.id === board) || primaryList,
+        [board, lists, primaryList]
+    );
 
     return (
         <div className="w-full px-[10px] my-1">
@@ -32,6 +42,7 @@ export const AddTaskButton = () => {
                 </AlertDialogTrigger>
                 <AlertDialogContent ContentClassName="p-0  md:w-[540px] lg:w-[600px] mb-[220px]">
                     <CreateTaskForm
+                        defaultList={defaultList}
                         onCancel={() => {
                             ref.current?.setIsOpen(false);
                         }}

@@ -73,8 +73,8 @@ export const DropdownMenu = forwardRef<DropdownMenuRef, DropdownMenuProps>(
             ref,
             () => ({
                 isOpen: isOpen,
-                handleOpen,
-                handleClose,
+                handleOpen: handleOpen,
+                handleClose: handleClose,
             }),
             [handleClose, handleOpen, isOpen]
         );

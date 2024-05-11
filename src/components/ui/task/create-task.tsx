@@ -1,11 +1,16 @@
 'use client';
 
 import { fetcher } from '@/lib/http';
-import { CreateTask, CreateTaskSchema, TaskSchema } from '@/lib/zod.schema';
+import {
+    CreateTask,
+    CreateTaskSchema,
+    ListWithoutTasksType,
+    TaskSchema,
+} from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
 import { IoAddOutline } from 'react-icons/io5';
 import { $Enums, Task } from '@prisma/client';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import Button from '../button';
 
@@ -14,6 +19,8 @@ import { RepeatPicker, RepeatStateType } from '../inputs/repeat-picker';
 import { DueDatePicker } from '../inputs/due-date-picker';
 import { ImportantPicker } from '../inputs/Important-picker';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
+import ListSelector from '../inputs/list-selector';
+import { useParams } from 'next/navigation';
 
 export type CreateTaskFormStateType = {
     title: string;
@@ -38,22 +45,20 @@ export const defaultCreateTaskFormValue: CreateTaskFormStateType = {
 export const CreateTaskForm = ({
     className = '',
     onCancel,
-    ListId,
+    defaultList,
     defaultValue = defaultCreateTaskFormValue,
 }: {
-    ListId?: string;
+    defaultList: ListWithoutTasksType;
     className?: string;
     onCancel?: () => void;
     defaultValue?: CreateTaskFormStateType;
 }) => {
     const [formState, setFormState] =
         useState<CreateTaskFormStateType>(defaultValue);
-
-    const listId = useStore((s) => s.currentList?.id); // !
-    const primaryListId = useStore((s) => s.primary?.id); // !
+    const [list, setList] = useState(defaultList);
+    const curList = useStore((s) => s.currentList);
 
     const addTask = useStore((s) => s.addTask);
-    const ListIdID = ListId || listId || primaryListId;
 
     const handleTaskNameChange: React.ChangeEventHandler<HTMLTextAreaElement> =
         useCallback((e) => {
@@ -93,7 +98,7 @@ export const CreateTaskForm = ({
 
         const parse = CreateTaskSchema.safeParse({
             ...formState,
-            listId: ListIdID,
+            listId: list.id,
         });
         if (!parse.success) return;
 
@@ -109,11 +114,13 @@ export const CreateTaskForm = ({
             });
 
             if (parse.success) {
-                addTask(parse.data);
+                if (!curList || curList?.id === list.id) {
+                    addTask(parse.data);
+                }
                 onCancel && onCancel();
             }
         }
-    }, [ListIdID, addTask, formState, onCancel]);
+    }, [addTask, curList, formState, list.id, onCancel]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {
@@ -169,22 +176,28 @@ export const CreateTaskForm = ({
                     />
                 </div>
             </div>
-            <div className="w-full flex justify-end gap-[0.35rem] p-[8px] border-t dark:border-[#FAFAFA]">
-                <Button
-                    type="button"
-                    className="text-[0.8rem] py-[0.35rem]"
-                    variant="outline"
-                    onClick={onCancel}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    className="text-[0.8rem] py-[0.35rem] aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
-                    variant="primary"
-                    aria-disabled={formState.title.trim() === ''}
-                >
-                    Add task
-                </Button>
+
+            <div className="w-full flex justify-between p-[8px] border-t dark:border-[#FAFAFA]">
+                <div>
+                    <ListSelector defaultValue={list} onChanged={setList} />
+                </div>
+                <div className="flex gap-[0.35rem] ">
+                    <Button
+                        type="button"
+                        className="text-[0.8rem] py-[0.35rem]"
+                        variant="outline"
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        className="text-[0.8rem] py-[0.35rem] aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
+                        variant="primary"
+                        aria-disabled={formState.title.trim() === ''}
+                    >
+                        Add task
+                    </Button>
+                </div>
             </div>
         </form>
     );
@@ -197,10 +210,19 @@ export const ListViewCreateTask = ({
     listId?: string;
     defaultValue?: CreateTaskFormStateType;
 }) => {
+    const { board } = useParams();
     const [isActive, seIsActive] = useState(false);
+
+    const primaryList = useStore((s) => s.primary)!;
+    const lists = useStore((s) => s.lists);
 
     const showForm = useCallback(() => seIsActive(true), []);
     const closeForm = useCallback(() => seIsActive(false), []);
+
+    const defaultList = useMemo(
+        () => lists.find((l) => l.id === (listId || board)) || primaryList,
+        [board, listId, lists, primaryList]
+    );
 
     return !isActive ? (
         <button
@@ -215,7 +237,7 @@ export const ListViewCreateTask = ({
     ) : (
         <div>
             <CreateTaskForm
-                ListId={listId}
+                defaultList={defaultList}
                 onCancel={closeForm}
                 defaultValue={defaultValue}
             />

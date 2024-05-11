@@ -124,7 +124,7 @@ export const updateListHandler = factory.createHandlers(
 /*
  * @path:: /lists/:id/order
  * @method:: PATCH
- !
+ ! 
  */
 export const updateOrderTaskInListHandler = factory.createHandlers(
     auth,
