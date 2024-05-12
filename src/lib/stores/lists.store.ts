@@ -58,6 +58,10 @@ export const createListsSlice: StateCreator<
     updateListById: (id, data) => {
         set((priv) => ({
             lists: priv.lists.map((i) => (i.id !== id ? i : { ...i, ...data })),
+            currentList:
+                priv.currentList?.id === id
+                    ? { ...priv.currentList, ...data }
+                    : priv.currentList,
         }));
         return {
             sync: async () => {

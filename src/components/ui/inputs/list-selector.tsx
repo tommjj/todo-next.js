@@ -76,7 +76,7 @@ const ListSelector = ({
                 <DropdownMenuTrigger>
                     <Button
                         variant="ghost"
-                        className="text-[0.8rem] py-[0.35rem] px-2 font-medium opacity-95"
+                        className="text-[0.8rem] py-[0.35rem] px-2 font-medium opacity-80"
                     >
                         <div>
                             {primaryList.id === state.id ? (
@@ -124,7 +124,7 @@ const ListSelector = ({
                         </div>
                         {inputValue.trim() === '' ? (
                             <div>
-                                <div className="px-1 mt-1">
+                                <div className="px-1 my-1">
                                     <Button
                                         {...buttonProps}
                                         type="button"

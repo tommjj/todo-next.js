@@ -196,9 +196,7 @@ export const TaskItem = forwardRef<
                 className
             )}
             onClick={() => {
-                push(`?details=${task.id}`, {
-                    shallow: true,
-                });
+                push(`?details=${task.id}`);
             }}
             {...props}
         >
@@ -268,9 +266,7 @@ const DraggableTaskItem = ({ task }: { task: Task }) => {
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
         if (timeStartClick.current + 150 > Date.now())
-            push(`?details=${task.id}`, {
-                shallow: true,
-            });
+            push(`?details=${task.id}`);
     }, [push, task.id]);
 
     const handleOver: DragEventHandler = useCallback(

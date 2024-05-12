@@ -35,7 +35,7 @@ function CreateListForm() {
 
     return (
         <form
-            className="group flex items-center w-full px-[10px] py-[2px] "
+            className="group flex items-center px-[8px] py-[5px] justify-start w-full grow text-sm"
             onSubmit={handleSubmit}
         >
             <PlusIcon className="h-6 w-6 p-[2px] mr-2 rounded-full text-[#444] dark:text-inherit" />
@@ -48,7 +48,7 @@ function CreateListForm() {
                 type="text"
                 name="listName"
                 placeholder="Create new list"
-                className="flex-grow w-12 h-8 outline-none font-light bg-inherit"
+                className="flex-grow w-12 outline-none font-light bg-inherit text-sm"
             ></input>
         </form>
     );

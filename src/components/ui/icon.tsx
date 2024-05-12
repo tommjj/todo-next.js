@@ -1,3 +1,10 @@
+import { AiOutlineClear } from 'react-icons/ai';
+import { BsClipboard } from 'react-icons/bs';
+import { CiCalendar, CiTrash } from 'react-icons/ci';
+import { FaRegStar } from 'react-icons/fa';
+import { GoHash, GoInbox } from 'react-icons/go';
+import { IoAddCircleOutline } from 'react-icons/io5';
+
 export function CircleIcon({ className = '' }: { className?: string }) {
     return (
         <svg
@@ -12,3 +19,14 @@ export function CircleIcon({ className = '' }: { className?: string }) {
         </svg>
     );
 }
+
+export const ICONS = {
+    todo: GoInbox,
+    important: FaRegStar,
+    planned: CiCalendar,
+    list: GoHash,
+    task: BsClipboard,
+    addTask: IoAddCircleOutline,
+    clear: AiOutlineClear,
+    delete: CiTrash,
+};

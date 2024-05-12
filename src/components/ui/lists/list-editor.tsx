@@ -4,6 +4,7 @@ import useStore from '@/lib/stores/index.store';
 import { ListWithoutTasksType } from '@/lib/zod.schema';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { ChangeEvent, useCallback, useState } from 'react';
+import { CiEdit } from 'react-icons/ci';
 
 function ListEditor({
     list,
@@ -42,10 +43,10 @@ function ListEditor({
 
     return (
         <form
-            className="group flex items-center w-full px-[10px] py-[2px] "
+            className="group flex items-center px-[8px] py-[5px] justify-start w-full grow text-sm"
             onSubmit={handleSubmit}
         >
-            <PlusIcon className="h-6 w-6 p-[2px] mr-2 rounded-full text-[#444] dark:text-inherit" />
+            <CiEdit className="w-6 h-6 p-[0.10rem] mr-[8px] text-[#444] dark:text-inherit " />
 
             <input
                 onBlur={handleBurl}
@@ -57,7 +58,7 @@ function ListEditor({
                 name="listName"
                 placeholder="list name"
                 autoFocus
-                className="flex-grow w-12 h-8 outline-none font-light bg-inherit"
+                className="flex-grow w-12 outline-none font-light bg-inherit text-sm"
             ></input>
         </form>
     );

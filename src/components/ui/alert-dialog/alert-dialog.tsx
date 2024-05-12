@@ -69,9 +69,12 @@ export function AlertDialogContent({
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        const ele = ref.current;
         if (!isOpen) return;
+        if (!ele) return;
 
         function preventScroll(e: any) {
+            if (e.target !== ele) return;
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -102,7 +105,7 @@ export function AlertDialogContent({
                       >
                           <div
                               className={cn(
-                                  'w-full md:w-[512px] px-6 py-4 rounded-md bg-white border dark:bg-[#111] animate-open',
+                                  'w-full md:w-[512px] px-6 py-4 rounded-md bg-white border dark:bg-[#111] animate-open ',
                                   ContentClassName
                               )}
                           >

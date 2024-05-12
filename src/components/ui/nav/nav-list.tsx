@@ -77,7 +77,7 @@ export const NavLink = ({
                             variant="ghost"
                             className={cn(
                                 buttonProps.className,
-                                'p-[1px] select-none opacity-0 group-hover:opacity-50'
+                                'p-[1px] select-none opacity-50 md:opacity-0 md:group-hover:opacity-50'
                             )}
                         >
                             <EllipsisHorizontalIcon className="h-[20px] w-[20px] " />

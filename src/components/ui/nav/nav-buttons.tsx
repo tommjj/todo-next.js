@@ -14,6 +14,7 @@ import AlertDialog, {
 import { CreateTaskForm } from '../task/create-task';
 import { useMemo, useRef } from 'react';
 import useStore from '@/lib/stores/index.store';
+import Search from '../search/search';
 
 export const AddTaskButton = () => {
     const ref = useRef<DialogRef>(null);
@@ -40,8 +41,14 @@ export const AddTaskButton = () => {
                         Add task
                     </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent ContentClassName="p-0  md:w-[540px] lg:w-[600px] mb-[220px]">
+                <AlertDialogContent
+                    ContentClassName="p-0  md:w-[540px] lg:w-[600px] mb-[220px] shadow-2xl shadow-[#00000040] border-none"
+                    className="bg-[#00000000] backdrop-blur-none"
+                >
                     <CreateTaskForm
+                        onAddTask={() => {
+                            ref.current?.setIsOpen(false);
+                        }}
                         defaultList={defaultList}
                         onCancel={() => {
                             ref.current?.setIsOpen(false);
@@ -67,16 +74,30 @@ export const getButtonClassName = (isActive: boolean) => {
 };
 
 export const SearchButton = () => {
-    const { board } = useParams();
+    const ref = useRef<DialogRef>(null);
 
     return (
-        <Button {...buttonProps}>
-            <div>
-                <IoIosSearch className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" />
-            </div>
+        <AlertDialog ref={ref}>
+            <AlertDialogTrigger>
+                <Button {...buttonProps}>
+                    <div>
+                        <IoIosSearch className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" />
+                    </div>
 
-            <div className="text-left line-clamp-1">Search</div>
-        </Button>
+                    <div className="text-left line-clamp-1">Search</div>
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent
+                ContentClassName="p-0  md:w-[640px] lg:w-[652px] shadow-2xl shadow-[#00000040] rounded-md"
+                className="bg-[#00000000] backdrop-blur-none"
+            >
+                <Search
+                    close={() => {
+                        ref.current?.setIsOpen(false);
+                    }}
+                />
+            </AlertDialogContent>
+        </AlertDialog>
     );
 };
 

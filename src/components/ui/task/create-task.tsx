@@ -45,11 +45,13 @@ export const defaultCreateTaskFormValue: CreateTaskFormStateType = {
 export const CreateTaskForm = ({
     className = '',
     onCancel,
+    onAddTask,
     defaultList,
     defaultValue = defaultCreateTaskFormValue,
 }: {
     defaultList: ListWithoutTasksType;
     className?: string;
+    onAddTask?: () => void;
     onCancel?: () => void;
     defaultValue?: CreateTaskFormStateType;
 }) => {
@@ -117,10 +119,20 @@ export const CreateTaskForm = ({
                 if (!curList || curList?.id === list.id) {
                     addTask(parse.data);
                 }
-                onCancel && onCancel();
+                setList(defaultList);
+                setFormState(defaultValue);
+                onAddTask && onAddTask();
             }
         }
-    }, [addTask, curList, formState, list.id, onCancel]);
+    }, [
+        addTask,
+        curList,
+        defaultList,
+        defaultValue,
+        formState,
+        list.id,
+        onAddTask,
+    ]);
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
         async (e) => {
