@@ -260,16 +260,19 @@ const DraggableTaskItem = ({ task }: { task: Task }) => {
     });
     const { getDraggingItem } = useDndMethods();
 
-    const timeStartClick = useRef(0);
+    const hadDrag = useRef(false);
     const [over, setOver] = useState({ dir: true, isOver: false });
 
-    const handleStartClick = useCallback(() => {
-        timeStartClick.current = Date.now();
-    }, []);
+    useEffect(() => {
+        if (isDrag) {
+            hadDrag.current = isDrag;
+        } else {
+            setTimeout(() => (hadDrag.current = isDrag));
+        }
+    }, [isDrag]);
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
-        if (timeStartClick.current + 150 > Date.now())
-            push(`?details=${task.id}`);
+        if (!hadDrag.current) push(`?details=${task.id}`);
     }, [push, task.id]);
 
     const handleOver: DragEventHandler = useCallback(
@@ -314,8 +317,6 @@ const DraggableTaskItem = ({ task }: { task: Task }) => {
         <TaskItem
             ref={ref as any}
             onClick={handleClick}
-            onMouseDown={handleStartClick}
-            onTouchStart={handleStartClick}
             onDragOver={handleOver}
             onDragLeave={handleLeave}
             onDragEnter={handleEnter}
