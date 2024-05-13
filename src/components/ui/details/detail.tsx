@@ -21,13 +21,13 @@ const getStateFromStorage = (): number | undefined => {
     }
 };
 
-export default function DetailsContainer({ id }: { id?: string }) {
+export default function DetailsContainer() {
     const searchParam = useSearchParams();
     const [width] = useState(getStateFromStorage() || 360);
     const [maxWidth, setMaxWidth] = useState(900);
     const tasks = useStore((state) => state.tasks);
     const ref = useRef<HTMLDivElement>(null);
-
+    const id = searchParam.get('details');
     const { push } = useRouter();
 
     const task = tasks.find((e) => e.id === id);

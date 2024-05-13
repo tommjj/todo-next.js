@@ -1,14 +1,14 @@
-function Layout({
-    children,
-    details,
-}: {
-    children: React.ReactNode;
-    details: React.ReactNode;
-}) {
+import NoSSR from '@/components/NoSSR';
+import DetailsContainer from '@/components/ui/details/detail';
+
+function Layout({ children }: { children: React.ReactNode }) {
     return (
         <>
             <div className="w-full h-full flex flex-col">{children}</div>
-            {details}
+
+            <NoSSR>
+                <DetailsContainer />
+            </NoSSR>
         </>
     );
 }
