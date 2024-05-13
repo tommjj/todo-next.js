@@ -15,7 +15,7 @@ import {
     CheckIcon,
     StarIcon as StarIconOutline,
 } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { GoWorkflow } from 'react-icons/go';
 import clsx from 'clsx';
@@ -181,6 +181,7 @@ export const TaskItem = forwardRef<
         HTMLDivElement
     > & { task: Task }
 >(function TaskItem({ className, task, ...props }, ref) {
+    const searchParam = useSearchParams();
     const { push } = useRouter();
 
     const subTaskCompletedCount = useMemo(() => {
@@ -196,7 +197,9 @@ export const TaskItem = forwardRef<
                 className
             )}
             onClick={() => {
-                push(`?details=${task.id}`);
+                const param = new URLSearchParams(searchParam);
+                param.set('details', task.id);
+                push(`?${param.toString()}`);
             }}
             {...props}
         >

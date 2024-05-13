@@ -6,6 +6,7 @@ import { ListPage } from '@/components/app-page/list-page';
 import { TodoPage } from '@/components/app-page/todo-page';
 import { ImportantPage } from '@/components/app-page/important-page';
 import { PlannedPage } from '@/components/app-page/planned-page';
+import { SearchPage } from '@/components/app-page/search-page';
 
 type Props = {
     params: { board: string };
@@ -32,6 +33,9 @@ export async function generateMetadata(
             break;
         case 'planned':
             title = 'planned';
+            break;
+        case 'search':
+            title = 'search';
             break;
         default:
             const id = params.board;
@@ -79,6 +83,9 @@ async function Page({ params: { board } }: Props) {
         case 'planned':
             Comp = PlannedPage;
             break;
+        case 'search':
+            Comp = SearchPage;
+            break;
         default:
             Comp = ListPage;
             break;
@@ -86,26 +93,6 @@ async function Page({ params: { board } }: Props) {
 
     return (
         <main className="w-full h-full overflow-y-auto custom-scrollbar">
-            {/* <AppHeader
-                list={
-                    params.board === 'important' || params.board === 'todo'
-                        ? undefined
-                        : list
-                }
-            />
-            <div className="flex flex-col items-center w-full">
-                <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
-                    <AppTitle />
-                    <div className="flex flex-col w-full flex-grow">
-                        <div className="">
-                            <ListViewCreateTask listId={list.id} />
-                        </div>
-
-                        <FetchList id={list.id} />
-                        <TaskList />
-                    </div>
-                </div>
-            </div> */}
             <Comp />
         </main>
     );

@@ -8,6 +8,7 @@ import {
     getAllImportantTasksByUserId,
     getAllPlannedTasksByUserId,
 } from '../services/task.service';
+import { Prisma } from '@prisma/client';
 
 const factory = new Factory();
 
@@ -29,7 +30,7 @@ const TASK_SELECT = {
     description: true,
     listId: true,
     order: true,
-};
+} satisfies Prisma.TaskSelect;
 /*
  * @path:: /tasks
  * @method:: POST
@@ -65,25 +66,7 @@ export const createTaskHandler = factory.createHandlers(
                     },
                 },
             },
-            select: {
-                id: true,
-                title: true,
-                important: true,
-                completed: true,
-                createAt: true,
-                dueDate: true,
-                repeatInterval: true,
-                repeatCount: true,
-                priority: true,
-                subTasks: {
-                    orderBy: {
-                        createAt: 'asc',
-                    },
-                },
-                description: true,
-                listId: true,
-                order: true,
-            },
+            select: TASK_SELECT,
         });
 
         if (data) return c.json({ data: data }, 200);
@@ -129,3 +112,32 @@ export const getAllPlannedTaskHandler = factory.createHandlers(
         return c.json(undefined, 500);
     }
 );
+
+/*
+ * @path:: /tasks/search/:q
+ * @method:: GET
+ */
+export const searchTasksHandler = factory.createHandlers(auth, async (c) => {
+    const user = c.get('user');
+    const q = c.req.param('q');
+
+    const tasks = await prisma.task.findMany({
+        select: TASK_SELECT,
+        where: {
+            title: {
+                contains: q,
+                mode: 'insensitive',
+            },
+            list: {
+                userId: user.id,
+            },
+        },
+    });
+    if (tasks.length > 0)
+        return c.json({
+            data: {
+                tasks,
+            },
+        });
+    return c.json(undefined, 404);
+});

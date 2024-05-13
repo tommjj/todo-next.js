@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import Button from '../button';
 import { buttonProps } from '../nav/nav-buttons';
@@ -61,14 +61,20 @@ const ListTitle = ({
 };
 
 const Search = ({ close }: { close?: () => void }) => {
+    const ref = useRef<HTMLTextAreaElement>(null);
     const [searchValue, setSearchValue] = useState('');
     const { push } = useRouter();
+
+    useEffect(() => {
+        ref.current?.focus();
+    }, []);
 
     return (
         <div className="w-full rounded-md ">
             <div className="flex w-full pt-2.5 pb-2 px-2">
                 <CiSearch className="w-6 h-6 p-[1px] ml-1 mr-2 " />
                 <textarea
+                    ref={ref}
                     onInput={(ev) => {
                         const el = ev.target as HTMLTextAreaElement;
 
@@ -78,6 +84,10 @@ const Search = ({ close }: { close?: () => void }) => {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             e.preventDefault();
+                            if (searchValue.trim()) {
+                                push(`/tasks/search?q=${searchValue.trim()}`);
+                                close && close();
+                            }
                         }
                     }}
                     className={cn(

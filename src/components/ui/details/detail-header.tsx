@@ -17,7 +17,7 @@ import AlertDialog, {
 import { BsLayoutSidebarReverse } from 'react-icons/bs';
 import { cn } from '@/lib/utils';
 import Button from '../button';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { buttonProps } from '../nav/nav-buttons';
 import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -26,12 +26,15 @@ import { Task } from '@/lib/zod.schema';
 import { toast } from '../sonner/sonner';
 
 export const DetailHeader = ({ task }: { task?: Task | null }) => {
+    const searchParam = useSearchParams();
     const { push } = useRouter();
     const deleteTask = useStore((state) => state.deleteTask);
 
     const handleClose = useCallback(() => {
-        push(`?`);
-    }, [push]);
+        const param = new URLSearchParams(searchParam);
+        param.delete('details');
+        push(`?${param.toString()}`);
+    }, [push, searchParam]);
 
     return (
         <header className="flex items-center justify-center w-full h-14">

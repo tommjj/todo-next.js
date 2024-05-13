@@ -2,7 +2,7 @@
 
 import useStore from '@/lib/stores/index.store';
 import { ResizeContainer } from '../resize-container';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -22,9 +22,9 @@ const getStateFromStorage = (): number | undefined => {
 };
 
 export default function DetailsContainer({ id }: { id?: string }) {
+    const searchParam = useSearchParams();
     const [width] = useState(getStateFromStorage() || 360);
     const [maxWidth, setMaxWidth] = useState(900);
-    const { board } = useParams();
     const tasks = useStore((state) => state.tasks);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -33,8 +33,10 @@ export default function DetailsContainer({ id }: { id?: string }) {
     const task = tasks.find((e) => e.id === id);
 
     const handleClose = useCallback(() => {
-        push(`/tasks/${board}`);
-    }, [board, push]);
+        const param = new URLSearchParams(searchParam);
+        param.delete('details');
+        push(`?${param.toString()}`);
+    }, [push, searchParam]);
 
     useEffect(() => {
         const handleResize = () => {
