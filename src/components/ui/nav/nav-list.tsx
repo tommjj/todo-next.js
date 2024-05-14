@@ -57,7 +57,7 @@ export const NavLink = ({
     }, [list.id, setEditor]);
 
     return (
-        <div className="flex items-center group">
+        <div className="relative flex items-center group overflow-hidden ">
             <Button
                 variant="ghost"
                 href={`/tasks/${list.id}`}
