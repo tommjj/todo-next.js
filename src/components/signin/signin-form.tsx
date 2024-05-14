@@ -4,8 +4,10 @@ import { signInAction } from '@/lib/action';
 import { useFormState, useFormStatus } from 'react-dom';
 import Button from '../ui/button';
 import Link from 'next/link';
+import { useState } from 'react';
 
 function SignInForm({ className }: { className?: String }) {
+    const [changed, setChanged] = useState(false);
     const [code, action] = useFormState(signInAction, undefined);
 
     return (
@@ -17,12 +19,15 @@ function SignInForm({ className }: { className?: String }) {
                     Sign in
                 </h2>
                 <div id="error" className="text-red-400 text-center h-4 mt-3">
-                    {code && 'Incorrect username or password!'}
+                    {!changed && code && 'Incorrect username or password!'}
                 </div>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form
+                    onSubmit={() => {
+                        setChanged(false);
+                    }}
                     action={action}
                     className="space-y-6"
                     aria-describedby="error"
@@ -43,6 +48,9 @@ function SignInForm({ className }: { className?: String }) {
                                 required
                                 autoComplete="off"
                                 className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
+                                onChange={() => {
+                                    setChanged(true);
+                                }}
                             />
                         </div>
                     </div>
@@ -63,6 +71,9 @@ function SignInForm({ className }: { className?: String }) {
                                 name="password"
                                 autoComplete="current-password"
                                 className="block text-lg dark:bg-[#ffffff10] px-2 w-full rounded-md outline-none border-0 py-2 text-gray-800 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-color sm:leading-6 dark:ring-gray-500 invalid:border-red-600"
+                                onChange={() => {
+                                    setChanged(true);
+                                }}
                             />
                         </div>
                         <div className="text-sm text-right mt-1">

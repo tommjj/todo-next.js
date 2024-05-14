@@ -70,7 +70,7 @@ export const NavLink = ({
                     {list.name}
                 </div>
             </Button>
-            <div className="absolute right-4">
+            <div className="absolute right-2">
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Button

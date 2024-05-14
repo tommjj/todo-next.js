@@ -216,8 +216,8 @@ const OptForm = () => {
 };
 
 const EmailVerify = () => {
-    const { has, get } = useSearchParams();
-    const token = get('token');
+    const searchParams = useSearchParams();
+    const token = searchParams.get('token');
 
     return token ? (
         <SignUpForm token={token}></SignUpForm>
@@ -232,8 +232,9 @@ const EmailVerify = () => {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-                {get('otp') &&
-                z.string().email().safeParse(get('email')).success ? (
+                {searchParams.get('otp') &&
+                z.string().email().safeParse(searchParams.get('email'))
+                    .success ? (
                     <OptForm />
                 ) : (
                     <EmailForm />
