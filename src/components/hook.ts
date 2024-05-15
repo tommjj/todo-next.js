@@ -1,8 +1,9 @@
 'use client';
 
-import { getListById } from '@/lib/http';
+import { fetcher, getListById } from '@/lib/http';
 import useStore from '@/lib/stores/index.store';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { z, ZodAny } from 'zod';
 
 export const useDrag = () => {
     const ref = useRef<any>();
@@ -135,6 +136,45 @@ export const useLoadList = (listId: string) => {
             setList(null);
         };
     }, [listId, setList]);
+
+    return state;
+};
+
+export const useFetch = <T>(path?: string) => {
+    const [state, setState] = useState<{
+        data: undefined | T;
+        isLoading: boolean;
+        isNotFound: boolean;
+    }>({
+        data: undefined,
+        isLoading: true,
+        isNotFound: false,
+    });
+
+    useLayoutEffect(() => {
+        if (!path) return;
+        setState({
+            data: undefined,
+            isLoading: true,
+            isNotFound: false,
+        });
+        fetcher.get(path).then(async ([res, err]) => {
+            if (res?.ok) {
+                setState({
+                    data: await res.json(),
+                    isLoading: false,
+                    isNotFound: true,
+                });
+
+                return;
+            }
+            setState({
+                data: undefined,
+                isLoading: false,
+                isNotFound: true,
+            });
+        });
+    }, [path]);
 
     return state;
 };

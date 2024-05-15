@@ -155,40 +155,52 @@ export const NavShareLinks = () => {
     }, []);
 
     return (
-        <div className="px-[10px] w-full ">
-            <Button
-                onClick={toggleList}
-                className="group px-[10px] py-[5px] justify-between w-full grow font-normal text-base"
-                variant="ghost"
-            >
-                Share lists
-                <div className="p-0 rounded-sm">
-                    <IoIosArrowForward
+        <>
+            {lists.length === 0 ? null : (
+                <div className="px-[10px] w-full ">
+                    <Button
+                        onClick={toggleList}
+                        className="group px-[10px] py-[5px] justify-between w-full grow font-normal text-base"
+                        variant="ghost"
+                    >
+                        Share lists
+                        <div className="p-0 rounded-sm">
+                            <IoIosArrowForward
+                                className={cn(
+                                    'h-6 w-6 p-1 transition-all duration-300 md:opacity-0 md:group-hover:opacity-100',
+                                    {
+                                        'rotate-90': isOpen,
+                                    }
+                                )}
+                            />
+                        </div>
+                    </Button>
+                    <ul
                         className={cn(
-                            'h-6 w-6 p-1 transition-all duration-300 md:opacity-0 md:group-hover:opacity-100',
-                            {
-                                'rotate-90': isOpen,
-                            }
+                            'overflow-hidden transition-all duration-300'
                         )}
-                    />
+                        style={{
+                            maxHeight: `${isOpen ? lists.length * 50 : 0}px`,
+                        }}
+                    >
+                        {lists.map((item) => (
+                            <li key={item.id}>
+                                {editId === item.id ? (
+                                    <ListEditor
+                                        list={item}
+                                        onClose={handleCloseEdit}
+                                    />
+                                ) : (
+                                    <NavLink
+                                        setEditor={setEditId}
+                                        list={item}
+                                    />
+                                )}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-            </Button>
-            <ul
-                className={cn('overflow-hidden transition-all duration-300')}
-                style={{
-                    maxHeight: `${isOpen ? lists.length * 50 : 0}px`,
-                }}
-            >
-                {lists.map((item) => (
-                    <li key={item.id}>
-                        {editId === item.id ? (
-                            <ListEditor list={item} onClose={handleCloseEdit} />
-                        ) : (
-                            <NavLink setEditor={setEditId} list={item} />
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
+            )}
+        </>
     );
 };

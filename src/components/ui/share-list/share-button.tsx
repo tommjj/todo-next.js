@@ -14,69 +14,102 @@ import { cn } from '@/lib/utils';
 import { buttonProps } from '../nav/nav-buttons';
 import Button from '../button';
 import { GoShareAndroid } from 'react-icons/go';
+import { useFetch } from '@/components/hook';
+import useStore from '@/lib/stores/index.store';
+import { ShareDataType } from '@/lib/zod.schema';
+import { useSession } from '@/components/session-context';
 
-export const ShareListContent = () => {
+export const ShareListContent = ({
+    shareData,
+}: {
+    shareData: ShareDataType;
+}) => {
+    const session = useSession();
+    const isOwner = session.id === shareData.user.id;
+
     return (
         <>
-            {false ? (
-                <>
-                    <div className="flex flex-col w-full pt-3 px-4 flex-grow border-b overflow-hidden">
-                        <div className="text-sm opacity-90 mb-1">Members</div>
-                        <div className="flex-grow overflow-y-auto custom-scrollbar">
-                            <ul className="flex flex-col gap-0.5 ">
-                                <li>
-                                    <Button
-                                        variant="ghost"
-                                        className={cn(
-                                            buttonProps.className,
-                                            'md:hover:bg-[#00000000] px-0 font-normal text-[0.9rem]'
-                                        )}
-                                    >
-                                        {' '}
-                                        <div className="h-7 w-7 text-sm font-semibold flex justify-center items-center border rounded-full mr-3 bg-[#00000020]">
-                                            {'User 01'.substring(0, 2)}
-                                        </div>
-                                        User 01
-                                    </Button>
-                                </li>
-                            </ul>
-                        </div>
+            {shareData.Share.length === 0 ? (
+                <div className="flex flex-col text-center items-center justify-center flex-grow">
+                    <GoShareAndroid className="w-44 h-44 opacity-70" />
+                    <div className="font-semibold mt-2 mb-2">
+                        Collaborate with friends and family
                     </div>
-                    <div className="w-full px-4 pt-2 mb-2">
-                        <div className="flex">
-                            <div className="bg-[#00000008] mb-2 p-2 rounded flex-grow">
-                                link
-                            </div>
-                            <Button
-                                onClick={() => {
-                                    navigator.clipboard.writeText('my link');
-                                }}
-                                variant="primary"
-                                className="px-3 py-2 mb-2"
-                            >
-                                <FaRegCopy />
-                            </Button>
-                        </div>
-                        <div className="text-center font-light text-[0.8rem] px-10">
-                            Anyone with this link can participate in editing
-                            this list
-                        </div>
+                    <div className="font-light text-[0.8rem] px-10">
+                        Invite others to finally get on top of those household
+                        chores or plan that dream holiday.
                     </div>
-                </>
+                </div>
             ) : (
-                <>
-                    <div className="flex flex-col text-center items-center justify-center flex-grow">
-                        <GoShareAndroid className="w-44 h-44 opacity-70" />
-                        <div className="font-semibold mt-2 mb-2">
-                            Collaborate with friends and family
-                        </div>
-                        <div className="font-light text-[0.8rem] px-10">
-                            Invite others to finally get on top of those
-                            household chores or plan that dream holiday.
-                        </div>
+                <div className="flex flex-col w-full pt-3 px-4 flex-grow border-b overflow-hidden">
+                    <div className="text-sm opacity-90 mb-1">Members</div>
+                    <div className="flex-grow overflow-y-auto custom-scrollbar">
+                        <ul className="flex flex-col gap-0.5 ">
+                            {[
+                                shareData.user,
+                                ...shareData.Share.map((user) => ({
+                                    ...user.user,
+                                })),
+                            ].map((item) => (
+                                <li key={item.id}>
+                                    <div
+                                        className={
+                                            'flex py-1 items-center px-0 font-normal'
+                                        }
+                                    >
+                                        <div className="flex-grow flex items-center">
+                                            <div className="h-8 w-8 text-[0.8rem] font-semibold flex justify-center items-center border rounded-full mr-3 bg-[#00000020]">
+                                                {item.name.substring(0, 2)}
+                                            </div>
+                                            <div className="text-base">
+                                                {item.name}
+                                            </div>
+                                        </div>
+                                        <div className="text-[0.8rem] flex items-center opacity-80">
+                                            {item.id === shareData.user.id &&
+                                                'Owner'}
+                                        </div>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-                    <div className="w-full px-4 pt-2 mb-2">
-                        <div className="flex">
+                </div>
+            )}
+
+            {!isOwner ? (
+                <div className="w-full px-4 pt-4 mb-2">
+                    <Button
+                        onClick={() => {
+                            navigator.clipboard.writeText('my link');
+                        }}
+                        variant="ghost"
+                        className="w-full px-3 py-2 mb-2 border text-red-500 font-medium"
+                    >
+                        leave
+                    </Button>
+                </div>
+            ) : (
+                <div className="w-full px-4 pt-2 mb-2">
+                    <div className="flex">
+                        {shareData.shareToken ? (
+                            <>
+                                <div className="bg-[#00000008] mb-2 p-2 rounded flex-grow">
+                                    link
+                                </div>
+                                <Button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(
+                                            'my link'
+                                        );
+                                    }}
+                                    variant="primary"
+                                    className="px-3 py-2 mb-2"
+                                >
+                                    <FaRegCopy />
+                                </Button>
+                            </>
+                        ) : (
                             <Button
                                 onClick={() => {
                                     navigator.clipboard.writeText('my link');
@@ -86,20 +119,28 @@ export const ShareListContent = () => {
                             >
                                 Create new link
                             </Button>
-                        </div>
-                        <div className="text-center font-light text-[0.8rem] px-10">
-                            Anyone with this link can participate in editing
-                            this list
-                        </div>
+                        )}
                     </div>
-                </>
+                    <div className="text-center font-light text-[0.8rem] px-10">
+                        Anyone with this link can participate in editing this
+                        list
+                    </div>
+                </div>
             )}
         </>
     );
 };
 
+type ShareData = {
+    data: ShareDataType;
+};
+
 export const ShareButton = () => {
+    const currentList = useStore((s) => s.currentList)!;
     const dialogRef = useRef<DialogRef>(null);
+    const { data } = useFetch<ShareData>(
+        `/v1/api/share/lists/${currentList.id}`
+    );
 
     const handleClose = useCallback(() => {
         dialogRef.current?.setIsOpen(false);
@@ -110,9 +151,12 @@ export const ShareButton = () => {
             <AlertDialogTrigger>
                 <Button
                     variant="ghost"
-                    className={cn(buttonProps.className, 'p-1 select-none')}
+                    className={cn(buttonProps.className, 'p-1 select-none', {
+                        'mr-2': !data,
+                    })}
                 >
                     <AiOutlineUserGroupAdd className="h-6 w-6 opacity-70" />
+                    {data && data.data.Share.length + 1}
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent
@@ -137,7 +181,9 @@ export const ShareButton = () => {
                             </Button>
                         </div>
                     </div>
-                    <ShareListContent />
+                    {currentList && data?.data && (
+                        <ShareListContent shareData={data.data} />
+                    )}
                 </div>
             </AlertDialogContent>
         </AlertDialog>

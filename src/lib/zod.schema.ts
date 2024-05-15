@@ -216,3 +216,21 @@ export type ListFetchType = z.infer<typeof ListFetchSchema>;
 export const OrderTaskSchema = z.object({
     order: z.array(z.string()),
 });
+
+export const ShareDataSchema = z.object({
+    id: z.string(),
+    user: z.object({
+        id: z.string(),
+        name: z.string(),
+    }),
+    Share: z.array(
+        z.object({
+            user: z.object({
+                id: z.string(),
+                name: z.string(),
+            }),
+        })
+    ),
+    shareToken: z.nullable(z.string()),
+});
+export type ShareDataType = z.infer<typeof ShareDataSchema>;

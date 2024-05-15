@@ -88,7 +88,6 @@ export async function deleteTask(id: string) {
 
         return undefined;
     } catch (err) {
-        console.log(err);
         return err as Error;
     }
 }

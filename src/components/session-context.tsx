@@ -7,7 +7,7 @@ export const SessionContext = createContext<UserSession | undefined>(undefined);
 
 export const useSession = () => {
     const session = useContext(SessionContext);
-
+    if (!session) throw new Error('session');
     return session;
 };
 
