@@ -226,14 +226,17 @@ export const ListViewCreateTask = ({
     const [isActive, seIsActive] = useState(false);
 
     const primaryList = useStore((s) => s.primary)!;
+    const shareLists = useStore((s) => s.shareLists);
     const lists = useStore((s) => s.lists);
 
     const showForm = useCallback(() => seIsActive(true), []);
     const closeForm = useCallback(() => seIsActive(false), []);
 
     const defaultList = useMemo(
-        () => lists.find((l) => l.id === (listId || board)) || primaryList,
-        [board, listId, lists, primaryList]
+        () =>
+            [...lists, ...shareLists].find((l) => l.id === (listId || board)) ||
+            primaryList,
+        [board, listId, lists, primaryList, shareLists]
     );
 
     return !isActive ? (

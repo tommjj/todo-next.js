@@ -32,7 +32,15 @@ export async function findTaskById<T extends Prisma.TaskSelect>(
     const task = await prisma.task.findUnique({
         select,
         where: userId
-            ? { id: taskId, list: { userId: userId } }
+            ? {
+                  id: taskId,
+                  list: {
+                      OR: [
+                          { userId: userId },
+                          { Share: { some: { userId: userId } } },
+                      ],
+                  },
+              }
             : { id: taskId },
     });
 

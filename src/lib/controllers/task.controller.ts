@@ -47,7 +47,12 @@ export const createTaskHandler = factory.createHandlers(
         const [list] = await withError(prisma.list.findUnique)({
             where: {
                 id: task.listId,
-                userId: user.id,
+                OR: [
+                    {
+                        userId: user.id,
+                    },
+                    { Share: { some: { userId: user.id } } },
+                ],
             },
             select: {
                 id: true,
@@ -129,7 +134,12 @@ export const searchTasksHandler = factory.createHandlers(auth, async (c) => {
                 mode: 'insensitive',
             },
             list: {
-                userId: user.id,
+                OR: [
+                    {
+                        userId: user.id,
+                    },
+                    { Share: { some: { userId: user.id } } },
+                ],
             },
         },
     });

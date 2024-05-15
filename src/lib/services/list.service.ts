@@ -49,7 +49,10 @@ export async function findListById<T extends Prisma.ListSelect>(
 
     const list = await prisma.list.findUnique({
         select,
-        where: { id: listId, userId: userId },
+        where: {
+            id: listId,
+            OR: [{ userId: userId }, { Share: { some: { userId: userId } } }],
+        },
     });
 
     if (!list) return [undefined, new Error('not found')];

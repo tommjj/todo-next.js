@@ -23,10 +23,13 @@ export const AddTaskButton = () => {
 
     const primaryList = useStore((s) => s.primary)!;
     const lists = useStore((s) => s.lists);
+    const shareLists = useStore((s) => s.shareLists);
 
     const defaultList = useMemo(
-        () => lists.find((l) => l.id === board) || primaryList,
-        [board, lists, primaryList]
+        () =>
+            [...lists, ...shareLists].find((l) => l.id === board) ||
+            primaryList,
+        [board, lists, primaryList, shareLists]
     );
 
     return (

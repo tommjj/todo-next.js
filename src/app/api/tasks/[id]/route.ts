@@ -32,7 +32,12 @@ export async function PATCH(
             where: {
                 id: params.id,
                 list: {
-                    userId: user.id,
+                    OR: [
+                        {
+                            userId: user.id,
+                        },
+                        { Share: { some: { userId: user.id } } },
+                    ],
                 },
             },
         });

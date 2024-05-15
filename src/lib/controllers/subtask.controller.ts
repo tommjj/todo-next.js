@@ -59,7 +59,16 @@ export const updateSubTask = factory.createHandlers(
             data: { ...body },
             where: {
                 id: id,
-                task: { list: { userId: user.id } },
+                task: {
+                    list: {
+                        OR: [
+                            {
+                                userId: user.id,
+                            },
+                            { Share: { some: { userId: user.id } } },
+                        ],
+                    },
+                },
             },
         });
 
@@ -83,7 +92,16 @@ export const deleteSubtask = factory.createHandlers(auth, async (c) => {
     const [data, err] = await func({
         where: {
             id: id,
-            task: { list: { userId: user.id } },
+            task: {
+                list: {
+                    OR: [
+                        {
+                            userId: user.id,
+                        },
+                        { Share: { some: { userId: user.id } } },
+                    ],
+                },
+            },
         },
     });
 

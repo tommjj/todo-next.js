@@ -16,7 +16,7 @@ export default function Introduce() {
                     <div></div>
                     <div>
                         <h1 className="text-5xl tracking-tighter lg:mt-0 text-[#333] dark:text-white font-semibold lg:top-0 md:text-6xl md:font-semibold lg:text-[4.8rem] lg:-ml-1 leading-none">
-                            Organize your work and life.
+                            Organize your work and life
                         </h1>
 
                         <p className="tracking-tight max-w-[340px] sm:max-w-none text-xl sm:text-2xl lg:px-0 mt-7 lg:mt-3 text-[#666] dark:text-white ">
@@ -41,7 +41,6 @@ export default function Introduce() {
                             ></input>
                             <div>
                                 <Button
-                                    scroll={false}
                                     variant="primary"
                                     className="mt-4 sm:mt-0 h-12 w-full flex-shrink flex-grow-0 group sm:w-44 px-7 pl-8 py-2 sm:rounded-none sm:rounded-r-md"
                                 >
@@ -53,45 +52,6 @@ export default function Introduce() {
                     </div>
                 </div>
             </div>
-            {/* <div className=" absolute h-14 z-0 lg:z-20 w-full bottom-0 lg:static lg:flex lg:items-center lg:justify-end lg:w-1/2 lg:h-full ">
-                <div
-                    className={`absolute w-screen h-[200%] bg-white dark:bg-[#09001B] border top-0 rounded-2xl lg:rotate-45 lg:translate-x-2/4 shadow-md shadow-[#e8e9f0] lg:h-0 lg:right-[-20%] lg:top-2/4  lg:bg-gradient-to-r lg:from-[#f8f7f7] lg:to-90% lg:to-[#ecedf3] lg:rounded-[324px] dark:lg:from-[#09001B] dark:lg:to-[#040130] lg:w-screen lg:pt-[100%] lg:-translate-y-2/4 dark:shadow-gray-500`}
-                ></div>
-                <div className="lg:flex justify-end relative h-full w-full rounded-l-lg">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        strokeWidth={1.2}
-                        viewBox="0 0 24 24"
-                        className="h-full lg:h-auto lg:w-9/12"
-                    >
-                        <defs>
-                            <linearGradient
-                                id="grad1"
-                                x1="0%"
-                                y1="0%"
-                                x2="100%"
-                                y2="100%"
-                            >
-                                <stop
-                                    offset="0%"
-                                    className="[stop-color:#6ca1f0] [stop-opacity:1] dark:[stop-color:#0D6EFD]"
-                                />
-                                <stop
-                                    offset="100%"
-                                    className="[stop-color:#0D6EFD] [stop-opacity:1] dark:[stop-color:#0058dc]"
-                                />
-                            </linearGradient>
-                        </defs>
-                        <path
-                            stroke="url(#grad1)"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                </div>
-            </div> */}
         </section>
     );
 }

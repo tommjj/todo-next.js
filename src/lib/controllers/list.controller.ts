@@ -113,7 +113,12 @@ export const updateListHandler = factory.createHandlers(
             data: body,
             where: {
                 id: id,
-                userId: user.id,
+                OR: [
+                    {
+                        userId: user.id,
+                    },
+                    { Share: { some: { userId: user.id } } },
+                ],
             },
         });
 
@@ -148,7 +153,10 @@ export const updateOrderTaskInListHandler = factory.createHandlers(
             },
             where: {
                 id: id,
-                userId: user.id,
+                OR: [
+                    { userId: user.id },
+                    { Share: { some: { userId: user.id } } },
+                ],
             },
         });
 
@@ -219,7 +227,15 @@ export const clearAllCompletedTaskInListHandler = factory.createHandlers(
 
         const list = await prisma.list.findUnique({
             select: { id: true },
-            where: { id, userId: user.id },
+            where: {
+                id,
+                OR: [
+                    {
+                        userId: user.id,
+                    },
+                    { Share: { some: { userId: user.id } } },
+                ],
+            },
         });
 
         if (!list) return c.json(undefined, { status: 401 });

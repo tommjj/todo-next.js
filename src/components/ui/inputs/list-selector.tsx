@@ -27,6 +27,7 @@ const ListSelector = ({
 }) => {
     const primaryList = useStore((s) => s.primary)!;
     const lists = useStore((s) => s.lists);
+    const shareLists = useStore((s) => s.shareLists);
     const addListSync = useStore((s) => s.addListSync);
 
     const [state, setState] = useState(defaultValue || primaryList);
@@ -44,13 +45,13 @@ const ListSelector = ({
 
     const listFitter = useMemo(
         () =>
-            [primaryList, ...lists].filter((list) =>
+            [primaryList, ...lists, ...shareLists].filter((list) =>
                 list.name
                     .toLocaleLowerCase()
                     .trim()
                     .match(inputValue.toLocaleLowerCase().trim())
             ),
-        [inputValue, lists, primaryList]
+        [inputValue, lists, primaryList, shareLists]
     );
 
     const createListHandle = useCallback(async () => {
@@ -149,6 +150,30 @@ const ListSelector = ({
                                 </div>
                                 <div className="px-1 ">
                                     {lists.map((list) => (
+                                        <Button
+                                            key={list.id}
+                                            {...buttonProps}
+                                            type="button"
+                                            className={cn(
+                                                buttonProps.className,
+                                                'text-[0.8rem] font-normal',
+                                                {
+                                                    [buttonActiveClassName]:
+                                                        list.id === state.id,
+                                                }
+                                            )}
+                                            onClick={() => handleSetList(list)}
+                                        >
+                                            <GoHash className="w-4 h-4 p-[2px] mr-1 text-[#444] dark:text-inherit" />
+                                            {list.name}
+                                        </Button>
+                                    ))}
+                                </div>
+                                <div className="px-1.5 text-[0.8rem] font-normal mt-1.5 mb-0.5 opacity-90">
+                                    Share lists
+                                </div>
+                                <div className="px-1 ">
+                                    {shareLists.map((list) => (
                                         <Button
                                             key={list.id}
                                             {...buttonProps}

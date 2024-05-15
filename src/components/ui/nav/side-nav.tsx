@@ -43,6 +43,7 @@ import {
 import { ResizeContainer } from '../resize-container';
 import { cn } from '@/lib/utils';
 import { NavLinks } from './nav-list';
+import { NavShareLinks } from './nav-share-list';
 
 function Nav() {
     const { isOpen, width, setWidth, closeNav, openNav, toggleNav } =
@@ -120,6 +121,7 @@ function Nav() {
                             <AddTaskButton />
                             <NavItems />
                             <NavLinks />
+                            <NavShareLinks />
                         </div>
                     </nav>
                 </ResizeContainer>
@@ -154,94 +156,5 @@ export const NavItems = () => {
         </ul>
     );
 };
-
-export function NavLink({
-    active,
-    list,
-}: {
-    active: boolean;
-    list: { id: string; name: string };
-}) {
-    const action = deleteListAction.bind(null, list.id);
-
-    return (
-        <div
-            className={`flex items-center relative ${clsx({
-                'font-light hover:bg-gray-100 dark:hover:bg-[#0D6EFD15]':
-                    !active,
-                'bg-[#0D6EFD20] hover:bg-[#0D6EFD25] dark:bg-[#ffffff20] before:absolute before:top-0 before:left-0 before:bg-[#0D6EFD] before:h-full before:w-[3px] font-normal':
-                    active,
-            })}`}
-        >
-            <Link
-                prefetch={false}
-                href={`/tasks/${list.id}`}
-                className={`flex-grow h-12 pl-4 pr-1 flex items-center `}
-            >
-                <div className="flex">
-                    <ListBulletIcon className="h-6 mr-4 " strokeWidth={1} />
-                    {list.name}
-                </div>
-            </Link>
-            {active && (
-                <div
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        return false;
-                    }}
-                >
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <EllipsisVerticalIcon
-                                className="h-6 cursor-pointer"
-                                strokeWidth={1}
-                            />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="transition-all duration-75">
-                            <DropdownMenuItem>
-                                <AlertDialog>
-                                    <AlertDialogTrigger>
-                                        <button className="w-36 px-3 py-1 text-red-600 flex justify-center items-center">
-                                            <TrashIcon className="h-4 mr-2" />
-                                            delete list
-                                        </button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>
-                                                Are you absolutely sure?
-                                            </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone.
-                                                This will permanently delete
-                                                your list and remove all data of
-                                                list from our servers.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>
-                                                Cancel
-                                            </AlertDialogCancel>
-                                            <AlertDialogAction asChild>
-                                                <form action={action}>
-                                                    <Button
-                                                        type="submit"
-                                                        variant="destructive"
-                                                    >
-                                                        Continue
-                                                    </Button>
-                                                </form>
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            )}
-        </div>
-    );
-}
 
 export default Nav;

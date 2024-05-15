@@ -62,6 +62,9 @@ export const createListsSlice: StateCreator<
                 priv.currentList?.id === id
                     ? { ...priv.currentList, ...data }
                     : priv.currentList,
+            shareLists: priv.shareLists.map((i) =>
+                i.id !== id ? i : { ...i, ...data }
+            ),
         }));
         return {
             sync: async () => {

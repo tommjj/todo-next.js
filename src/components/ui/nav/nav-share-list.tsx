@@ -43,16 +43,16 @@ export const NavLink = ({
 }) => {
     const { board } = useParams();
 
-    const { push } = useRouter();
-    const removeList = useStore((s) => s.removeList);
+    // const { push } = useRouter();
+    // const removeList = useStore((s) => s.removeList);
 
-    const handleDelete = useCallback(() => {
-        const { sync, nextId, privId } = removeList(list.id);
-        if (board === list.id) {
-            push(`/tasks/${privId || nextId || 'todo'}`);
-        }
-        sync();
-    }, [board, list.id, removeList, push]);
+    // const handleDelete = useCallback(() => {
+    //     const { sync, nextId, privId } = removeList(list.id);
+    //     if (board === list.id) {
+    //         push(`/tasks/${privId || nextId || 'todo'}`);
+    //     }
+    //     sync();
+    // }, [board, list.id, removeList, push]);
 
     const handleSetEditor = useCallback(() => {
         setEditor(list.id);
@@ -97,7 +97,7 @@ export const NavLink = ({
                             <FaRegEdit className="h-4 mr-2 opacity-90 mb-[1px]" />
                             Edit
                         </Button>
-                        <AlertDialog>
+                        {/* <AlertDialog>
                             <AlertDialogTrigger>
                                 <Button
                                     variant="ghost"
@@ -136,7 +136,7 @@ export const NavLink = ({
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
-                        </AlertDialog>
+                        </AlertDialog> */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
@@ -144,8 +144,8 @@ export const NavLink = ({
     );
 };
 
-export const NavLinks = () => {
-    const lists = useStore((s) => s.lists);
+export const NavShareLinks = () => {
+    const lists = useStore((s) => s.shareLists);
     const [isOpen, setIsOpen] = useState(true);
     const [editId, setEditId] = useState<undefined | string>(undefined);
 
@@ -155,14 +155,13 @@ export const NavLinks = () => {
     }, []);
 
     return (
-        <div className="px-[10px] w-full mt-5">
+        <div className="px-[10px] w-full ">
             <Button
                 onClick={toggleList}
                 className="group px-[10px] py-[5px] justify-between w-full grow font-normal text-base"
                 variant="ghost"
             >
-                {/* < className="w-6 h-6 mr-[8px] text-[#444] dark:text-inherit" /> */}
-                My lists
+                Share lists
                 <div className="p-0 rounded-sm">
                     <IoIosArrowForward
                         className={cn(
@@ -177,7 +176,7 @@ export const NavLinks = () => {
             <ul
                 className={cn('overflow-hidden transition-all duration-300')}
                 style={{
-                    maxHeight: `${isOpen ? (1 + lists.length) * 50 : 0}px`,
+                    maxHeight: `${isOpen ? lists.length * 50 : 0}px`,
                 }}
             >
                 {lists.map((item) => (
@@ -189,10 +188,6 @@ export const NavLinks = () => {
                         )}
                     </li>
                 ))}
-
-                <li>
-                    <CreateListForm />
-                </li>
             </ul>
         </div>
     );
