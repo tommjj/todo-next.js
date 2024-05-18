@@ -7,6 +7,8 @@ import Button from '../button';
 import { useSession } from '@/components/session-context';
 import { FaRegCopy } from 'react-icons/fa';
 import { MdDoNotDisturbAlt } from 'react-icons/md';
+import useStore from '@/lib/stores/index.store';
+import { useRouter } from 'next/navigation';
 
 export const CreateLinkButton = () => {
     const [state, setState] = useShareContext();
@@ -35,7 +37,7 @@ export const CreateLinkButton = () => {
     );
 };
 
-const RemoveShareLink = () => {
+const RemoveShareLinkButton = () => {
     const [shareData, setShareData] = useShareContext();
 
     const handleRemove = useCallback(() => {
@@ -62,6 +64,30 @@ const RemoveShareLink = () => {
     );
 };
 
+const LeaveButton = () => {
+    const [shareData] = useShareContext();
+    const { replace } = useRouter();
+    const removeShareList = useStore((s) => s.removeShareList);
+
+    const onClick = useCallback(() => {
+        const { sync, nextId, privId } = removeShareList(shareData.id);
+
+        replace(`/tasks/${privId || nextId || 'todo'}`);
+
+        sync();
+    }, [removeShareList, replace, shareData.id]);
+
+    return (
+        <Button
+            onClick={onClick}
+            variant="ghost"
+            className="w-full px-3 py-2 mb-2 border text-red-500 font-medium"
+        >
+            leave
+        </Button>
+    );
+};
+
 export const ShareListFooter = () => {
     const [shareData] = useShareContext();
     const session = useSession();
@@ -71,15 +97,7 @@ export const ShareListFooter = () => {
         <>
             {!isOwner ? (
                 <div className="w-full px-4 pt-4 mb-2">
-                    <Button
-                        onClick={() => {
-                            navigator.clipboard.writeText('my link');
-                        }}
-                        variant="ghost"
-                        className="w-full px-3 py-2 mb-2 border text-red-500 font-medium"
-                    >
-                        leave
-                    </Button>
+                    <LeaveButton />
                 </div>
             ) : (
                 <div className="w-full px-4 pt-2 mb-2">
@@ -100,7 +118,7 @@ export const ShareListFooter = () => {
                                 >
                                     <FaRegCopy />
                                 </Button>
-                                <RemoveShareLink />
+                                <RemoveShareLinkButton />
                             </>
                         ) : (
                             <CreateLinkButton />

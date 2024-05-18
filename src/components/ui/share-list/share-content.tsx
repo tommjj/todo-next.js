@@ -6,9 +6,58 @@ import { GoShareAndroid } from 'react-icons/go';
 import Button from '../button';
 import { LiaTimesSolid } from 'react-icons/lia';
 import { useShareContext } from './share';
+import { fetcher } from '@/lib/http';
+import { useCallback } from 'react';
+
+export const UserItem = ({
+    user,
+    isOwner,
+}: {
+    isOwner: boolean;
+    user: { id: string; name: string };
+}) => {
+    const [shareData, setShareData] = useShareContext();
+
+    const onClick = useCallback(() => {
+        fetcher
+            .delete(`/v1/api/share/lists/${shareData.id}/user/${user.id}`)
+            .then(([res]) => {
+                if (res?.ok) {
+                    setShareData((priv) => ({
+                        ...priv,
+                        Share: priv.Share.filter(
+                            (share) => share.user.id !== user.id
+                        ),
+                    }));
+                }
+            });
+    }, [setShareData, shareData.id, user.id]);
+
+    return (
+        <div className={'flex py-1 items-center px-0 font-normal'}>
+            <div className="flex-grow flex items-center">
+                <Avatar name={user.name} />
+                <div className="text-base">{user.name}</div>
+            </div>
+            <div className="text-[0.8rem] flex items-center opacity-80">
+                {user.id === shareData.user.id ? (
+                    'Owner'
+                ) : isOwner ? (
+                    <Button
+                        variant="ghost"
+                        className="px-1 py-1 mb-2"
+                        onClick={onClick}
+                    >
+                        <LiaTimesSolid className="h-5 w-5" />
+                    </Button>
+                ) : null}
+            </div>
+        </div>
+    );
+};
 
 export const ShareListContent = () => {
-    const [shareData] = useShareContext();
+    const [shareData, setShareData] = useShareContext();
     const session = useSession();
     const isOwner = session.id === shareData.user.id;
 
@@ -37,30 +86,7 @@ export const ShareListContent = () => {
                                 })),
                             ].map((item) => (
                                 <li key={item.id}>
-                                    <div
-                                        className={
-                                            'flex py-1 items-center px-0 font-normal'
-                                        }
-                                    >
-                                        <div className="flex-grow flex items-center">
-                                            <Avatar name={item.name} />
-                                            <div className="text-base">
-                                                {item.name}
-                                            </div>
-                                        </div>
-                                        <div className="text-[0.8rem] flex items-center opacity-80">
-                                            {item.id === shareData.user.id ? (
-                                                'Owner'
-                                            ) : isOwner ? (
-                                                <Button
-                                                    variant="ghost"
-                                                    className="px-1 py-1 mb-2"
-                                                >
-                                                    <LiaTimesSolid className="h-5 w-5" />
-                                                </Button>
-                                            ) : null}
-                                        </div>
-                                    </div>
+                                    <UserItem isOwner={isOwner} user={item} />
                                 </li>
                             ))}
                         </ul>

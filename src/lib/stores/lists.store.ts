@@ -20,6 +20,9 @@ export interface ListsSlice {
     ) => Promise<ListWithoutTasksType | undefined>;
     updateListById: (id: string, data: ListUpdateType) => Sync;
     removeList: (id: string) => Sync & { nextId?: string; privId?: string };
+    removeShareList: (
+        id: string
+    ) => Sync & { nextId?: string; privId?: string };
     syncOrder: () => void;
 }
 
@@ -91,6 +94,31 @@ export const createListsSlice: StateCreator<
             privId,
             sync: async () => {
                 const [res] = await fetcher.delete(`/v1/api/lists/${id}`);
+            },
+        };
+    },
+    removeShareList: (id) => {
+        let nextId: string | undefined, privId: string | undefined;
+        const { primary } = get();
+        set((priv) => {
+            const index = priv.shareLists.findIndex((i) => i.id === id);
+            privId = priv.shareLists[index - 1]?.id;
+            nextId = priv.shareLists[index + 1]?.id;
+
+            return {
+                shareLists: priv.shareLists.filter((i) => {
+                    return i.id !== id;
+                }),
+            };
+        });
+
+        return {
+            nextId,
+            privId,
+            sync: async () => {
+                const [res] = await fetcher.delete(
+                    `/v1/api/share/lists/${id}/user/${primary?.userId}`
+                );
             },
         };
     },

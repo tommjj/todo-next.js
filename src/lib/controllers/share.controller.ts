@@ -108,3 +108,34 @@ export const removeShareListToken = factory.createHandlers(auth, async (c) => {
         return c.json(undefined, 500);
     }
 });
+
+/*
+ * @path:: /share/lists/:listId/user/:userId
+ * @method:: DELETE
+ */
+export const removeUserFromShareList = factory.createHandlers(
+    auth,
+    async (c) => {
+        const user = c.get('user');
+        const listId = c.req.param('listId');
+        const userId = c.req.param('userId');
+
+        const isSelf = user.id === userId;
+
+        try {
+            await prisma.share.delete({
+                where: {
+                    listId_userId: {
+                        listId: listId,
+                        userId: userId,
+                    },
+                    list: isSelf ? undefined : { userId: user.id },
+                },
+            });
+
+            return c.json(undefined, 204);
+        } catch (err) {
+            return c.json(undefined, 401);
+        }
+    }
+);

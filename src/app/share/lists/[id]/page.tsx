@@ -26,8 +26,6 @@ async function Page({ params, searchParams }: Props) {
 
     if (!searchParams.InvitationTokens || !user) return ErrorPage(400);
 
-    console.log('log::', params.id, searchParams.InvitationTokens);
-
     try {
         const data = await prisma.list.findUnique({
             select: {

@@ -29,34 +29,29 @@ import AlertDialog, {
 } from '../alert-dialog/alert-dialog';
 import ListEditor from '../lists/list-editor';
 import { FaRegEdit } from 'react-icons/fa';
+import { CiLogout } from 'react-icons/ci';
 
 export const NavLink = ({
     list,
-    setEditor,
 }: {
     list: {
         id: string;
         name: string;
         color: string | null;
     };
-    setEditor: (id: string) => void;
 }) => {
     const { board } = useParams();
 
-    // const { push } = useRouter();
-    // const removeList = useStore((s) => s.removeList);
+    const { replace } = useRouter();
+    const removeShareList = useStore((s) => s.removeShareList);
 
-    // const handleDelete = useCallback(() => {
-    //     const { sync, nextId, privId } = removeList(list.id);
-    //     if (board === list.id) {
-    //         push(`/tasks/${privId || nextId || 'todo'}`);
-    //     }
-    //     sync();
-    // }, [board, list.id, removeList, push]);
-
-    const handleSetEditor = useCallback(() => {
-        setEditor(list.id);
-    }, [list.id, setEditor]);
+    const handleLeave = useCallback(() => {
+        const { sync, nextId, privId } = removeShareList(list.id);
+        if (board === list.id) {
+            replace(`/tasks/${privId || nextId || 'todo'}`);
+        }
+        sync();
+    }, [removeShareList, list.id, board, replace]);
 
     return (
         <div className="relative flex items-center group overflow-hidden ">
@@ -86,18 +81,7 @@ export const NavLink = ({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="p-1">
-                        <Button
-                            onClick={handleSetEditor}
-                            variant="ghost"
-                            className={cn(
-                                buttonProps.className,
-                                ' w-36 px-3 py-1 flex justify-start items-center font-light mb-1'
-                            )}
-                        >
-                            <FaRegEdit className="h-4 mr-2 opacity-90 mb-[1px]" />
-                            Edit
-                        </Button>
-                        {/* <AlertDialog>
+                        <AlertDialog>
                             <AlertDialogTrigger>
                                 <Button
                                     variant="ghost"
@@ -106,8 +90,8 @@ export const NavLink = ({
                                         ' w-36 px-3 py-1 text-red-600 flex justify-start items-center font-light'
                                     )}
                                 >
-                                    <TrashIcon className="h-4 mr-2" />
-                                    Delete list
+                                    <CiLogout className="h-4 mr-2" />
+                                    Leave list
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -116,9 +100,7 @@ export const NavLink = ({
                                         Are you absolutely sure?
                                     </AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This action cannot be undone. This will
-                                        permanently delete your list and remove
-                                        all data of list from our servers.
+                                        This action cannot be undone.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -127,7 +109,7 @@ export const NavLink = ({
                                     </AlertDialogCancel>
                                     <AlertDialogAction asChild>
                                         <Button
-                                            onClick={handleDelete}
+                                            onClick={handleLeave}
                                             type="button"
                                             variant="destructive"
                                         >
@@ -136,7 +118,7 @@ export const NavLink = ({
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
-                        </AlertDialog> */}
+                        </AlertDialog>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
@@ -191,10 +173,7 @@ export const NavShareLinks = () => {
                                         onClose={handleCloseEdit}
                                     />
                                 ) : (
-                                    <NavLink
-                                        setEditor={setEditId}
-                                        list={item}
-                                    />
+                                    <NavLink list={item} />
                                 )}
                             </li>
                         ))}

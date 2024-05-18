@@ -115,12 +115,7 @@ export const updateListHandler = factory.createHandlers(
             data: body,
             where: {
                 id: id,
-                OR: [
-                    {
-                        userId: user.id,
-                    },
-                    { Share: { some: { userId: user.id } } },
-                ],
+                userId: user.id,
             },
         });
 
