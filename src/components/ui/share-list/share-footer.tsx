@@ -9,6 +9,16 @@ import { FaRegCopy } from 'react-icons/fa';
 import { MdDoNotDisturbAlt } from 'react-icons/md';
 import useStore from '@/lib/stores/index.store';
 import { useRouter } from 'next/navigation';
+import AlertDialog, {
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '../alert-dialog/alert-dialog';
 
 export const CreateLinkButton = () => {
     const [state, setState] = useShareContext();
@@ -69,7 +79,7 @@ const LeaveButton = () => {
     const { replace } = useRouter();
     const removeShareList = useStore((s) => s.removeShareList);
 
-    const onClick = useCallback(() => {
+    const handleLeave = useCallback(() => {
         const { sync, nextId, privId } = removeShareList(shareData.id);
 
         replace(`/tasks/${privId || nextId || 'todo'}`);
@@ -78,13 +88,36 @@ const LeaveButton = () => {
     }, [removeShareList, replace, shareData.id]);
 
     return (
-        <Button
-            onClick={onClick}
-            variant="ghost"
-            className="w-full px-3 py-2 mb-2 border text-red-500 font-medium"
-        >
-            leave
-        </Button>
+        <>
+            <AlertDialog>
+                <AlertDialogTrigger>
+                    <Button
+                        variant="ghost"
+                        className="w-full px-3 py-2 mb-2 border text-red-500 font-medium"
+                    >
+                        leave
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button onClick={handleLeave} variant="destructive">
+                                Continue
+                            </Button>
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 };
 

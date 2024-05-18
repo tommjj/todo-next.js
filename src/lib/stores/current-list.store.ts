@@ -4,11 +4,14 @@ import { List, ListWithoutTasksType, Task } from '@/lib/zod.schema';
 import { AppSlice } from './app.store';
 import { ListsSlice } from './lists.store';
 import { TasksSlice } from './tasks.store';
+import { getListById } from '../http';
 
 export interface CurrentListSlice {
     currentList: ListWithoutTasksType | null;
 
     setList: (list: List | { tasks: Task[] } | null) => void;
+
+    refreshCurrentList: () => void;
 }
 
 export const createCurrentListSlice: StateCreator<
@@ -16,7 +19,7 @@ export const createCurrentListSlice: StateCreator<
     [],
     [],
     CurrentListSlice
-> = (set) => ({
+> = (set, get) => ({
     currentList: null,
     setList: (list) =>
         set(() => {
@@ -30,6 +33,16 @@ export const createCurrentListSlice: StateCreator<
                 tasks: tasks,
             };
         }),
+    refreshCurrentList: async () => {
+        const { setList, currentList } = get();
+
+        if (!currentList) return;
+        const [data] = await getListById(currentList.id);
+
+        if (data) {
+            setList(data);
+        }
+    },
 });
 
 export default createCurrentListSlice;

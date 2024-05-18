@@ -35,7 +35,7 @@ export const useShareContext = () => {
     return context;
 };
 
-type ShareData = {
+export type ShareData = {
     data: ShareDataType;
 };
 
