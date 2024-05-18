@@ -7,7 +7,7 @@ import prisma from '../databases/prisma.init';
 
 const OTP_EXPIRED_TIME_SECOND = 60 * 5;
 const CACHE_EXPIRED_TIME_SECOND = 60 * 60;
-const MAX_OTP_PER_EMAIL = 2;
+const MAX_OTP_PER_EMAIL = 4;
 
 export const createRandomOTP = () => {
     const otp = Math.round(Math.random() * 1000000);

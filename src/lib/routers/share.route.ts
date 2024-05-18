@@ -8,4 +8,6 @@ const share = new Hono();
 
 share.get('/lists/:id', ...shareController.getShareDetails);
 
+share.post('/lists/:id', ...shareController.createNewShareListToken);
+
 export default share;

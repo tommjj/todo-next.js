@@ -45,7 +45,7 @@ export async function findListById<T extends Prisma.ListSelect>(
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {
-    if (listId === 'todo' && userId) return getTodo({ userId: userId }, select);
+    if (listId === 'todo' && userId) return getPrimaryList(userId, select);
 
     const list = await prisma.list.findUnique({
         select,
@@ -74,8 +74,8 @@ export async function getAllListsBySession(): Promise<
     return [lists, undefined];
 }
 
-export async function getTodo<T extends Prisma.ListSelect>(
-    { userId }: { userId: string },
+export async function getPrimaryList<T extends Prisma.ListSelect>(
+    userId: string,
     select: T = defaultListSelect as T
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]

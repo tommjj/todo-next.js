@@ -11,11 +11,12 @@ export const authConfig = {
             const isLoggedIn = !!auth?.user;
 
             const isOnTasks = nextUrl.pathname.startsWith('/tasks');
+            const isOnShare = nextUrl.pathname.startsWith('/share');
             const isOnHomePage = nextUrl.pathname === '/';
 
             if (isOnHomePage) return true;
 
-            if (isOnTasks) {
+            if (isOnTasks || isOnShare) {
                 if (isLoggedIn) {
                     return true;
                 }

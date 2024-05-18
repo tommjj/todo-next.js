@@ -2,7 +2,7 @@ import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { deleteList, getTodo } from '../services/list.service';
+import { deleteList, getPrimaryList } from '../services/list.service';
 import { withError } from '../utils';
 import {
     ListCreateSchema,
@@ -20,10 +20,12 @@ export const getAllListsDetailsHandler = factory.createHandlers(
     auth,
     async (c) => {
         const user = c.get('user');
-        const [primaryList] = await getTodo(
-            { userId: user.id },
-            { id: true, name: true, userId: true, color: true }
-        );
+        const [primaryList] = await getPrimaryList(user.id, {
+            id: true,
+            name: true,
+            userId: true,
+            color: true,
+        });
 
         const ListsPromise = withError(prisma.list.findMany)({
             select: { id: true, name: true, userId: true, color: true },

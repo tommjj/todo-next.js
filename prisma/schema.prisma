@@ -26,7 +26,7 @@ model List {
   userId     String
   color      String?
   shareToken String?
-  user       User    @relation("project", fields: [userId], references: [id])
+  user       User    @relation("project", fields: [userId], references: [id], onDelete: Cascade)
   Share      Share[]
   tasks      Task[]
   User       User[]
@@ -35,8 +35,8 @@ model List {
 model Share {
   listId String
   userId String
-  list   List   @relation(fields: [listId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([listId, userId])
   @@index([listId])
@@ -80,8 +80,8 @@ model Comment {
   text     String   @db.VarChar(255)
   taskId   String
   userId   String
-  User     User     @relation(fields: [userId], references: [id])
-  Task     Task     @relation(fields: [taskId], references: [id])
+  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Task     Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([id, taskId])
 }

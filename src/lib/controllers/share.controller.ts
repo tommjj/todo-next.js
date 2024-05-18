@@ -1,8 +1,8 @@
 import { Factory } from 'hono/factory';
 import { auth } from './middleware';
-import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { withError } from '../utils';
+import { getPrimaryList } from '../services/list.service';
+import { createRandString } from '../utils';
 
 const factory = new Factory();
 
@@ -49,4 +49,36 @@ export const getShareDetails = factory.createHandlers(auth, async (c) => {
  * @path:: /share/lists/:id
  * @method:: POST
  */
-// export const;
+export const createNewShareListToken = factory.createHandlers(
+    auth,
+    async (c) => {
+        const user = c.get('user');
+        const listId = c.req.param('id');
+
+        const [primary, err] = await getPrimaryList(user.id, { id: true });
+        if (err) return c.json(undefined, 500);
+
+        const token = createRandString(80);
+
+        try {
+            const list = await prisma.list.update({
+                select: {
+                    shareToken: true,
+                },
+                data: {
+                    shareToken: token,
+                },
+                where: {
+                    id: listId,
+                    NOT: {
+                        id: primary.id,
+                    },
+                },
+            });
+
+            return c.json({ data: list });
+        } catch (err) {
+            return c.json(undefined, 500);
+        }
+    }
+);
