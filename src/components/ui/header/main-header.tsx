@@ -14,7 +14,7 @@ import {
     ClearCurrentListButton,
     DeleteCurrentListButton,
 } from '../list-options/list-option-buttons';
-import { ShareButton } from '../share-list/share-button';
+import { ShareButton } from '../share-list/share';
 
 export const ListOption = ({
     clearList = false,

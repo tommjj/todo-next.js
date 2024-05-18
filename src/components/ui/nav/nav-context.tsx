@@ -22,9 +22,9 @@ type NavContextAction = {
 
 const NAV_STORAGE_KEY = 'nav';
 
-const defaultState: NavContextType = {
+const DEFAULT_STATE: NavContextType = {
     isOpen: true,
-    width: 250,
+    width: 300,
 };
 
 const NavContext = createContext<
@@ -43,7 +43,7 @@ const getStateFromStorage = (): NavContextType | undefined => {
 
 export const NavProvider = ({ children }: { children: React.ReactNode }) => {
     const [navState, setNavState] = useState(
-        getStateFromStorage() || defaultState
+        getStateFromStorage() || DEFAULT_STATE
     );
 
     const toggleNav = useCallback(() => {

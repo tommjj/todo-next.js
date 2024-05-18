@@ -4,7 +4,7 @@ import prisma from '../databases/prisma.init';
 
 import type { Lists } from '@/lib/definitions';
 
-export const defaultListSelect = {
+export const DEFAULT_LIST_SELECT = {
     id: true,
     name: true,
     color: true,
@@ -41,7 +41,7 @@ export const defaultListSelect = {
 
 export async function findListById<T extends Prisma.ListSelect>(
     { listId, userId }: { listId: string; userId?: string },
-    select: T = defaultListSelect as T
+    select: T = DEFAULT_LIST_SELECT as T
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {
@@ -76,7 +76,7 @@ export async function getAllListsBySession(): Promise<
 
 export async function getPrimaryList<T extends Prisma.ListSelect>(
     userId: string,
-    select: T = defaultListSelect as T
+    select: T = DEFAULT_LIST_SELECT as T
 ): Promise<
     [undefined, Error] | [Prisma.ListGetPayload<{ select: T }>, undefined]
 > {

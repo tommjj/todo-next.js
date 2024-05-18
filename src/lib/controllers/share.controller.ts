@@ -70,6 +70,7 @@ export const createNewShareListToken = factory.createHandlers(
                 },
                 where: {
                     id: listId,
+                    userId: user.id,
                     NOT: {
                         id: primary.id,
                     },
@@ -82,3 +83,28 @@ export const createNewShareListToken = factory.createHandlers(
         }
     }
 );
+
+/*
+ * @path:: /share/lists/:id/token
+ * @method:: DELETE
+ */
+export const removeShareListToken = factory.createHandlers(auth, async (c) => {
+    const user = c.get('user');
+    const listId = c.req.param('id');
+
+    try {
+        await prisma.list.update({
+            data: {
+                shareToken: null,
+            },
+            where: {
+                userId: user.id,
+                id: listId,
+            },
+        });
+
+        return c.json(undefined, 204);
+    } catch (err) {
+        return c.json(undefined, 500);
+    }
+});

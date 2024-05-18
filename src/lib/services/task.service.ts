@@ -5,7 +5,7 @@ import type { CreateTask } from '@/lib/definitions';
 import { Task } from '.prisma/client';
 import { withError } from '../utils';
 
-const defaultTaskSelect = {
+const DEFAULT_TASK_SELECT = {
     id: true,
     title: true,
     important: true,
@@ -25,7 +25,7 @@ type TaskIdUserId = { taskId: string; userId?: string };
 
 export async function findTaskById<T extends Prisma.TaskSelect>(
     { taskId, userId }: TaskIdUserId,
-    select: T = defaultTaskSelect as T
+    select: T = DEFAULT_TASK_SELECT as T
 ): Promise<
     [undefined, Error] | [Prisma.TaskGetPayload<{ select: T }>, undefined]
 > {
@@ -95,7 +95,7 @@ export async function deleteTask(id: string) {
 export const getAllImportantTasksByUserId = async (id: string) => {
     return await withError(prisma.task.findMany)({
         select: {
-            ...defaultTaskSelect,
+            ...DEFAULT_TASK_SELECT,
         },
         where: {
             list: {
@@ -112,7 +112,7 @@ export const getAllImportantTasksByUserId = async (id: string) => {
 export const getAllPlannedTasksByUserId = async (id: string) => {
     return await withError(prisma.task.findMany)({
         select: {
-            ...defaultTaskSelect,
+            ...DEFAULT_TASK_SELECT,
         },
         where: {
             list: {
