@@ -12,7 +12,7 @@ import { Task } from '@/lib/zod.schema';
 function BottomBar({ task }: { task: Task }) {
     const { board } = useParams();
     const { push } = useRouter();
-    const deleteTask = useStore((state) => state.deleteTask);
+    const deleteTask = useStore((state) => state.removeTask);
 
     const handleClickOverlay = useCallback(() => {
         push(`?`);

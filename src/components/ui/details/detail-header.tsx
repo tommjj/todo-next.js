@@ -28,7 +28,7 @@ import { toast } from '../sonner/sonner';
 export const DetailHeader = ({ task }: { task?: Task | null }) => {
     const searchParam = useSearchParams();
     const { push } = useRouter();
-    const deleteTask = useStore((state) => state.deleteTask);
+    const deleteTask = useStore((state) => state.removeTask);
 
     const handleClose = useCallback(() => {
         const param = new URLSearchParams(searchParam);

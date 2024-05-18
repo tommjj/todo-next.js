@@ -31,7 +31,7 @@ export interface TasksSlice {
     handleToggleImportantTask: (listId: string) => Sync;
     repeatTask: (taskId: string) => void;
     updateTask: (id: string, task: TaskUpdate) => Sync;
-    deleteTask: (taskId: string) => DeleteWithCancel;
+    removeTask: (taskId: string) => DeleteWithCancel;
     moveItem: (fromIndex: number, toIndex: number) => void;
     moveItemById: (
         itemIdMove: string,
@@ -185,14 +185,14 @@ export const createTasksAppSlice: StateCreator<
             }
         }
     },
-    deleteTask: (taskId) => {
+    removeTask: (taskId) => {
         var isCancel = false;
         set((priv) => ({ bin: new Set(priv.bin).add(taskId) }));
         return {
             sync: async () => {
                 if (isCancel) return;
                 try {
-                    await fetcher.delete(`/api/tasks/${taskId}`);
+                    await fetcher.delete(`/v1/api/tasks/${taskId}`);
 
                     set((priv) => {
                         const tasks = priv.tasks;

@@ -3,8 +3,10 @@ import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { convertTime, withError } from '../utils';
-import { CreateTaskSchema } from '../zod.schema';
+import { CreateTaskSchema, TaskUpdateSchema } from '../zod.schema';
 import {
+    deleteTaskById,
+    findTaskById,
     getAllImportantTasksByUserId,
     getAllPlannedTasksByUserId,
 } from '../services/task.service';
@@ -150,4 +152,64 @@ export const searchTasksHandler = factory.createHandlers(auth, async (c) => {
             },
         });
     return c.json(undefined, 404);
+});
+
+/*
+ * @path:: /tasks/:id
+ * @method:: PATCH
+ */
+export const updateTaskHandler = factory.createHandlers(
+    auth,
+    zValidator('json', TaskUpdateSchema),
+    async (c) => {
+        const user = c.get('user');
+        const id = c.req.param('id');
+        const body = c.req.valid('json');
+
+        const { subTasks, ...task } = body;
+
+        try {
+            await prisma.task.update({
+                data: {
+                    ...task,
+                    dueDate: convertTime(body.dueDate),
+                },
+                where: {
+                    id: id,
+                    list: {
+                        OR: [
+                            {
+                                userId: user.id,
+                            },
+                            { Share: { some: { userId: user.id } } },
+                        ],
+                    },
+                },
+            });
+
+            return c.json(undefined, 204);
+        } catch (error) {
+            return c.json(undefined, 410);
+        }
+    }
+);
+
+/*
+ * @path:: /tasks/:id
+ * @method:: DELETE
+ */
+export const deleteTaskHandler = factory.createHandlers(auth, async (c) => {
+    const user = c.get('user');
+    const id = c.req.param('id');
+
+    const [task] = await findTaskById(
+        { taskId: id, userId: user.id },
+        { id: true }
+    );
+
+    if (!task) return c.json(undefined, 401);
+
+    const err = await deleteTaskById(id);
+
+    return c.json(undefined, err ? 401 : 204);
 });

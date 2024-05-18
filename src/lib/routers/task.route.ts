@@ -1,19 +1,18 @@
 import { Hono } from 'hono';
-import {
-    createTaskHandler,
-    getAllImportantTaskHandler,
-    getAllPlannedTaskHandler,
-    searchTasksHandler,
-} from '@controllers/task.controller';
+import * as c from '@controllers/task.controller';
 
 const task = new Hono();
 
-task.get('/search/:q', ...searchTasksHandler);
+task.get('/search/:q', ...c.searchTasksHandler);
 
-task.get('/important', ...getAllImportantTaskHandler);
+task.get('/important', ...c.getAllImportantTaskHandler);
 
-task.get('/planned', ...getAllPlannedTaskHandler);
+task.get('/planned', ...c.getAllPlannedTaskHandler);
 
-task.post('/', ...createTaskHandler);
+task.post('/', ...c.createTaskHandler);
+
+task.patch('/:id', ...c.updateTaskHandler);
+
+task.delete('/:id', ...c.deleteTaskHandler);
 
 export default task;

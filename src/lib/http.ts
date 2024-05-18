@@ -97,7 +97,9 @@ export async function getListById(
     id: string
 ): Promise<[undefined, unknown] | [List, undefined]> {
     try {
-        const [res, err] = await fetcher.get(`/api/lists/${id}`);
+        const [res, err] = await fetcher.get(
+            `/v1/api/lists/${id}?includeTasks=true`
+        );
 
         if (!res?.ok) throw new Error('not found');
 
@@ -113,14 +115,13 @@ export async function getListById(
     }
 }
 
-export function updateTaskById(id: string, task: TaskUpdate) {
-    return fetch(`/api/tasks/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-            ...task,
-        } satisfies TaskUpdate),
-    });
-}
+export const updateTaskById = async (id: string, task: TaskUpdate) => {
+    const [res] = await fetcher.patch.json(`/v1/api/tasks/${id}`, task);
+    if (res?.ok) {
+        return undefined;
+    }
+    return new Error('update err');
+};
 
 export const updateSubtaskById = async (id: string, data: SubTaskUpdate) => {
     const [res] = await fetcher.patch.json(`/v1/api/subtasks/${id}`, {

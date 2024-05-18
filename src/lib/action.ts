@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { AccountSchema, CreateTaskSchema } from './zod.schema';
 import { createUser, getUserByUsername } from './services/user.service';
 import { deleteList, getAllListsBySession } from './services/list.service';
-import { deleteTask, findTaskById } from './services/task.service';
+import { deleteTaskById, findTaskById } from './services/task.service';
 import jwt from 'jsonwebtoken';
 
 export type State =
@@ -161,6 +161,6 @@ export async function deleteTaskAction(id: string) {
 
     if (!task) return;
 
-    await deleteTask(id);
+    await deleteTaskById(id);
     revalidatePath('/tasks', 'layout');
 }

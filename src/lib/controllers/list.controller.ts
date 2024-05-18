@@ -2,13 +2,18 @@ import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { deleteList, getPrimaryList } from '../services/list.service';
+import {
+    deleteList,
+    findListById,
+    getPrimaryList,
+} from '../services/list.service';
 import { withError } from '../utils';
 import {
     ListCreateSchema,
     ListUpdateSchema,
     OrderTaskSchema,
 } from '../zod.schema';
+import { z } from 'zod';
 
 const factory = new Factory();
 
@@ -68,12 +73,34 @@ export const getAllListsDetailsHandler = factory.createHandlers(
 /*
  * @path:: /lists/:id
  * @method:: GET
+ * @query:: [includeTasks: boolean]
  */
-export const getListHandler = factory.createHandlers(auth, async (c) => {
-    const { id } = c.req.param();
-
-    return c.json({ list: id });
+const querySchema = z.object({
+    includeTasks: z.coerce.boolean().default(false),
 });
+export const getListHandler = factory.createHandlers(
+    auth,
+    zValidator('query', querySchema),
+    async (c) => {
+        const { includeTasks } = c.req.valid('query');
+        const user = c.get('user');
+        const id = c.req.param('id');
+
+        const [list, err] = await findListById(
+            {
+                listId: id,
+                userId: user.id,
+            },
+            includeTasks
+                ? undefined
+                : { id: true, color: true, name: true, userId: true }
+        );
+
+        if (list) return Response.json(list, { status: 200 });
+
+        return Response.json({ message: err.message }, { status: 410 });
+    }
+);
 
 /*
  * @path:: /lists
