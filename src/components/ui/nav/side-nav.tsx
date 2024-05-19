@@ -1,35 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
 import { useEffect, useLayoutEffect, useState } from 'react';
-
-import { Lists } from '@/lib/definitions';
-import clsx from 'clsx';
-import CreateListForm from '../lists/create-list-form';
-import {
-    ListBulletIcon,
-    EllipsisVerticalIcon,
-    TrashIcon,
-} from '@heroicons/react/24/outline';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '../drop-down-menu/drop-down-menu';
-import { deleteListAction } from '@/lib/action';
-import AlertDialog, {
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '../alert-dialog/alert-dialog';
-import Button from '../button';
 import { useNavContext } from './nav-context';
 import NoSSR from '@/components/NoSSR';
 import NavHeader from './nav-header';

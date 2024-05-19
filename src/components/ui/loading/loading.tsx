@@ -15,7 +15,7 @@ export const MainLoadingOverlay = () => {
     return isLoading ? (
         <div className="flex items-center justify-center fixed top-0 left-0 w-screen h-screen bg-main-bg-color dark:bg-main-bg-color-dark z-[999]">
             <div>
-                <div>
+                <div className="mt-5">
                     <Image
                         priority
                         className="h-[72px] w-[72px]"

@@ -7,10 +7,9 @@ import { GoHash } from 'react-icons/go';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useCallback, useState } from 'react';
 import { cn } from '@/lib/utils';
-import CreateListForm from '../lists/list-create';
 import { buttonProps, getButtonClassName } from './nav-buttons';
 import useStore from '@/lib/stores/index.store';
-import { EllipsisHorizontalIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 import {
     DropdownMenu,
@@ -28,7 +27,6 @@ import AlertDialog, {
     AlertDialogTrigger,
 } from '../alert-dialog/alert-dialog';
 import ListEditor from '../lists/list-editor';
-import { FaRegEdit } from 'react-icons/fa';
 import { CiLogout } from 'react-icons/ci';
 
 export const NavLink = ({

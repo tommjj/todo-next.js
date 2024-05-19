@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import Button from '../button';
 import { buttonProps } from '../nav/nav-buttons';

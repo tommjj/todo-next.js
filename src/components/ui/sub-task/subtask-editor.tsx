@@ -1,14 +1,8 @@
 import { cn } from '@/lib/utils';
 import { useCallback, useState } from 'react';
-import { IoAddOutline } from 'react-icons/io5';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
 import Button from '../button';
-import { fetcher, updateSubtaskById } from '@/lib/http';
-import {
-    SubTask,
-    SubTaskCreateWithoutId,
-    SubTaskSchema,
-} from '@/lib/zod.schema';
+import { SubTask } from '@/lib/zod.schema';
 import useStore from '@/lib/stores/index.store';
 
 export const SubTaskFormEditor = ({
@@ -87,7 +81,7 @@ export const SubTaskFormEditor = ({
                     variant="primary"
                     aria-disabled={formState.title.trim() === ''}
                 >
-                    Add sub-task
+                    Save
                 </Button>
             </div>
         </form>
