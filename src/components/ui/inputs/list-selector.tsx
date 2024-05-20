@@ -145,70 +145,77 @@ const ListSelector = ({
                                         Todo
                                     </Button>
                                 </div>
-                                {lists.length === 0 ? null : (
-                                    <>
-                                        <div className="px-1.5 text-[0.8rem] font-normal mt-1.5 mb-0.5 opacity-90">
-                                            My lists
-                                        </div>
-                                        <div className="px-1 ">
-                                            {lists.map((list) => (
-                                                <Button
-                                                    key={list.id}
-                                                    {...buttonProps}
-                                                    type="button"
-                                                    className={cn(
-                                                        buttonProps.className,
-                                                        'text-[0.8rem] font-normal',
-                                                        {
-                                                            [buttonActiveClassName]:
-                                                                list.id ===
-                                                                state.id,
-                                                        }
-                                                    )}
-                                                    onClick={() =>
-                                                        handleSetList(list)
-                                                    }
-                                                >
-                                                    <GoHash className="w-4 h-4 p-[2px] mr-1 text-[#444] dark:text-inherit" />
-                                                    {list.name}
-                                                </Button>
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
+                                <div className="px-1 mb-1">
+                                    {lists.length === 0 ? null : (
+                                        <>
+                                            <div className="px-0.5 text-[0.8rem] font-normal mt-1.5 mb-0.5 opacity-90">
+                                                My lists
+                                            </div>
+                                            <ul>
+                                                {lists.map((list) => (
+                                                    <li key={list.id}>
+                                                        <Button
+                                                            {...buttonProps}
+                                                            type="button"
+                                                            className={cn(
+                                                                buttonProps.className,
+                                                                'text-[0.8rem] font-normal',
+                                                                {
+                                                                    [buttonActiveClassName]:
+                                                                        list.id ===
+                                                                        state.id,
+                                                                }
+                                                            )}
+                                                            onClick={() =>
+                                                                handleSetList(
+                                                                    list
+                                                                )
+                                                            }
+                                                        >
+                                                            <GoHash className="w-4 h-4 p-[2px] mr-1 text-[#444] dark:text-inherit" />
+                                                            {list.name}
+                                                        </Button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
 
-                                {shareLists.length === 0 ? null : (
-                                    <>
-                                        shareLists
-                                        <div className="px-1.5 text-[0.8rem] font-normal mt-1.5 mb-0.5 opacity-90">
-                                            Share lists
-                                        </div>
-                                        <div className="px-1 ">
-                                            {shareLists.map((list) => (
-                                                <Button
-                                                    key={list.id}
-                                                    {...buttonProps}
-                                                    type="button"
-                                                    className={cn(
-                                                        buttonProps.className,
-                                                        'text-[0.8rem] font-normal',
-                                                        {
-                                                            [buttonActiveClassName]:
-                                                                list.id ===
-                                                                state.id,
-                                                        }
-                                                    )}
-                                                    onClick={() =>
-                                                        handleSetList(list)
-                                                    }
-                                                >
-                                                    <GoHash className="w-4 h-4 p-[2px] mr-1 text-[#444] dark:text-inherit" />
-                                                    {list.name}
-                                                </Button>
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
+                                    {shareLists.length === 0 ? null : (
+                                        <>
+                                            <div className="px-0.5 text-[0.8rem] font-normal mt-1.5 mb-0.5 opacity-90">
+                                                Share lists
+                                            </div>
+                                            <ul>
+                                                {shareLists.map((list) => (
+                                                    <li key={list.id}>
+                                                        <Button
+                                                            {...buttonProps}
+                                                            type="button"
+                                                            className={cn(
+                                                                buttonProps.className,
+                                                                'text-[0.8rem] font-normal',
+                                                                {
+                                                                    [buttonActiveClassName]:
+                                                                        list.id ===
+                                                                        state.id,
+                                                                }
+                                                            )}
+                                                            onClick={() =>
+                                                                handleSetList(
+                                                                    list
+                                                                )
+                                                            }
+                                                        >
+                                                            <GoHash className="w-4 h-4 p-[2px] mr-1 text-[#444] dark:text-inherit" />
+                                                            {list.name}
+                                                        </Button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         ) : (
                             <div className="px-1 my-1">

@@ -20,6 +20,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IoIosSync } from 'react-icons/io';
 import { useFetch } from '@/components/hook';
 import { ShareDataType } from '@/lib/zod.schema';
+import { IoOptionsOutline } from 'react-icons/io5';
 
 export type ShareData = {
     data: ShareDataType;
@@ -125,6 +126,22 @@ export const AppHeader = () => {
         <header className="flex items-center justify-between w-full h-14 px-3">
             <div></div>
             <div className="flex gap-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                'p-1 select-none'
+                            )}
+                        >
+                            <IoOptionsOutline className="h-6 w-6 opacity-70" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="transition-all duration-75 p-1">
+                        <div className="w-[500px] h-96"></div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
                 <ShareButton />
                 <ListOption clearList deleteList={IsMyList} refresh />
             </div>

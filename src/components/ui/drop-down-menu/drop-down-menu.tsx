@@ -126,6 +126,8 @@ export const DropdownMenu = forwardRef<DropdownMenuRef, DropdownMenuProps>(
                 [`left: ${
                     isOverOverflow
                         ? triggerBoundingRect.right
+                        : triggerBoundingRect.left > 10
+                        ? 10
                         : triggerBoundingRect.left
                 }px;`]:
                     isOverLeft ||
@@ -133,6 +135,8 @@ export const DropdownMenu = forwardRef<DropdownMenuRef, DropdownMenuProps>(
                 [`right: ${
                     isOverOverflow
                         ? window.innerWidth - triggerBoundingRect.left
+                        : window.innerWidth - triggerBoundingRect.right > 10
+                        ? 15
                         : window.innerWidth - triggerBoundingRect.right
                 }px`]:
                     isOverRight ||
