@@ -76,7 +76,7 @@ model SubTask {
 
 model Comment {
   id       String   @id @default(uuid())
-  createAt DateTime @default(now())
+  createAt DateTime @default(now()) @db.Timestamptz()
   text     String   @db.VarChar(255)
   taskId   String
   userId   String

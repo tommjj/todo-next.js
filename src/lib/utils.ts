@@ -166,20 +166,31 @@ export const daysIntoYear = (date: Date) => {
 };
 
 //! return type error
-export const withError = <T extends Function>(
+export const withError = <T extends (...args: any[]) => Promise<any>>(
     func: T
 ): ((
-    ...a: ArgumentTypes<T>
-) => Promise<[undefined, unknown] | [ReturnTypes<T>, undefined]>) => {
-    return async (...a: ArgumentTypes<T>) => {
+    ...a: Parameters<T>
+) => Promise<[ReturnType<T>, undefined] | [undefined, unknown]>) => {
+    return async (...a: Parameters<T>) => {
         try {
             const data = await func(...a);
-
             return [data, undefined];
         } catch (err) {
             return [undefined, err];
         }
     };
+};
+
+export const noError = <T extends (...args: any[]) => Promise<any>>(
+    func: T
+): T => {
+    return (async (...a: Parameters<T>) => {
+        try {
+            return await func(...a);
+        } catch (err) {
+            return null;
+        }
+    }) as T;
 };
 
 export function createRandString(length: number) {

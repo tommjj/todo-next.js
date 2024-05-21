@@ -8,6 +8,7 @@ import { PriorityPicker } from '../inputs/priority-picker';
 import { ImportantPicker } from '../inputs/Important-picker';
 import useStore from '@/lib/stores/index.store';
 import { DescriptionInput, TaskNameInput } from '../inputs/text-input';
+import { useParams } from 'next/navigation';
 
 type FormStateType = {
     title: string;
@@ -20,6 +21,8 @@ type FormStateType = {
 };
 
 export const DetailEditorTask = ({ task }: { task: Task }) => {
+    const { board } = useParams();
+    const currentList = useStore((s) => s.currentList);
     const ref = useRef<FormStateType | undefined>(undefined);
     const updateTask = useStore((s) => s.updateTask);
     const [formState, setFormState] = useState<FormStateType>({
@@ -39,10 +42,14 @@ export const DetailEditorTask = ({ task }: { task: Task }) => {
             if (parse.success) {
                 const sync = updateTask(task.id, parse.data);
                 sync.sync();
+
+                document.title = `${formState.title} - ${
+                    currentList ? currentList.name : board
+                }`;
             }
         }
         ref.current = formState;
-    }, [formState, task, updateTask]);
+    }, [board, currentList, formState, task, updateTask]);
 
     useEffect(() => {
         const test = function (e: any) {

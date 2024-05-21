@@ -26,55 +26,63 @@ export const SubtaskView = ({ task }: { task: Task }) => {
 
     return (
         <div>
-            <Button
-                onClick={toggleList}
-                className="px-0 pt-[5px] pb-[3px] justify-start w-full grow font-medium text-[0.9rem] md:hover:bg-inherit rounded-none opacity-90 hover:opacity-100"
-                variant="ghost"
-            >
-                <div className="p-0 rounded-sm">
-                    <IoIosArrowForward
+            {subtasks.length === 0 ? (
+                <AddSubtaskButton taskId={task.id} />
+            ) : (
+                <>
+                    <Button
+                        onClick={toggleList}
+                        className="px-0 pt-[5px] pb-[3px] justify-start w-full grow font-medium text-[0.9rem] md:hover:bg-inherit rounded-none opacity-90 hover:opacity-100"
+                        variant="ghost"
+                    >
+                        <div className="p-0 rounded-sm">
+                            <IoIosArrowForward
+                                className={cn(
+                                    'h-6 w-5 pr-1 mt-1 transition-all duration-300 mr-1',
+                                    {
+                                        'rotate-90': isOpen,
+                                    }
+                                )}
+                            />
+                        </div>
+                        <span className="">Sub-tasks</span>
+                        <span className="ml-1 px-1 rounded font-light text-[0.8rem]">
+                            {subTaskCompletedCount}/{subtasks.length}
+                        </span>
+                    </Button>
+                    <ul
                         className={cn(
-                            'h-6 w-5 pr-1 mt-1 transition-all duration-300 mr-1',
-                            {
-                                'rotate-90': isOpen,
-                            }
+                            'ml-4 border-t overflow-hidden transition-all h-auto'
                         )}
-                    />
-                </div>
-                <span className="">Sub-tasks</span>
-                <span className="ml-1 px-1 rounded font-light text-[0.8rem]">
-                    {subTaskCompletedCount}/{subtasks.length}
-                </span>
-            </Button>
-            <ul
-                className={cn(
-                    'ml-4 border-t overflow-hidden transition-all h-auto'
-                )}
-                style={{
-                    maxHeight: `${
-                        isOpen ? 60 * (1 + subtasks.length) + 100 : 0
-                    }px`,
-                }}
-            >
-                {subtasks.map((item) => (
-                    <li key={`subtask::${item.id}`}>
-                        {subtaskEditor !== item.id ? (
-                            <SubtaskItem
-                                subtask={item}
-                                setEditor={() => setSubtaskEditor(item.id)}
-                            />
-                        ) : (
-                            <SubTaskFormEditor
-                                subTask={item}
-                                onCancel={handleClose}
-                            />
-                        )}
-                    </li>
-                ))}
-                <li>
-                    <AddSubtaskButton taskId={task.id} />
-                </li>
-            </ul>
+                        style={{
+                            maxHeight: `${
+                                isOpen ? 60 * (1 + subtasks.length) + 100 : 0
+                            }px`,
+                        }}
+                    >
+                        {subtasks.map((item) => (
+                            <li key={`subtask::${item.id}`}>
+                                {subtaskEditor !== item.id ? (
+                                    <SubtaskItem
+                                        subtask={item}
+                                        setEditor={() =>
+                                            setSubtaskEditor(item.id)
+                                        }
+                                    />
+                                ) : (
+                                    <SubTaskFormEditor
+                                        subTask={item}
+                                        onCancel={handleClose}
+                                    />
+                                )}
+                            </li>
+                        ))}
+                        <li>
+                            <AddSubtaskButton taskId={task.id} />
+                        </li>
+                    </ul>
+                </>
+            )}
         </div>
     );
 };

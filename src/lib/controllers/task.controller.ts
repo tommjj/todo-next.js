@@ -2,7 +2,7 @@ import { Factory } from 'hono/factory';
 import { auth } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
-import { convertTime, withError } from '../utils';
+import { convertTime, noError, withError } from '../utils';
 import { CreateTaskSchema, TaskUpdateSchema } from '../zod.schema';
 import {
     deleteTaskById,
@@ -33,6 +33,33 @@ const TASK_SELECT = {
     listId: true,
     order: true,
 } satisfies Prisma.TaskSelect;
+
+/*
+ * @path:: /tasks/:id
+ * @method:: GET
+ */
+export const getTaskHandler = factory.createHandlers(auth, async (c) => {
+    const user = c.get('user');
+    const id = c.req.param('id');
+
+    const tasks = await noError(prisma.task.findUnique)({
+        where: {
+            id: id,
+            list: {
+                OR: [
+                    { userId: user.id },
+                    { Share: { some: { userId: user.id } } },
+                ],
+            },
+        },
+        select: TASK_SELECT,
+    });
+
+    if (!tasks) return c.json(undefined, 410);
+
+    return c.json({ data: tasks });
+});
+
 /*
  * @path:: /tasks
  * @method:: POST
@@ -213,3 +240,53 @@ export const deleteTaskHandler = factory.createHandlers(auth, async (c) => {
 
     return c.json(undefined, err ? 401 : 204);
 });
+
+/* ---------------------
+ * -------COMMENT-------
+------------------------*/
+
+/*
+ * @path:: /tasks/:id/comments
+ * @method:: GET
+ */
+export const getAllCommentOfTaskHandler = factory.createHandlers(
+    auth,
+    async (c) => {
+        const user = c.get('user');
+        const id = c.req.param('id');
+
+        const comments = await noError(prisma.task.findUnique)({
+            where: {
+                id: id,
+                list: {
+                    OR: [
+                        { userId: user.id },
+                        { Share: { some: { userId: user.id } } },
+                    ],
+                },
+            },
+            select: {
+                Comments: {
+                    select: {
+                        id: true,
+                        createAt: true,
+                        text: true,
+                        taskId: true,
+                        User: {
+                            select: {
+                                id: true,
+                                name: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        createAt: 'asc',
+                    },
+                },
+            },
+        });
+
+        if (!comments) return c.json(undefined, 410);
+        return c.json({ data: comments.Comments });
+    }
+);
