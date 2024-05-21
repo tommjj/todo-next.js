@@ -3,7 +3,7 @@
 import { useLoadList } from '@/components/hook';
 import { useParams } from 'next/navigation';
 import { ListNotFound } from '../ui/not-found/not-found';
-import { AppHeader } from '../ui/header/main-header';
+import { ListHeader } from '../ui/header/main-header';
 import AppTitle from '../ui/task/app-title';
 import { ListViewCreateTask } from '../ui/task/create-task';
 import SortTasksListContainer from '../ui/task/sort-list-container';
@@ -16,7 +16,7 @@ export const ListPage = () => {
         <ListNotFound />
     ) : (
         <>
-            <AppHeader />
+            <ListHeader />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <AppTitle />

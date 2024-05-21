@@ -14,6 +14,7 @@ import {
     TasksCompletedTskList,
     TasksNotCompletedList,
 } from '../ui/task/list-container';
+import { Header } from '../ui/header/main-header';
 
 export const usePlannedTask = () => {
     const setList = useStore((s) => s.setList);
@@ -61,18 +62,13 @@ export const PlannedPage = () => {
 
     return isLoading ? null : (
         <>
-            <header className="flex items-center justify-between w-full h-14 px-3"></header>
+            <Header listTitle="Planned" />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <AppTitle name="Planned" />
                     <div className="flex flex-col w-full flex-grow">
                         <div className="">
-                            <ListViewCreateTask
-                                defaultValue={{
-                                    ...defaultCreateTaskFormValue,
-                                    important: true,
-                                }}
-                            />
+                            <ListViewCreateTask />
                         </div>
                         <div className="w-full flex-grow relative">
                             <TasksNotCompletedList tasks={plannedTask} />

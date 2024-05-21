@@ -64,7 +64,7 @@ export const ShareButton = () => {
                         'mr-2': !data,
                     })}
                 >
-                    <AiOutlineUserGroupAdd className="h-6 w-6 opacity-70" />
+                    <AiOutlineUserGroupAdd className="h-6 w-6 p-[1px] opacity-70" />
                     {data && data.data.Share.length + 1}
                 </Button>
             </AlertDialogTrigger>

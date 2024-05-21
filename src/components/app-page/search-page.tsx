@@ -13,6 +13,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { ListNotFound } from '../ui/not-found/not-found';
 import Search from '../ui/search/search';
+import { Header } from '../ui/header/main-header';
 
 export const useSearchTask = (q: string | null) => {
     const setList = useStore((s) => s.setList);
@@ -65,7 +66,7 @@ export const SearchPage = () => {
 
     return isLoading ? null : isNotFound ? (
         <>
-            <header className="flex items-center justify-between w-full h-14 px-3"></header>
+            <Header listTitle="Share" />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <AppTitle name={` Search`} />
@@ -79,7 +80,7 @@ export const SearchPage = () => {
         </>
     ) : (
         <>
-            <header className="flex items-center justify-between w-full h-14 px-3"></header>
+            <Header listTitle={`Results for "${s.get('q')}"`} />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <AppTitle name={`Results for "${s.get('q')}"`} />

@@ -105,7 +105,7 @@ const Search = ({ close }: { close?: () => void }) => {
                 />
             </div>
 
-            <div className="h-[400px] overflow-x-hidden overflow-y-auto custom-scrollbar">
+            <div className="h-[520px] md:h-[420px] overflow-x-hidden overflow-y-auto custom-scrollbar">
                 <div className="w-full">
                     {searchValue.trim() === '' ? null : (
                         <TaskSearch searchText={searchValue} close={close} />

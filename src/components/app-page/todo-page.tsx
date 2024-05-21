@@ -7,90 +7,74 @@ import SortTasksListContainer from '../ui/task/sort-list-container';
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger,
 } from '../ui/drop-down-menu/drop-down-menu';
 import Button from '../ui/button';
 import { buttonProps } from '../ui/nav/nav-buttons';
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
-import AlertDialog, {
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '../ui/alert-dialog/alert-dialog';
-import { AiOutlineClear } from 'react-icons/ai';
-import useStore from '@/lib/stores/index.store';
-import { useCallback } from 'react';
 
-const Header = () => {
-    const primaryListId = useStore((s) => s.primary?.id);
-    const clearCompletedTasksSync = useStore((s) => s.clearCompletedTasksSync);
+import { useEffect, useRef, useState } from 'react';
+import { IoOptionsOutline } from 'react-icons/io5';
+import { ListOption } from '../ui/header/main-header';
 
-    const handleClear = useCallback(() => {
-        if (!primaryListId) return;
-        clearCompletedTasksSync(primaryListId);
-    }, [clearCompletedTasksSync, primaryListId]);
+export const Header = () => {
+    const ref = useRef<HTMLHeadElement>(null);
+    const [isShowTitle, setIsShowTitle] = useState(false);
+
+    useEffect(() => {
+        const element = ref.current;
+        const parentElement = ref.current?.parentElement;
+
+        if (!element || !parentElement) return;
+
+        const handler = () => {
+            setIsShowTitle(parentElement.scrollTop > 50);
+        };
+
+        parentElement.addEventListener('scroll', handler);
+
+        return () => {
+            parentElement.removeEventListener('scroll', handler);
+        };
+    }, []);
 
     return (
-        <header className="flex items-center justify-end w-full h-14 px-3">
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <Button
-                        variant="ghost"
-                        className={cn(buttonProps.className, 'p-1 select-none')}
-                    >
-                        <EllipsisHorizontalIcon className="h-6 w-6" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="transition-all duration-75 p-1">
-                    <DropdownMenuItem>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                                <Button
-                                    variant="ghost"
-                                    className={cn(
-                                        buttonProps.className,
-                                        ' px-3 py-1 text-amber-600 flex justify-start items-center font-light'
-                                    )}
-                                >
-                                    <AiOutlineClear className="h-5 w-4 mr-2" />
-                                    Clear tasks
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>
-                                        Clear all completed task?
-                                    </AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>
-                                        Cancel
-                                    </AlertDialogCancel>
-                                    <AlertDialogAction asChild>
-                                        <Button
-                                            className="bg-amber-600"
-                                            onClick={handleClear}
-                                            variant="warning"
-                                        >
-                                            Continue
-                                        </Button>
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+        <header
+            ref={ref}
+            className="flex items-center justify-between w-full h-14 px-3 sticky top-0 left-0 bg-main-bg-color dark:bg-main-bg-color-dark z-20"
+        >
+            <div></div>
+            <div
+                className={cn(
+                    'absolute font-semibold -translate-x-1/2 left-1/2 transition-all opacity-0 translate-y-5',
+                    {
+                        'opacity-100 translate-y-0': isShowTitle,
+                    }
+                )}
+            >
+                Todo
+            </div>
+
+            <div className="flex gap-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                buttonProps.className,
+                                'p-1 select-none'
+                            )}
+                        >
+                            <IoOptionsOutline className="h-6 w-6 p-[1px] opacity-70" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="transition-all duration-75 p-1">
+                        <div className="w-[500px] h-96"></div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <ListOption clearList />
+            </div>
         </header>
     );
 };

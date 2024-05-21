@@ -14,6 +14,7 @@ import {
     TasksCompletedTskList,
     TasksNotCompletedList,
 } from '../ui/task/list-container';
+import { Header } from '../ui/header/main-header';
 
 export const useImportantTask = () => {
     const setList = useStore((s) => s.setList);
@@ -61,7 +62,7 @@ export const ImportantPage = () => {
 
     return isLoading ? null : (
         <>
-            <header className="flex items-center justify-between w-full h-14 px-3"></header>
+            <Header listTitle="Important" />
             <div className="flex flex-col items-center w-full">
                 <div className="flex flex-col w-full max-w-4xl px-3 lg:px-5">
                     <AppTitle name="Important" />
