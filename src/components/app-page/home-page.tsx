@@ -5,7 +5,7 @@ import Button from '../ui/button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function Introduce() {
+export default function Hero() {
     const [email, setEmail] = useState('');
     const { push } = useRouter();
 

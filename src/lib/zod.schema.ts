@@ -254,4 +254,19 @@ export const CommentAPIResSchema = z.object({
 export type CommentAPIResType = z.infer<typeof CommentAPIResSchema>;
 
 export const CommentsAPIResSchema = z.array(CommentAPIResSchema);
-export type CommentsAPIResType = z.infer<typeof CommentAPIResSchema>;
+export type CommentsAPIResType = z.infer<typeof CommentsAPIResSchema>;
+
+export const CommentSchema = z.object({
+    id: z.string(),
+    createAt: z.coerce.date(),
+    text: z.string(),
+    taskId: z.string(),
+    userId: z.string(),
+});
+export type CommentType = z.infer<typeof CommentSchema>;
+
+export const CommentCreateSchema = CommentSchema.omit({
+    id: true,
+    createAt: true,
+});
+export type CommentCreateType = z.infer<typeof CommentCreateSchema>;

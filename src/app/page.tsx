@@ -1,4 +1,4 @@
-import Introduce from '@/components/app-page/home-page';
+import Hero from '@/components/app-page/home-page';
 import Logo from '@/components/logo';
 
 import Header from '@/components/ui/header/header';
@@ -12,7 +12,7 @@ export default function Home() {
                 <UserButton />
             </Header>
             <main className="no-scrollbar snap-mandatory snap-y scroll-smooth min-h-screen max-h-screen overflow-y-auto w-full -mt-16 bg-main-bg-color dark:bg-main-bg-color-dark">
-                <Introduce />
+                <Hero />
                 <section className="snap-always snap-center w-full h-screen pt-[600px]"></section>
             </main>
         </>

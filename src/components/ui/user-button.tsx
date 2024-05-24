@@ -8,6 +8,7 @@ import {
 } from './drop-down-menu/drop-down-menu';
 import ThemeSelector from './theme-selector';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
+import NoSSR from '../NoSSR';
 
 async function UserButton() {
     const session = await auth();
@@ -56,29 +57,31 @@ export function UserMenu({
                     {name}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-[#fafafb] dark:bg-[#040130]">
-                <DropdownMenuItem>
-                    <ThemeSelector />
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <hr></hr>
+            <NoSSR>
+                <DropdownMenuContent className="bg-[#fafafb] dark:bg-[#040130]">
+                    <DropdownMenuItem>
+                        <ThemeSelector />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <hr></hr>
 
-                    <form
-                        action={async () => {
-                            'use server';
-                            await signOut();
-                        }}
-                    >
-                        <button
-                            className="flex w-full py-2 items-center px-3 text-[#333] dark:text-white font-light hover:bg-gray-100 dark:hover:bg-[#111] rounded-md"
-                            type="submit"
+                        <form
+                            action={async () => {
+                                'use server';
+                                await signOut();
+                            }}
                         >
-                            <ArrowLeftOnRectangleIcon className="h-5 mr-3 " />{' '}
-                            sign out
-                        </button>
-                    </form>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
+                            <button
+                                className="flex w-full py-2 items-center px-3 text-[#333] dark:text-white font-light hover:bg-gray-100 dark:hover:bg-[#111] rounded-md"
+                                type="submit"
+                            >
+                                <ArrowLeftOnRectangleIcon className="h-5 mr-3 " />{' '}
+                                sign out
+                            </button>
+                        </form>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </NoSSR>
         </DropdownMenu>
     );
 }

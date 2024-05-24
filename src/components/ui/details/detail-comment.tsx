@@ -1,15 +1,30 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import Button from '../button';
 import { CreateCommentButton } from '../comment/comment-create';
+import { CommentsAPIResSchema, CommentsAPIResType } from '@/lib/zod.schema';
+import { useFetch } from '@/components/hook';
+import { CommentList } from '../comment/comment-list';
 
-const Comment = () => {
+const Comment = ({ taskId }: { taskId: string }) => {
+    const { data } = useFetch<{ data: any }>(
+        `/v1/api/tasks/${taskId}/comments`
+    );
+    const [comments, setComments] = useState<CommentsAPIResType>([]);
     const [isOpen, setIsOpen] = useState(true);
 
     const toggleList = useCallback(() => setIsOpen((p) => !p), []);
+
+    useLayoutEffect(() => {
+        if (!data) return;
+
+        const parse = CommentsAPIResSchema.safeParse(data.data);
+
+        if (parse.success) setComments(parse.data);
+    }, [data]);
 
     return (
         <div>
@@ -33,7 +48,7 @@ const Comment = () => {
                     <span className="ml-1 px-1 rounded font-light text-[0.8rem]"></span>
                 </Button>
             </>
-            <ul
+            <div
                 className={cn(
                     'ml-4 border-t overflow-hidden transition-all h-auto border-gray-100 dark:border-gray-900'
                 )}
@@ -43,10 +58,10 @@ const Comment = () => {
                 //     }px`,
                 // }}
             >
-                <li>
-                    <CreateCommentButton />
-                </li>
-            </ul>
+                <CommentList comments={comments} />
+
+                <CreateCommentButton />
+            </div>
         </div>
     );
 };

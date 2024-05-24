@@ -31,7 +31,7 @@ export const DetailTaskView = (props: { taskId?: string }) => {
             <div className="bg-main-bg-color dark:bg-main-bg-color-dark rounded-md min-h-full">
                 <DetailEditorTask task={task} key={taskId} />
                 <SubtaskView task={task} key={`sub::${taskId}`} />
-                <Comment />
+                <Comment taskId={task.id} />
             </div>
         </div>
     );

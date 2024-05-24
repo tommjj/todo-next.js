@@ -17,20 +17,18 @@ import {
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuRef,
     DropdownMenuTrigger,
 } from '../drop-down-menu/drop-down-menu';
-import {
-    EmojiClickData,
-    EmojiStyle,
-    SuggestionMode,
-    Theme,
-} from 'emoji-picker-react';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { useTheme } from 'next-themes';
+import { CommentAPIResType } from '@/lib/zod.schema';
+
+import data from '@emoji-mart/data';
 
 const Picker = dynamic(
     () => {
-        return import('emoji-picker-react');
+        return import('@emoji-mart/react');
     },
     { ssr: false }
 );
@@ -41,16 +39,19 @@ export const CreateComment = ({
 }: {
     className?: string;
     onCancel?: () => void;
-    onSubmitted?: () => void;
+    onCreated?: (newCom: CommentAPIResType) => void;
 }) => {
     const { theme } = useTheme();
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const dropDownRef = useRef<DropdownMenuRef>(null);
     const [text, setText] = useState('');
     const user = useSession();
 
-    const handleAddIcon = useCallback((e: EmojiClickData) => {
-        setText((priv) => priv + e.emoji);
+    const handleAddIcon = useCallback((e: any) => {
+        // console.log(e);
+        setText((priv) => priv + e.native);
         inputRef.current?.focus();
+        dropDownRef.current?.handleClose();
     }, []);
 
     const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> =
@@ -78,7 +79,7 @@ export const CreateComment = ({
             </div>
             <div className="w-full flex justify-between gap-[0.35rem] p-[8px] pt-2 dark:border-[#FAFAFA]">
                 <div className="flex items-center">
-                    <DropdownMenu>
+                    <DropdownMenu ref={dropDownRef}>
                         <DropdownMenuTrigger>
                             <Button
                                 variant="outline"
@@ -88,21 +89,20 @@ export const CreateComment = ({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="border-none">
-                            <Picker
-                                theme={
-                                    theme
-                                        ? theme === 'light'
-                                            ? Theme.LIGHT
-                                            : theme === 'dark'
-                                            ? Theme.DARK
-                                            : Theme.AUTO
-                                        : Theme.AUTO
-                                }
-                                onEmojiClick={handleAddIcon}
-                                emojiStyle={EmojiStyle.NATIVE}
-                                width={300}
-                                height={400}
-                            ></Picker>
+                            <div
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                }}
+                            >
+                                <Picker
+                                    data={data}
+                                    onEmojiSelect={handleAddIcon}
+                                    perLine={8}
+                                    previewPosition="none"
+                                    navPosition="bottom"
+                                    theme={theme}
+                                ></Picker>
+                            </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -140,10 +140,10 @@ export const CreateCommentButton = () => {
         <CreateComment onCancel={handleToggle} />
     ) : (
         <div className="flex py-2">
-            <Avatar className="w-8 h-8 mr-2" name={user.name} />{' '}
+            <Avatar className="w-[1.8rem] h-[1.8rem] mr-2" name={user.name} />{' '}
             <div
                 onClick={handleToggle}
-                className="flex-grow h-8 border rounded-full text-gray-400 px-3 text-[0.9rem] flex items-center cursor-pointer border-gray-100 hover:border-gray-200"
+                className="flex-grow h-[1.8rem] border rounded-full text-gray-400 px-3 text-[0.9rem] flex items-center cursor-pointer border-gray-100 hover:border-gray-200"
             >
                 Comment
             </div>
