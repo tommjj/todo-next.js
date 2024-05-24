@@ -234,3 +234,24 @@ export const ShareDataSchema = z.object({
     shareToken: z.nullable(z.string()),
 });
 export type ShareDataType = z.infer<typeof ShareDataSchema>;
+
+/*
+ * ************************* *
+ * ---------Comments-------- *
+ * ************************* *
+ */
+
+export const CommentAPIResSchema = z.object({
+    id: z.string(),
+    createAt: z.coerce.date(),
+    text: z.string(),
+    taskId: z.string(),
+    User: z.object({
+        id: z.string(),
+        name: z.string(),
+    }),
+});
+export type CommentAPIResType = z.infer<typeof CommentAPIResSchema>;
+
+export const CommentsAPIResSchema = z.array(CommentAPIResSchema);
+export type CommentsAPIResType = z.infer<typeof CommentAPIResSchema>;

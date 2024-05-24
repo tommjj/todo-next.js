@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { forwardRef } from 'react';
 
 export const TaskNameInput = ({
     className,
@@ -69,3 +70,41 @@ export const DescriptionInput = ({
         />
     );
 };
+
+type AreaInputPropsType = React.DetailedHTMLProps<
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
+> & { onEnter?: () => void };
+
+export const AreaInput = forwardRef<HTMLTextAreaElement, AreaInputPropsType>(
+    function AreaInput({ className, onEnter, ...props }, ref) {
+        return (
+            <textarea
+                ref={ref}
+                onInput={(ev) => {
+                    const el = ev.target as HTMLTextAreaElement;
+
+                    el.style.height = '5px';
+                    el.style.height = el.scrollHeight + 'px';
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+
+                        if (onEnter) {
+                            onEnter();
+                        }
+                    }
+                }}
+                className={cn(
+                    'w-full overflow-hidden h-max resize-none outline-none bg-inherit',
+                    className
+                )}
+                autoComplete="off"
+                autoCapitalize="off"
+                rows={1}
+                {...props}
+            />
+        );
+    }
+);

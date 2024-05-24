@@ -9,11 +9,11 @@ import { cn } from '@/lib/utils';
 import { DetailHeader } from './detail-header';
 import { DetailTaskView } from './detail-task-view';
 
-const StorageKey = 'detailWidth';
+const STORAGE_KEY = 'detailWidth';
 
 const getStateFromStorage = (): number | undefined => {
     try {
-        const state = localStorage?.getItem(StorageKey);
+        const state = localStorage?.getItem(STORAGE_KEY);
         if (!state) return undefined;
         return Number(state);
     } catch (err) {
@@ -61,7 +61,7 @@ export default function DetailsContainer() {
     }, [task]);
 
     const handleSizeChanged = useCallback((w: number) => {
-        localStorage.setItem(StorageKey, w.toString());
+        localStorage.setItem(STORAGE_KEY, w.toString());
     }, []);
 
     return (

@@ -12,6 +12,7 @@ import React, {
     forwardRef,
     useImperativeHandle,
 } from 'react';
+import { createPortal } from 'react-dom';
 
 const DDMContext = createContext<
     | {
@@ -160,10 +161,15 @@ export const DropdownMenu = forwardRef<DropdownMenuRef, DropdownMenuProps>(
         useEffect(() => {
             if (!isOpen) return;
 
-            function preventScroll(e: any) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
+            function preventScroll(e: WheelEvent) {
+                const ele = e.target;
+                const content = contentRef.current;
+                if (!ele || !content) return;
+
+                if (!content.contains(ele as Node)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
             }
 
             const handleClick = (e: MouseEvent) => {
@@ -233,12 +239,16 @@ export function DropdownMenuContent({
     const { contentRef } = useDDMContext();
 
     return (
-        <div
-            ref={contentRef}
-            className={`hidden fixed z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
-        >
-            {children}
-        </div>
+        document.body &&
+        createPortal(
+            <div
+                ref={contentRef}
+                className={`hidden fixed z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
+            >
+                {children}
+            </div>,
+            document.body
+        )
     );
 }
 

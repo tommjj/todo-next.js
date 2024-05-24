@@ -45,14 +45,14 @@ export const SubtaskView = ({ task }: { task: Task }) => {
                                 )}
                             />
                         </div>
-                        <span className="">Sub-tasks</span>
+                        <span className="opacity-90">Sub-tasks</span>
                         <span className="ml-1 px-1 rounded font-light text-[0.8rem]">
                             {subTaskCompletedCount}/{subtasks.length}
                         </span>
                     </Button>
                     <ul
                         className={cn(
-                            'ml-4 border-t overflow-hidden transition-all h-auto'
+                            'ml-4 border-t overflow-hidden transition-all h-auto border-gray-100  dark:border-gray-900'
                         )}
                         style={{
                             maxHeight: `${
