@@ -92,7 +92,7 @@ export const SearchButton = () => {
             </AlertDialogTrigger>
             <AlertDialogContent
                 ContentClassName="p-0 md:w-[640px] lg:w-[652px] shadow-2xl shadow-[#00000040] rounded-md"
-                className="bg-[#00000000] backdrop-blur-none"
+                className="bg-[#00000000] backdrop-blur-none z-0"
             >
                 <Search
                     close={() => {

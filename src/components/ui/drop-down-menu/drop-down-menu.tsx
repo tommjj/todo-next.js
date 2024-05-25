@@ -236,10 +236,10 @@ export function DropdownMenuContent({
     children: React.ReactNode;
     className?: string;
 }) {
-    const { contentRef } = useDDMContext();
+    const { contentRef, isOpen } = useDDMContext();
 
     return (
-        document.body &&
+        isOpen &&
         createPortal(
             <div
                 ref={contentRef}
