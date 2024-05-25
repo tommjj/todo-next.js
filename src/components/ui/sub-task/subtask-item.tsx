@@ -62,7 +62,7 @@ export const SubtaskItem = ({
     }, [subtask, removeSubtask]);
 
     return (
-        <div className="group flex w-full py-2 border-b">
+        <div className="group flex w-full py-2">
             <div
                 className={cn('flex justify-center items-start px-2 pt-[3px]', {
                     'pt-1': subtask.description,

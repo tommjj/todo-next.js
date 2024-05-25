@@ -10,6 +10,7 @@ import Button from '../button';
 import {
     ChangeEvent,
     ChangeEventHandler,
+    FormEventHandler,
     useCallback,
     useRef,
     useState,
@@ -22,9 +23,14 @@ import {
 } from '../drop-down-menu/drop-down-menu';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { useTheme } from 'next-themes';
-import { CommentAPIResType } from '@/lib/zod.schema';
+import {
+    CommentAPIResSchema,
+    CommentAPIResType,
+    CommentCreateType,
+} from '@/lib/zod.schema';
 
 import data from '@emoji-mart/data';
+import { fetcher } from '@/lib/http';
 
 const Picker = dynamic(
     () => {
@@ -35,8 +41,11 @@ const Picker = dynamic(
 
 export const CreateComment = ({
     className,
+    taskId,
     onCancel = () => {},
+    onCreated,
 }: {
+    taskId: string;
     className?: string;
     onCancel?: () => void;
     onCreated?: (newCom: CommentAPIResType) => void;
@@ -48,7 +57,6 @@ export const CreateComment = ({
     const user = useSession();
 
     const handleAddIcon = useCallback((e: any) => {
-        // console.log(e);
         setText((priv) => priv + e.native);
         inputRef.current?.focus();
         dropDownRef.current?.handleClose();
@@ -59,12 +67,34 @@ export const CreateComment = ({
             setText((priv) => e.target.value);
         }, []);
 
+    const submit: FormEventHandler<HTMLFormElement> = useCallback(
+        (e) => {
+            e.preventDefault();
+
+            fetcher.post
+                .json('/v1/api/comments', {
+                    text,
+                    taskId,
+                } satisfies CommentCreateType)
+                .then(async ([res]) => {
+                    if (!res?.ok) return;
+                    const data = (await res.json()).data;
+
+                    const parse = CommentAPIResSchema.safeParse(data);
+                    if (!parse.success) return;
+                    onCreated && onCreated(parse.data);
+                });
+        },
+        [onCreated, taskId, text]
+    );
+
     return (
         <form
             className={cn(
                 'w-full border dark:border-[#FAFAFA] rounded-md',
                 className
             )}
+            onSubmit={submit}
         >
             <div className="w-full px-[10px] pt-[10px] min-h-[54px]">
                 <AreaInput
@@ -128,7 +158,15 @@ export const CreateComment = ({
     );
 };
 
-export const CreateCommentButton = () => {
+export const CreateCommentButton = ({
+    className,
+    taskId,
+    onCreated = () => {},
+}: {
+    taskId: string;
+    className?: string;
+    onCreated?: (newCom: CommentAPIResType) => void;
+}) => {
     const user = useSession();
     const [isActive, setIsActive] = useState(false);
 
@@ -137,7 +175,11 @@ export const CreateCommentButton = () => {
     }, []);
 
     return isActive ? (
-        <CreateComment onCancel={handleToggle} />
+        <CreateComment
+            onCreated={onCreated}
+            taskId={taskId}
+            onCancel={handleToggle}
+        />
     ) : (
         <div className="flex py-2">
             <Avatar className="w-[1.8rem] h-[1.8rem] mr-2" name={user.name} />{' '}

@@ -268,5 +268,6 @@ export type CommentType = z.infer<typeof CommentSchema>;
 export const CommentCreateSchema = CommentSchema.omit({
     id: true,
     createAt: true,
+    userId: true,
 });
 export type CommentCreateType = z.infer<typeof CommentCreateSchema>;
