@@ -94,9 +94,8 @@ export async function deleteTaskById(id: string) {
 
 export const getAllImportantTasksByUserId = async (id: string) => {
     return await withError(prisma.task.findMany)({
-        select: {
-            ...DEFAULT_TASK_SELECT,
-        },
+        select: DEFAULT_TASK_SELECT,
+
         where: {
             list: {
                 userId: id,
@@ -111,9 +110,8 @@ export const getAllImportantTasksByUserId = async (id: string) => {
 
 export const getAllPlannedTasksByUserId = async (id: string) => {
     return await withError(prisma.task.findMany)({
-        select: {
-            ...DEFAULT_TASK_SELECT,
-        },
+        select: DEFAULT_TASK_SELECT,
+
         where: {
             list: {
                 userId: id,
