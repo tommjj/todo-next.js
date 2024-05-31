@@ -1,5 +1,5 @@
 import { Factory } from 'hono/factory';
-import { auth } from './middleware';
+import { auth, delay } from './middleware';
 import { zValidator } from '@hono/zod-validator';
 import prisma from '../databases/prisma.init';
 import { z } from 'zod';
@@ -35,6 +35,7 @@ export const verifyOTPHandler = factory.createHandlers(
         'json',
         z.object({ otp: z.string().length(6), email: z.string().email() })
     ),
+    delay(200),
     async (c) => {
         const body = c.req.valid('json');
 

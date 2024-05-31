@@ -22,13 +22,13 @@ function redisBuilder() {
 if (process.env.NODE_ENV === 'production') {
     redis = redisBuilder();
 } else {
-    let globalWithPrisma = global as typeof globalThis & {
+    let globalWithRedis = global as typeof globalThis & {
         redis: Redis;
     };
-    if (!globalWithPrisma.redis) {
-        globalWithPrisma.redis = redisBuilder();
+    if (!globalWithRedis.redis) {
+        globalWithRedis.redis = redisBuilder();
     }
-    redis = globalWithPrisma.redis;
+    redis = globalWithRedis.redis;
 }
 
 export default redis;

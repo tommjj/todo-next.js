@@ -12,3 +12,11 @@ export const auth = factory.createMiddleware(async (c, next) => {
     c.set('user', user);
     await next();
 });
+
+export const delay = (time: number) => {
+    return factory.createMiddleware(async (c, next) => {
+        await new Promise((resolve) => setTimeout(resolve, time));
+
+        await next();
+    });
+};
