@@ -14,7 +14,12 @@ export const authConfig = {
             const isOnShare = nextUrl.pathname.startsWith('/share');
             const isOnHomePage = nextUrl.pathname === '/';
 
-            if (isOnHomePage) return true;
+            if (isOnHomePage) {
+                if (isLoggedIn) {
+                    return Response.redirect(new URL('/tasks', nextUrl));
+                }
+                return true;
+            }
 
             if (isOnTasks || isOnShare) {
                 if (isLoggedIn) {
