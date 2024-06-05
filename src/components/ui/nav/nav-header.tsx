@@ -47,16 +47,18 @@ const NavHeader = () => {
                     <DropdownMenuContent className="w-48 p-1 dark:border-white">
                         <ThemeSelector />
                         <hr className="dark:border-white my-1" />
-                        <form action={signOutAction}>
-                            <Button
-                                variant="ghost"
-                                className="flex w-full py-1 justify-start items-center px-3 text-[#333]"
-                                type="submit"
-                            >
-                                <ArrowLeftOnRectangleIcon className="h-5 mr-3 " />{' '}
-                                sign out
-                            </Button>
-                        </form>
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <form action={signOutAction}>
+                                <Button
+                                    variant="ghost"
+                                    className="flex w-full py-1 justify-start items-center px-3 text-[#333]"
+                                    type="submit"
+                                >
+                                    <ArrowLeftOnRectangleIcon className="h-5 mr-3 " />{' '}
+                                    sign out
+                                </Button>
+                            </form>
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
