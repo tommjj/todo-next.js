@@ -238,17 +238,14 @@ export function DropdownMenuContent({
 }) {
     const { contentRef, isOpen } = useDDMContext();
 
-    return (
-        isOpen &&
-        createPortal(
-            <div
-                ref={contentRef}
-                className={`hidden fixed z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
-            >
-                {children}
-            </div>,
-            document.body
-        )
+    return createPortal(
+        <div
+            ref={contentRef}
+            className={`hidden fixed z-[999] rounded-md border bg-[#FAFAFA] dark:bg-[#18181B] ${className} pointer-events-auto transition-none`}
+        >
+            {children}
+        </div>,
+        document.body
     );
 }
 
