@@ -1,6 +1,12 @@
 import Logo from '@/components/logo';
 import SignInForm from '@/components/signin/signin-form';
 import Header from '@/components/ui/header/header';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Sign in',
+    description: 'todo next app',
+};
 
 function SignInPage() {
     return (

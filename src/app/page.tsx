@@ -3,6 +3,12 @@ import Logo from '@/components/logo';
 
 import Header from '@/components/ui/header/header';
 import UserButton from '@/components/ui/user-button';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'TODO',
+    description: 'todo next app',
+};
 
 export default function Home() {
     return (

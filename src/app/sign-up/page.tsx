@@ -2,6 +2,12 @@ import Logo from '@/components/logo';
 import EmailVerify from '@/components/signup/email';
 import SignUpForm from '@/components/signup/signup-form';
 import Header from '@/components/ui/header/header';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Sign up',
+    description: 'todo next app',
+};
 
 function SignUpPage() {
     return (
