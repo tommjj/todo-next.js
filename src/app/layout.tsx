@@ -7,11 +7,6 @@ import Toaster from '@/components/ui/sonner/sonner';
 import { SessionProvider } from '@/components/session-context';
 import { auth } from '@/auth';
 
-export const metadata: Metadata = {
-    title: 'TODO',
-    description: 'todo next app',
-};
-
 export default async function RootLayout(props: {
     children: React.ReactNode;
     modal: React.ReactNode;

@@ -9,11 +9,11 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  name          String    @unique
+  id            String    @id @default(uuid()) @db.Char(36)
+  email         String    @unique @db.Char(320)
+  name          String    @unique @db.Char(32)
   password      String
-  primaryListId String?
+  primaryListId String?   @db.Char(36)
   List          List[]    @relation("project")
   Share         Share[]
   primaryList   List?     @relation(fields: [primaryListId], references: [id])
@@ -21,11 +21,11 @@ model User {
 }
 
 model List {
-  id         String  @id @default(uuid())
+  id         String  @id @default(uuid()) @db.Char(36)
   name       String  @db.VarChar(30)
-  userId     String
-  color      String?
-  shareToken String?
+  userId     String  @db.Char(36)
+  color      String? @db.Char(9)
+  shareToken String? @db.Char(120)
   user       User    @relation("project", fields: [userId], references: [id], onDelete: Cascade)
   Share      Share[]
   tasks      Task[]
@@ -33,8 +33,8 @@ model List {
 }
 
 model Share {
-  listId String
-  userId String
+  listId String @db.Char(36)
+  userId String @db.Char(36)
   list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -43,7 +43,7 @@ model Share {
 }
 
 model Task {
-  id             String         @id @default(cuid())
+  id             String         @id @default(cuid()) @db.Char(36)
   title          String         @db.VarChar(250)
   important      Boolean        @default(false)
   completed      Boolean        @default(false)
@@ -51,7 +51,7 @@ model Task {
   dueDate        DateTime?      @db.Date
   repeatInterval RepeatInterval @default(NONE)
   repeatCount    Int?
-  listId         String
+  listId         String         @db.Char(36)
   order          Int            @default(autoincrement())
   description    String?        @db.VarChar(512)
   priority       Priority?
@@ -63,10 +63,10 @@ model Task {
 }
 
 model SubTask {
-  id          String   @id @default(cuid())
+  id          String   @id @default(cuid()) @db.Char(36)
   title       String   @db.VarChar(125)
   completed   Boolean  @default(false)
-  taskId      String
+  taskId      String   @db.Char(36)
   description String?  @db.VarChar(255)
   task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   createAt    DateTime @default(now()) @db.Timestamp()
@@ -75,11 +75,11 @@ model SubTask {
 }
 
 model Comment {
-  id       String   @id @default(uuid())
+  id       String   @id @default(uuid()) @db.Char(36)
   createAt DateTime @default(now()) @db.Timestamptz()
   text     String   @db.VarChar(255)
-  taskId   String
-  userId   String
+  taskId   String   @db.Char(36)
+  userId   String   @db.Char(36)
   User     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Task     Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
