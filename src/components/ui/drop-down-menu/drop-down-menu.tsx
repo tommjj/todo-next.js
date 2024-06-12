@@ -232,9 +232,11 @@ export function DropdownMenuTrigger({
 export function DropdownMenuContent({
     children,
     className = '',
+    hidden = true,
 }: {
     children: React.ReactNode;
     className?: string;
+    hidden?: boolean;
 }) {
     const { contentRef, isOpen } = useDDMContext();
 

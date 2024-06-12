@@ -46,7 +46,7 @@ export const AddTaskButton = () => {
                 </AlertDialogTrigger>
                 <AlertDialogContent
                     ContentClassName="p-0  md:w-[540px] lg:w-[600px] mb-[220px] shadow-2xl shadow-[#00000040] border-none"
-                    className="bg-[#00000000] backdrop-blur-none"
+                    className="bg-[#00000000] backdrop-blur-none z-[998]"
                 >
                     <CreateTaskForm
                         onAddTask={() => {

@@ -142,7 +142,7 @@ export const RepeatPicker = ({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <div className="w-[200px] bg-main-bg-color dark:bg-main-bg-color-dark">
+                <div className="w-[200px] bg-main-bg-color dark:bg-main-bg-color-dark ">
                     <div className="border-b p-2">
                         <input
                             onClick={(e) => e.stopPropagation()}

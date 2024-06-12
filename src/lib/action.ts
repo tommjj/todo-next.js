@@ -29,7 +29,6 @@ export async function createAccountAction(
     formData: FormData
 ) {
     try {
-        console.log(token);
         const decoded = jwt.verify(token, process.env.AUTH_SECRET!) as {
             email?: string;
         };
