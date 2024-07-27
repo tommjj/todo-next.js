@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 const useEnhancedEffect =
     typeof window !== 'undefined' && process.env.NODE_ENV !== 'test'

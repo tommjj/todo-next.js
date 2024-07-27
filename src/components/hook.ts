@@ -3,7 +3,6 @@
 import { fetcher, getListById } from '@/lib/http';
 import useStore from '@/lib/stores/index.store';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { z, ZodAny } from 'zod';
 
 export const useDrag = () => {
     const ref = useRef<any>();
@@ -94,7 +93,7 @@ export const useDrag = () => {
 
     // drag end
     useEffect(() => {
-        if (state.isDragging) return;
+        if (!state.isDragging) return;
         const handleUp = () => {
             setState((priv) => ({
                 ...priv,
